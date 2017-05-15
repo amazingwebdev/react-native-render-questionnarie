@@ -2,19 +2,19 @@
  * Created by alperen on 9.05.2017.
  */
 import React from 'react'
-import { Container, Content, ListItem, Text, Radio } from 'native-base'
+import { Content, ListItem, Text, Radio } from 'native-base'
 
-import { BaseComponent, BaseProps, BaseState } from "../BaseComponent";
+import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from "../MultiInputComponent";
 
-interface RadioButtonProps extends BaseProps {
+interface RadioButtonProps extends MultiInputComponentProps {
     options: any
 }
 
-interface RadioButtonState extends BaseState {
+interface RadioButtonState extends MultiInputComponentState {
     selection: string
 }
 
-export class RadioButton extends BaseComponent<RadioButtonProps, RadioButtonState>
+export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButtonState>
 {
     constructor(props: RadioButtonProps) {
         super(props)
@@ -22,16 +22,39 @@ export class RadioButton extends BaseComponent<RadioButtonProps, RadioButtonStat
             selection: "foo"
         }
         this.renderOption = this.renderOption.bind(this)
+        this.onPress = this.onPress.bind(this)
     }
 
     public render(): JSX.Element {
+        let options: JSX.Element[] = []
+
+        this.optionValues.map((option) => {
+            let name = option[this.props.keyName]
+            let value = option[this.props.valueName]
+            if (!name || !value) {
+                //Alert.alert("Hata", "beş dakikada değişir bütün işler")
+            } else {
+                let checked = this.state.selection === name
+                options.push(<ListItem onPress={this.onPress.bind(this, name)}>
+                    <Radio selected={checked} />
+                    <Text>{name}</Text>
+                </ListItem>)
+            }
+
+        })
         return (
-            <Radio selected={true} />
+            <Content>
+                {options}
+            </Content>
         )
     }
 
+    private onPress(selection: string) {
+        this.setState({ selection })
+    }
+
     private renderOption(option: any) {
-       
+
     }
 
     public getValue() {

@@ -5,6 +5,7 @@ import { BaseProps, BaseState, BaseComponent } from '../'
 
 interface TextFieldProps extends BaseProps {
     value?: string
+    validation?: string
 }
 
 interface TextFieldState extends BaseState {
@@ -12,7 +13,9 @@ interface TextFieldState extends BaseState {
 }
 
 const style = {
-    height: 40
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1
 }
 
 export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
@@ -22,12 +25,15 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
         this.state = {
             value: props.value
         }
+        if(props.required) {
+            style.borderColor = "red"
+        }
         this.onChange = this.onChange.bind(this);
     }
 
     public render(): JSX.Element {
         return (
-            <TextInput style={style} onChangeText={(value) => this.setState({ value })} value={this.state.value} />
+            <TextInput editable={true} maxLength={40} style={style} onChangeText={(value) => this.setState({ value })} value={this.state.value} />
         )
     }
 

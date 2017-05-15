@@ -52,17 +52,17 @@ export class StaticOptionSource implements OptionSource {
 
 }
 
-export interface BaseOptionalComponentProps extends BaseProps {
+export interface MultiInputComponentProps extends BaseProps {
     options: OptionSource
     keyName: string
     valueName: string
 }
 
-export interface BaseOptionalComponentState extends BaseState {
+export interface MultiInputComponentState extends BaseState {
 
 }
 
-export abstract class BaseOptionalComponent<P extends BaseOptionalComponentProps, S extends BaseOptionalComponentState> extends BaseComponent<P, S> {
+export abstract class MultiInputComponent<P extends MultiInputComponentProps, S extends MultiInputComponentState> extends BaseComponent<P, S> {
 
     protected optionValues: Array<Map<string, string>>
 

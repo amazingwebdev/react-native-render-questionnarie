@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Button, Alert } from 'react-native'
+import { Alert } from 'react-native'
 import {
     BaseComponent,
     BaseProps,
@@ -12,59 +12,107 @@ import {
     Dropdown
 } from '../components'
 
-import { Container, Button as Piton } from 'native-base'
+import { Content, Text, Button } from 'native-base'
 
 import Style from './SurveyStyle'
 
-interface SurveyProps {
+import { HTTPOptionSource, StaticOptionSource } from '../components/MultiInputComponent'
 
+interface SurveyProps {
+    form: any
 }
 
 interface SurveyState {
-
+    pageNumber: number
 }
+
 
 export class Survey extends React.Component<SurveyProps, SurveyState> {
 
+    form
     constructor(props: SurveyProps) {
         super(props)
-
+        this.state = {
+            pageNumber: 0
+        }
+        this.form = props.form
         this.onPress = this.onPress.bind(this)
     }
 
+
     public render(): JSX.Element {
-        let defaultValue = "foo"
-        let options = {
-            "type": "static",
-            "values": [
-                {
-                    "key": "foo",
-                    "value": "bar"
-                },
-                {
-                    "key": "foo2",
-                    "value": "bar2",
-                }
-            ]
-        }
+        let elements: JSX.Element[] = []
+
+        let page = this.form.pages[this.state.pageNumber]
+
+        page["questions"].map((question) => {
+            switch (question["type"]) {
+                case "slider":
+                    elements.push(<SliderInput
+                        ref={question["tag"]}
+                        key={question["tag"]}
+                        title={question["title"]}
+                        min={question["min"]}
+                        max={question["max"]}
+                        step={question["step"]}
+                        required={question["required"] || false}
+                    />)
+                    break;
+                case "textinput":
+                    elements.push(<TextField
+                        ref={question["tag"]}
+                        key={question["tag"]}
+                        title={question["title"]}
+                        required={question["required"] || false}
+                        validation={question["validation"]}
+                    />)
+                    break;
+                case "dropdown":
+                    elements.push(<Dropdown
+                        ref={question["tag"]}
+                        key={question["tag"]}
+                        title={question["title"]}
+                        options={question["options"]}
+                        keyName={question["keyName"]}
+                        valueName={question["valueName"]}
+                        defaultValue="2"
+                    />)
+                    break;
+
+                case "radio":
+                    elements.push(<RadioButton
+                        ref={question["tag"]}
+                        key={question["tag"]}
+                        title={question["title"]}
+                        options={question["options"]}
+                        keyName={question["keyName"]}
+                        valueName={question["valueName"]}
+                    />)
+                    break;
+                default:
+                    break;
+            }
+
+        })
+
+        elements.push(<Button onPress={this.onPress} light><Text> Çiğdem </Text></Button>)
+
         return (
-            <Container style={Style}>
-                <TextField ref="q1" tag="q1" key="q1" type={QuestionType.Textfield} value="foo" />
-                <SliderInput ref="q2" tag="q2" key="q2" type={QuestionType.Slider} min={0} max={200} step={20} />
-                <Dropdown ref="q2.1" tag="2.1" key="q78" type={QuestionType.Dropdown} />
-                <Checkboxx ref="q3" tag="q3" key="q3" options={options} keyName="key" valueName="value" type={QuestionType.Checkbox} />
-                <Button title="çiğdem" key="çiğdem" onPress={this.onPress} />
-                {/*<Piton  />*/}
-            </Container>
+            <Content style={Style}>
+                {elements}
+            </Content>
         )
     }
 
     public getSurveyAnswers(): Array<Object> {
-        let answers = []
+        let answers: any = []
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
-                answers.push({ [component.props.tag]: component.getValue() })
+                let value = component.getValue()
+                if (value !== undefined) {
+                    answers.push({ [q]: component.getValue() })
+                }
             }
         }
         return answers
@@ -72,7 +120,10 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
     private onPress() {
         console.log(this.getSurveyAnswers())
-        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers()))
+        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers(), (key, value) => {
+            if (value === null) return undefined
+            return value
+        }))
     }
 
 }

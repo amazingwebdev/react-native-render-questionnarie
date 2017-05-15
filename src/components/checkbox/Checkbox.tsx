@@ -1,67 +1,44 @@
 import React from 'react'
-import { Container, Content, ListItem, Text, CheckBox } from 'native-base';
+import { Container, ListItem, Text, CheckBox } from 'native-base';
 
-import { BaseComponent, BaseProps, BaseState } from '../BaseComponent'
+import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
 
-interface CheckBoxProps extends BaseProps {
-    options: { type: string, values: Array<Object> }
-    keyName?: string
-    valueName?: string
-    defaultValue?: string
+interface CheckBoxProps extends MultiInputComponentProps {
+
 }
 
-interface CheckBoxState extends BaseState {
+interface CheckBoxState extends MultiInputComponentState {
     selection: Map<string, boolean>
 }
 
-export class Checkboxx extends BaseComponent<CheckBoxProps, CheckBoxState> {
+export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState> {
 
-    private optionValues: Array<Object>
-
-    constructor(props: CheckBoxProps) {
+    constructor(props: CheckBoxProps, Optionsource) {
         super(props)
         let selection: Map<string, boolean> = new Map<string, boolean>()
-        this.optionValues = new Array<Map<string, string>>()
         this.state = {
             selection
         }
-
-        this.bindMethods()
-        this.initOptions()
-    }
-
-    private bindMethods() {
         this.renderOptions = this.renderOptions.bind(this)
-        this.initOptions = this.initOptions.bind(this)
-    }
-
-    private initOptions() {
-        if (this.props.options.type === 'static') {
-            for (let option of this.props.options.values) {
-                this.optionValues.push(option)
-            }
-        } else if (this.props.options.type === 'http') {
-
-        } else {
-            console.error('no such option type')
-        }
-        console.log('options are', this.optionValues)
     }
 
     public render(): JSX.Element {
         return (
             <Container style={{height: 100}}>
-                <Content>
                     {
                         this.optionValues.map(this.renderOptions)
                     }
-                </Content>
             </Container>
         )
     }
 
-    private renderOptions(option: any): JSX.Element {
-        let [key, value] = [option['key'], option['value']]
+    private renderOptions(option: Map<string, string>): JSX.Element {
+        let [key, value] = [option.get("key"), option.get("value")]
+        if (key === undefined) {
+            return (
+                <Text> beş dakikada değişir bütün işler </Text>
+            ) 
+        }
         let checked = this.state.selection.get(key)
         return (
             <ListItem onPress={this.onPress.bind(this, key)}>
@@ -82,7 +59,7 @@ export class Checkboxx extends BaseComponent<CheckBoxProps, CheckBoxState> {
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as Checkboxx
-                selections.push({ [q]: this.state.selection.get(q)})
+                /*selections.push({ [q]: this.state.selection.get(q)})*/
             }
         }
         return selections
