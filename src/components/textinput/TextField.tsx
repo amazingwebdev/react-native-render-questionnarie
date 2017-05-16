@@ -1,11 +1,14 @@
 import React from 'react'
 import { TextInput } from 'react-native'
 
+import { Item, Input } from 'native-base'
+
 import { BaseProps, BaseState, BaseComponent } from '../'
 
 interface TextFieldProps extends BaseProps {
     value?: string
     validation?: string
+    placeholder?: string
 }
 
 interface TextFieldState extends BaseState {
@@ -25,7 +28,7 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
         this.state = {
             value: props.value
         }
-        if(props.required) {
+        if (props.required) {
             style.borderColor = "red"
         }
         this.onChange = this.onChange.bind(this);
@@ -33,8 +36,14 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     public render(): JSX.Element {
         return (
-            <TextInput editable={true} maxLength={40} style={style} onChangeText={(value) => this.setState({ value })} value={this.state.value} />
+            <Item rounded>
+                <Input 
+                    onChangeText={(value) => this.setState({ value })}
+                    placeholder={this.props.placeholder}
+                    value={this.state.value} />
+            </Item>
         )
+
     }
 
     public onChange(e: React.FormEvent<HTMLInputElement>) {

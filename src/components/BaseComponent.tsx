@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { View } from 'react-native'
+import { Header, Title } from 'native-base'
 
 export enum QuestionType {
     Textfield, Slider, Checkbox, RadioButton, Dropdown
@@ -25,8 +25,16 @@ export interface BaseState {
 
 }
 
-export abstract class BaseComponent<P, S> extends React.Component<P, S>  {
+export abstract class BaseComponent<P extends BaseProps, S extends BaseState> extends React.Component<P, S>  {
 
     public abstract getValue(): any | undefined
+
+    protected getTitle(): JSX.Element | undefined {
+        return (this.props.title === undefined ? undefined :
+            <Header>
+                <Title>{this.props.title}</Title>
+            </Header>
+        )
+    }
 
 }

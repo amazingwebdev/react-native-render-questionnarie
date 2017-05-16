@@ -9,7 +9,8 @@ import {
     QuestionType,
     Checkboxx,
     RadioButton,
-    Dropdown
+    Dropdown,
+    DeckSwiperInput
 } from '../components'
 
 import { Content, Text, Button } from 'native-base'
@@ -46,44 +47,37 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         let page = this.form.pages[this.state.pageNumber]
 
         page["questions"].map((question) => {
+            let commonProps = {
+                ref: question["tag"],
+                key: question["tag"],
+                required: question["required"]
+            }
             switch (question["type"]) {
                 case "slider":
                     elements.push(<SliderInput
-                        ref={question["tag"]}
-                        key={question["tag"]}
-                        title={question["title"]}
+                        {...commonProps}
                         min={question["min"]}
                         max={question["max"]}
                         step={question["step"]}
-                        required={question["required"] || false}
                     />)
                     break;
                 case "textinput":
                     elements.push(<TextField
-                        ref={question["tag"]}
-                        key={question["tag"]}
-                        title={question["title"]}
-                        required={question["required"] || false}
+                        {...commonProps}
                         validation={question["validation"]}
                     />)
                     break;
                 case "dropdown":
                     elements.push(<Dropdown
-                        ref={question["tag"]}
-                        key={question["tag"]}
-                        title={question["title"]}
+                        {...commonProps}
                         options={question["options"]}
                         keyName={question["keyName"]}
                         valueName={question["valueName"]}
-                        defaultValue="2"
                     />)
                     break;
-
                 case "radio":
                     elements.push(<RadioButton
-                        ref={question["tag"]}
-                        key={question["tag"]}
-                        title={question["title"]}
+                        {...commonProps}
                         options={question["options"]}
                         keyName={question["keyName"]}
                         valueName={question["valueName"]}
@@ -95,6 +89,8 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
         })
 
+
+        elements.push(<DeckSwiperInput />)
         elements.push(<Button onPress={this.onPress} light><Text> Çiğdem </Text></Button>)
 
         return (

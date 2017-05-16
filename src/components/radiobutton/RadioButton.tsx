@@ -2,7 +2,10 @@
  * Created by alperen on 9.05.2017.
  */
 import React from 'react'
-import { Content, ListItem, Text, Radio } from 'native-base'
+
+import { StyleSheet } from 'react-native'
+
+import { Content, Header, Button, Icon, Title, ListItem, Text, Radio } from 'native-base'
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from "../MultiInputComponent";
 
@@ -19,10 +22,11 @@ export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButt
     constructor(props: RadioButtonProps) {
         super(props)
         this.state = {
-            selection: "foo"
+            selection: ''
         }
         this.renderOption = this.renderOption.bind(this)
         this.onPress = this.onPress.bind(this)
+        this.getTitle = this.getTitle.bind(this);
     }
 
     public render(): JSX.Element {
@@ -35,15 +39,18 @@ export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButt
                 //Alert.alert("Hata", "beş dakikada değişir bütün işler")
             } else {
                 let checked = this.state.selection === name
-                options.push(<ListItem onPress={this.onPress.bind(this, name)}>
-                    <Radio selected={checked} />
-                    <Text>{name}</Text>
-                </ListItem>)
+                options.push(
+                    <ListItem style={{ width: '100%' }} onPress={this.onPress.bind(this, name)}>
+                        <Radio selected={checked} />
+                        <Text>{name}</Text>
+
+                    </ListItem>)
             }
 
         })
         return (
             <Content>
+                {this.getTitle()}
                 {options}
             </Content>
         )
