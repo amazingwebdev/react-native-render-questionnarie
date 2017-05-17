@@ -7,6 +7,7 @@ export enum QuestionType {
 }
 
 export interface BaseProps {
+    tag: string
     required?: boolean
     title?: string
     trackType?: string
