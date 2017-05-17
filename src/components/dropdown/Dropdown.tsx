@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Alert } from 'react-native'
 
-import { Picker } from 'native-base'
+import { Picker, View } from 'native-base'
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from "../MultiInputComponent";
 const Item = Picker.Item;
@@ -39,11 +39,12 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
         }
     }
 
-    public setSelection(selection: string) {
+    private setSelection(selection: string) {
         this.setState({ selection: selection })
     }
 
     public render(): JSX.Element {
+        let i = 0;
         let options: JSX.Element[] = []
         this.optionValues.map((option) => {
             let name = option[this.props.keyName]
@@ -51,16 +52,18 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
             if (!name || !value) {
                 //Alert.alert("Hata", "beş dakikada değişir bütün işler")
             } else {
-                options.push(<Item label={name} value={value} />)
+                options.push(<Item key={this.props.tag} label={name} value={value} />)
             }
             
         })
         return (
-            <Picker style={{ borderColor: "red", borderWidth: 2, width: "100%" }}
+            <View>
+                <Picker ref={this.props.tag + "_" +i} key={this.props.tag + "_" + i++} style={{ borderColor: "red", borderWidth: 2, width: "100%" }}
                 selectedValue={this.state.selection}
                 onValueChange={this.renderOption.bind(this)}>
                 {options}
             </Picker>
+            </View>
         )
     }
 
