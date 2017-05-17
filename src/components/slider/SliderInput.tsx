@@ -1,5 +1,7 @@
 import React from 'react'
-import { View, Text, Slider } from 'react-native'
+import { Text, Slider } from 'react-native'
+
+import { View } from 'native-base'
 
 import { BaseProps, BaseState, BaseComponent } from '../'
 
