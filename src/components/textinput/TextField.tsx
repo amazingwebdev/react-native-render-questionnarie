@@ -1,7 +1,5 @@
 import React from 'react'
-import { TextInput } from 'react-native'
-
-import { Item, Input } from 'native-base'
+import { View, Item, Input } from 'native-base'
 
 import { BaseProps, BaseState, BaseComponent } from '../'
 
@@ -36,12 +34,14 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     public render(): JSX.Element {
         return (
-            <Item rounded>
-                <Input 
-                    onChangeText={(value) => this.setState({ value })}
-                    placeholder={this.props.placeholder}
-                    value={this.state.value} />
-            </Item>
+            <View>
+                <Item rounded>
+                    <Input
+                        onChangeText={(value) => this.setState({ value })}
+                        placeholder={this.props.placeholder}
+                        value={this.state.value} />
+                </Item>
+            </View>
         )
 
     }
