@@ -52,8 +52,8 @@ export class StaticOptionSource implements OptionSource {
 
 export interface MultiInputComponentProps extends BaseProps {
     options: OptionSource
-    keyName: string
-    valueName: string
+    titleKey: string
+    valueKey: string
 }
 
 export interface MultiInputComponentState extends BaseState {
@@ -72,12 +72,6 @@ export abstract class MultiInputComponent<P extends MultiInputComponentProps, S 
             this.optionValues = options["values"]
         }
 
-        /*this.initOptions = this.initOptions.bind(this)
-        this.initOptions()*/
     }
-
-    private initOptions() {
-        this.optionValues = this.props.options.getOptions()
-    }
-
+    
 }

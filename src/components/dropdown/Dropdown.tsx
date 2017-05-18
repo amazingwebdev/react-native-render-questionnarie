@@ -1,8 +1,5 @@
 import React from 'react'
-
-import { Alert } from 'react-native'
-
-import { Picker, View } from 'native-base'
+import { View, Picker } from 'native-base'
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from "../MultiInputComponent";
 const Item = Picker.Item;
@@ -39,30 +36,24 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
         }
     }
 
-    private setSelection(selection: string) {
-        this.setState({ selection: selection })
-    }
-
     public render(): JSX.Element {
         let i = 0;
         let options: JSX.Element[] = []
         this.optionValues.map((option) => {
-            let name = option[this.props.keyName]
-            let value = option[this.props.valueName]
-            if (!name || !value) {
-                //Alert.alert("Hata", "beş dakikada değişir bütün işler")
-            } else {
-                options.push(<Item key={this.props.tag} label={name} value={value} />)
-            }
-            
+            let name = option[this.props.titleKey]
+            let value = option[this.props.valueKey]
+            options.push(<Item key={this.props.tag} label={name} value={value} />)
         })
         return (
             <View>
-                <Picker ref={this.props.tag + "_" +i} key={this.props.tag + "_" + i++} style={{ borderColor: "red", borderWidth: 2, width: "100%" }}
-                selectedValue={this.state.selection}
-                onValueChange={this.renderOption.bind(this)}>
-                {options}
-            </Picker>
+                <Picker
+                    ref={this.props.tag + "_" + i}
+                    key={this.props.tag + "_" + i++}
+                    style={{ borderColor: "red", borderWidth: 2, width: "100%" }}
+                    selectedValue={this.state.selection}
+                    onValueChange={this.renderOption.bind(this)}>
+                    {options}
+                </Picker>
             </View>
         )
     }
@@ -73,8 +64,12 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
         });
     }
 
-
     public getValue() {
         return this.state.selection;
     }
+
+    private setSelection(selection: string) {
+        this.setState({ selection: selection })
+    }
+
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, ListItem, Text, CheckBox } from 'native-base';
+import { View, CheckBox, ListItem, Text } from 'native-base';
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
 
@@ -24,26 +24,21 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
 
     public render(): JSX.Element {
         return (
-            <Container style={{height: 100}}>
-                    {
-                        this.optionValues.map(this.renderOptions)
-                    }
-            </Container>
+            <View>
+                {this.getTitle()}
+                {this.optionValues.map(this.renderOptions)}
+            </View>
         )
     }
 
-    private renderOptions(option: Map<string, string>): JSX.Element {
-        let [key, value] = [option.get("key"), option.get("value")]
-        if (key === undefined) {
-            return (
-                <Text> beş dakikada değişir bütün işler </Text>
-            ) 
-        }
-        let checked = this.state.selection.get(key)
+    private renderOptions(option): JSX.Element {
+        let [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
+        let checked = this.state.selection.get(title)
+        let key= this.props.tag + "_" + value
         return (
-            <ListItem onPress={this.onPress.bind(this, key)}>
-                <CheckBox ref={key} key={key} checked={checked} />
-                <Text>{value}</Text>
+            <ListItem key={key}  onPress={this.onPress.bind(this, title)}>
+                <CheckBox ref={value} checked={checked} />
+                <Text>{title}</Text>
             </ListItem>
         )
     }
@@ -55,14 +50,17 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
     }
 
     public getValue(): any | undefined {
-        let selections = []
+        let selections: string[] = []
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as Checkboxx
-                /*selections.push({ [q]: this.state.selection.get(q)})*/
+                if (this.refs[q]["props"]["checked"]) {
+                    selections.push(q)
+                }
+
             }
         }
-        return selections
+        return selections.length > 0 ? selections : undefined
     }
 
 }

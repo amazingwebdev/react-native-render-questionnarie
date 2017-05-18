@@ -13,7 +13,7 @@ import {
     DeckSwiperInput
 } from '../components'
 
-import { Content, Text, Button } from 'native-base'
+import { Content, Text, Button, View } from 'native-base'
 
 import Style from './SurveyStyle'
 
@@ -47,9 +47,15 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         let page = this.form.pages[this.state.pageNumber]
 
         page["questions"].map((question) => {
+            let tag = question["tag"]
+            if (tag === undefined || tag === '') {
+                Alert.alert("tost", "most")
+            }
             let commonProps = {
-                ref: question["tag"],
-                key: question["tag"],
+                tag: tag,
+                ref: tag,
+                key: tag,
+                title: question["title"],
                 required: question["required"]
             }
             switch (question["type"]) {
@@ -71,16 +77,24 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
                     elements.push(<Dropdown
                         {...commonProps}
                         options={question["options"]}
-                        keyName={question["keyName"]}
-                        valueName={question["valueName"]}
+                        titleKey={question["titleKey"]}
+                        valueKey={question["valueKey"]}
                     />)
                     break;
                 case "radio":
                     elements.push(<RadioButton
                         {...commonProps}
                         options={question["options"]}
-                        keyName={question["keyName"]}
-                        valueName={question["valueName"]}
+                        titleKey={question["titleKey"]}
+                        valueKey={question["valueKey"]}
+                    />)
+                    break;
+                    case "checkbox":
+                    elements.push(<Checkboxx 
+                        {...commonProps}
+                        options={question["options"]}
+                        titleKey={question["titleKey"]}
+                        valueKey={question["valueKey"]}
                     />)
                     break;
                 default:
@@ -89,12 +103,10 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
         })
 
-
-        elements.push(<DeckSwiperInput />)
-        elements.push(<Button onPress={this.onPress} light><Text> Çiğdem </Text></Button>)
+        elements.push(<View key="k2"><Button onPress={this.onPress} light><Text> Çiğdem </Text></Button></View>)
 
         return (
-            <Content style={Style}>
+            <Content key="content" style={Style}>
                 {elements}
             </Content>
         )
