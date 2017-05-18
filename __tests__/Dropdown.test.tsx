@@ -23,9 +23,12 @@ it("renders correctly", () => {
     "valueKey": "oid"
   }
 
+
   const dropdown = renderer.create(
     <Dropdown tag="q1" options={options} titleKey="title" valueKey="oid" />
   );
+  console.log(dropdown)
   expect(dropdown).toBeDefined();
+
 });
 

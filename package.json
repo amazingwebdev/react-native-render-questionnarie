@@ -42,6 +42,9 @@
       "ts",
       "tsx",
       "js"
+    ],
+        "transformIgnorePatterns": [
+   "node_modules/(?!native-base)/"
     ]
   }
 }
