@@ -17,8 +17,6 @@ import { Content, Text, Button, View } from 'native-base'
 
 import Style from './SurveyStyle'
 
-import { HTTPOptionSource, StaticOptionSource } from '../components/MultiInputComponent'
-
 interface SurveyProps {
     form: any
 }
