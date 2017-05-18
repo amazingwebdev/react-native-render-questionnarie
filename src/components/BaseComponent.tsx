@@ -1,6 +1,5 @@
-import * as React from 'react'
-
-import { Header, Title } from 'native-base'
+import React from 'react'
+import { Header, Text } from 'native-base'
 
 export enum QuestionType {
     Textfield, Slider, Checkbox, RadioButton, Dropdown
@@ -19,7 +18,6 @@ export interface BaseProps {
     visible?: boolean
     visibleIf?: string
     defaultValue?: string
-
 }
 
 export interface BaseState {
@@ -32,8 +30,8 @@ export abstract class BaseComponent<P extends BaseProps, S extends BaseState> ex
 
     protected getTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
-            <Header>
-                <Title>{this.props.title}</Title>
+            <Header style={{ height: 'auto' }}>
+                <Text>{this.props.title}</Text>
             </Header>
         )
     }
