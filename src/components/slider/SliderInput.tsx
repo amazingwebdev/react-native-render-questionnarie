@@ -28,6 +28,7 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
     public render(): JSX.Element {
         return (
             <View>
+                {this.getTitle()}
                 <Slider
                     minimumValue={this.props.min}
                     maximumValue={this.props.max}
