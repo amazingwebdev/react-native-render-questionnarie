@@ -2,14 +2,6 @@ import React from 'react'
 import { View, Picker } from 'native-base'
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from "../MultiInputComponent";
-const Item = Picker.Item;
-
-
-class Options {
-    private type: string
-    private values: Array<Map<string, string>>
-    private request: Map<string, string>
-}
 
 interface DropdownProps extends MultiInputComponentProps {
 
@@ -26,50 +18,51 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
         this.state = {
             selection: undefined,
         }
-        this.renderOption = this.renderOption.bind(this)
-        this.setSelection = this.setSelection.bind(this)
+        this.renderOptions = this.renderOptions.bind(this)
+        this.setValue = this.setValue.bind(this)
     }
 
-    componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setSelection(this.props.defaultValue)
+    public componentDidMount() {
+        if (this.props.defaultValue !== undefined) {
+            if (typeof this.props.defaultValue === 'string') {
+                this.setValue(this.props.defaultValue)
+            } else {
+                console.error(`ListInput tag:${this.props.tag}", default value is not string`)
+            }
+        } else {
+            console.debug(`ListInput tag:${this.props.tag}", no default value`)
         }
     }
 
     public render(): JSX.Element {
-        let i = 0;
-        let options: JSX.Element[] = []
-        this.optionValues.map((option) => {
-            let name = option[this.props.titleKey]
-            let value = option[this.props.valueKey]
-            options.push(<Item key={this.props.tag} label={name} value={value} />)
-        })
         return (
             <View>
+                {this.getTitle()}
                 <Picker
-                    ref={this.props.tag + "_" + i}
-                    key={this.props.tag + "_" + i++}
-                    style={{ borderColor: "red", borderWidth: 2, width: "100%" }}
+                    ref={this.props.tag}
+                    key={this.props.tag}
                     selectedValue={this.state.selection}
-                    onValueChange={this.renderOption.bind(this)}>
-                    {options}
+                    onValueChange={this.setValue}>
+                    {this.options.map(this.renderOptions)}
                 </Picker>
             </View>
         )
     }
 
-    public renderOption(value: string) {
-        this.setState({
-            selection: value
-        });
+    public setValue(selection: string) {
+        this.setState({ selection })
     }
 
     public getValue() {
         return this.state.selection;
     }
 
-    private setSelection(selection: string) {
-        this.setState({ selection: selection })
+    private renderOptions(option) {
+        let name = option[this.props.titleKey]
+        let value = option[this.props.valueKey]
+        return (
+            <Picker.Item key={this.props.tag} label={name} value={value} />
+        )
     }
 
 }

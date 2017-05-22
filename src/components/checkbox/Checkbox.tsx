@@ -22,31 +22,25 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         this.renderOptions = this.renderOptions.bind(this)
     }
 
+    public componentDidMount() {
+        if (this.props.defaultValue !== undefined) {
+            if (this.props.defaultValue instanceof Array) {
+                this.setValue(this.props.defaultValue)
+            } else {
+                console.error(`CheckInput tag:${this.props.tag}", default value is not array`)
+            }
+        } else {
+            console.debug(`CheckInput tag:${this.props.tag}", no default value`)
+        }
+    }
+
     public render(): JSX.Element {
         return (
             <View>
                 {this.getTitle()}
-                {this.optionValues.map(this.renderOptions)}
+                {this.options.map(this.renderOptions)}
             </View>
         )
-    }
-
-    private renderOptions(option): JSX.Element {
-        let [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
-        let checked = this.state.selection.get(title)
-        let key= this.props.tag + "_" + value
-        return (
-            <ListItem key={key}  onPress={this.onPress.bind(this, title)}>
-                <CheckBox ref={value} checked={checked} />
-                <Text>{title}</Text>
-            </ListItem>
-        )
-    }
-
-    private onPress(key: string) {
-        let selection = this.state.selection
-        selection.set(key, !selection.get(key))
-        this.setState({ selection })
     }
 
     public getValue(): any | undefined {
@@ -57,10 +51,35 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
                 if (this.refs[q]["props"]["checked"]) {
                     selections.push(q)
                 }
-
             }
         }
         return selections.length > 0 ? selections : undefined
+    }
+
+    public setValue(selections: Array<string>) {
+        let selection = this.state.selection
+        selections.map((sel) => {
+            selection.set(sel, true)
+        })
+        this.setState({ selection })
+    }
+
+    private renderOptions(option): JSX.Element {
+        let [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
+        let checked = this.state.selection.get(value)
+        let key = this.props.tag + "_" + value
+        return (
+            <ListItem key={key} onPress={this.onPress.bind(this, value)}>
+                <CheckBox ref={value} checked={checked} />
+                <Text>{title}</Text>
+            </ListItem>
+        )
+    }
+
+    private onPress(key: string) {
+        let selection = this.state.selection
+        selection.set(key, !selection.get(key))
+        this.setState({ selection })
     }
 
 }

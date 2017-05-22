@@ -22,7 +22,19 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
         super(props)
         this.state = { value: props.value || 0 }
 
-        this.onChange = this.onChange.bind(this)
+        this.onValueChange = this.onValueChange.bind(this)
+    }
+
+    public componentWillMount() {
+        if (this.props.defaultValue !== undefined) {
+            if (typeof this.props.defaultValue === 'number') {
+                this.setValue(this.props.defaultValue)
+            } else {
+                console.error(`SliderInput tag:${this.props.tag}", default value is not number`)
+            }
+        } else {
+            console.debug(`SliderInput tag:${this.props.tag}", no default value`)
+        }
     }
 
     public render(): JSX.Element {
@@ -33,8 +45,8 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
                     minimumValue={this.props.min}
                     maximumValue={this.props.max}
                     step={this.props.step}
-                    value={this.props.value}
-                    onValueChange={this.onChange}
+                    value={this.state.value}
+                    onValueChange={this.onValueChange}
                 />
                 <Text style={{ textAlign: 'center' }}>
                     {this.state.value}
@@ -43,12 +55,16 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
         )
     }
 
-    private onChange(e: any) {
-        this.setState({ value: e })
+    public setValue(value: number) {
+        this.setState({ value })
     }
 
     public getValue() {
         return this.state.value;
+    }
+
+    private onValueChange(value: number) {
+        this.setState({ value })
     }
 
 }

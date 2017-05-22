@@ -28,13 +28,11 @@ interface SurveyState {
 
 export class Survey extends React.Component<SurveyProps, SurveyState> {
 
-    form
     constructor(props: SurveyProps) {
         super(props)
         this.state = {
             pageNumber: 0
         }
-        this.form = props.form
         this.onPress = this.onPress.bind(this)
     }
 
@@ -42,19 +40,17 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     public render(): JSX.Element {
         let elements: JSX.Element[] = []
 
-        let page = this.form.pages[this.state.pageNumber]
+        let page = this.props.form.pages[this.state.pageNumber]
 
         page["questions"].map((question) => {
             let tag = question["tag"]
-            if (tag === undefined || tag === '') {
-                Alert.alert("tost", "most")
-            }
             let commonProps = {
                 tag: tag,
                 ref: tag,
                 key: tag,
                 title: question["title"],
-                required: question["required"]
+                required: question["required"],
+                defaultValue: question["defaultValue"]
             }
             switch (question["type"]) {
                 case "slider":
@@ -111,13 +107,13 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     public getSurveyAnswers(): Array<Object> {
-        let answers: any = []
+        let answers: Array<Object> = []
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
                 let value = component.getValue()
                 if (value !== undefined) {
-                    answers.push({ [q]: component.getValue() })
+                    answers.push({ [q]: value })
                 }
             }
         }
@@ -125,11 +121,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     private onPress() {
-        console.log(this.getSurveyAnswers())
-        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers(), (key, value) => {
-            if (value === null) return undefined
-            return value
-        }))
+        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers()))
     }
 
 }

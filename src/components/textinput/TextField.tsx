@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Item, Input } from 'native-base'
+import { View, Item, Input, Icon } from 'native-base'
 
 import { BaseProps, BaseState, BaseComponent } from '../'
 
@@ -13,12 +13,6 @@ interface TextFieldState extends BaseState {
     value?: string
 }
 
-const style = {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1
-}
-
 export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     constructor(props: TextFieldProps) {
@@ -26,10 +20,19 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
         this.state = {
             value: props.value
         }
-        if (props.required) {
-            style.borderColor = "red"
+        this.onChangeText = this.onChangeText.bind(this);
+    }
+
+    public componentWillMount() {
+        if (this.props.defaultValue !== undefined) {
+            if (typeof this.props.defaultValue === 'string') {
+                this.setValue(this.props.defaultValue)
+            } else {
+                console.error(`TextInput tag:${this.props.tag}", default value is not string`)
+            }
+        } else {
+            console.debug(`TextInput tag:${this.props.tag}", no default value`)
         }
-        this.onChange = this.onChange.bind(this);
     }
 
     public render(): JSX.Element {
@@ -37,23 +40,24 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
             <View>
                 <Item rounded>
                     <Input
-                        onChangeText={(value) => this.setState({ value })}
+                        onChangeText={this.onChangeText}
                         placeholder={this.props.placeholder}
                         value={this.state.value} />
                 </Item>
             </View>
         )
-
     }
 
-    public onChange(e: React.FormEvent<HTMLInputElement>) {
-        this.setState({
-            value: e.currentTarget.value
-        });
+    public setValue(value: string) {
+        this.setState({ value })
     }
 
     public getValue() {
-        return this.state.value;
+        return this.state.value ? this.state.value : undefined;
+    }
+
+    private onChangeText(value: string) {
+        this.setState({ value });
     }
 
 }

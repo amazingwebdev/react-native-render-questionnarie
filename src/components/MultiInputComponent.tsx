@@ -14,14 +14,14 @@ export interface MultiInputComponentState extends BaseState {
 
 export abstract class MultiInputComponent<P extends MultiInputComponentProps, S extends MultiInputComponentState> extends BaseComponent<P, S> {
 
-    protected optionValues: Array<Map<string, string>>
+    protected options: Array<Map<string, string>>
 
     constructor(props: P) {
         super(props)
-        this.optionValues = new Array<Map<string, string>>()
+        this.options = new Array<Map<string, string>>()
         let options = props.options
         if (options["type"] === "static") {
-            this.optionValues = options["values"]
+            this.options = options["values"]
         }
 
     }
