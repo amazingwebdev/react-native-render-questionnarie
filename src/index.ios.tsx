@@ -14,6 +14,36 @@ export default class App extends Component<{}, {}> {
                     "tag": "sayfa1",
                     "questions": [
                         {
+                            "title": "Segmentasyon",
+                            "type": "radio",
+                            "tag": "segmentation",
+                            "required": true,
+                            "photoRequired": true,
+                            "defaultValue": "val2",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "name": "kod",
+                                        "value": "val"
+                                    },
+                                    {
+                                        "name": "kod2",
+                                        "value": "val2"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "value"
+                        },
+                        {
+                            "title": "Tabela adı",
+                            "type": "textinput",
+                            "tag": "q1",
+                            "required": true,
+                            "photoRequired": true
+                        },
+                        {
                             "title": "Asuman",
                             "type": "checkbox",
                             "tag": "checkbox",
@@ -76,6 +106,135 @@ export default class App extends Component<{}, {}> {
                             "valueKey": "oid"
                         },
                         {
+                            "title": "ülke",
+                            "type": "dropdown",
+                            "tag": "q12",
+                            "defaultValue": "2",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "oid": "1",
+                                        "name": "Türkiye"
+                                    },
+                                    {
+                                        "oid": "2",
+                                        "name": "Amsterdam"
+                                    },
+                                    {
+                                        "oid": "3",
+                                        "name": "londra"
+                                    },
+                                    {
+                                        "oid": "4",
+                                        "name": "la"
+                                    },
+                                    {
+                                        "oid": "5",
+                                        "name": "angara"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "oid"
+                        }, {
+                            "title": "ülke",
+                            "type": "dropdown",
+                            "tag": "q13",
+                            "defaultValue": "2",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "oid": "1",
+                                        "name": "Türkiye"
+                                    },
+                                    {
+                                        "oid": "2",
+                                        "name": "Amsterdam"
+                                    },
+                                    {
+                                        "oid": "3",
+                                        "name": "londra"
+                                    },
+                                    {
+                                        "oid": "4",
+                                        "name": "la"
+                                    },
+                                    {
+                                        "oid": "5",
+                                        "name": "angara"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "oid"
+                        }, {
+                            "title": "ülke",
+                            "type": "dropdown",
+                            "tag": "q14",
+                            "defaultValue": "2",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "oid": "1",
+                                        "name": "Türkiye"
+                                    },
+                                    {
+                                        "oid": "2",
+                                        "name": "Amsterdam"
+                                    },
+                                    {
+                                        "oid": "3",
+                                        "name": "londra"
+                                    },
+                                    {
+                                        "oid": "4",
+                                        "name": "la"
+                                    },
+                                    {
+                                        "oid": "5",
+                                        "name": "angara"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "oid"
+                        }, {
+                            "title": "ülke",
+                            "type": "dropdown",
+                            "tag": "q15",
+                            "defaultValue": "2",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "oid": "1",
+                                        "name": "Türkiye"
+                                    },
+                                    {
+                                        "oid": "2",
+                                        "name": "Amsterdam"
+                                    },
+                                    {
+                                        "oid": "3",
+                                        "name": "londra"
+                                    },
+                                    {
+                                        "oid": "4",
+                                        "name": "la"
+                                    },
+                                    {
+                                        "oid": "5",
+                                        "name": "angara"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "oid"
+                        },
+                        {
                             "type": "slider",
                             "tag": "q2",
                             "title": "Slider sorusu",
@@ -84,37 +243,6 @@ export default class App extends Component<{}, {}> {
                             "max": 100,
                             "step": 6
                         },
-                        {
-                            "title": "Tabela adı",
-                            "type": "textinput",
-                            "defaultValue": "Çiğdem",
-                            "tag": "q1",
-                            "required": true,
-                            "photoRequired": true
-                        },
-                        {
-                            "title": "Segmentasyon",
-                            "type": "radio",
-                            "tag": "segmentation",
-                            "required": true,
-                            "photoRequired": true,
-                            "defaultValue": "val2",
-                            "options": {
-                                "type": "static",
-                                "values": [
-                                    {
-                                        "name": "kod",
-                                        "value": "val"
-                                    },
-                                    {
-                                        "name": "kod2",
-                                        "value": "val2"
-                                    }
-                                ]
-                            },
-                            "titleKey": "name",
-                            "valueKey": "value"
-                        }
                     ]
                 }
             ]
