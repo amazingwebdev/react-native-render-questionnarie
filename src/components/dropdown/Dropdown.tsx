@@ -19,7 +19,14 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
             selection: undefined,
         }
         this.renderOptions = this.renderOptions.bind(this)
-        this.setValue = this.setValue.bind(this)
+    }
+
+    public componentWillMount() {
+        let defaultOption: Object = {}
+        defaultOption[this.props.titleKey] = "Seçiniz"
+        defaultOption[this.props.valueKey] = "-1"
+        this.options.splice(0, 0, defaultOption)
+        this.setState({ selection: defaultOption[this.props.valueKey] })
     }
 
     public componentDidMount() {
@@ -54,14 +61,18 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
     }
 
     public getValue() {
-        return this.state.selection;
+        if(this.state.selection === undefined || this.state.selection === "-1") {
+            return undefined
+        }
+        return this.state.selection
     }
 
     private renderOptions(option) {
         let name = option[this.props.titleKey]
         let value = option[this.props.valueKey]
+        let key = this.props.tag + "_" + value
         return (
-            <Picker.Item key={this.props.tag} label={name} value={value} />
+            <Picker.Item key={key} label={name} value={value} />
         )
     }
 
