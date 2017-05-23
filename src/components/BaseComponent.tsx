@@ -30,7 +30,12 @@ export abstract class BaseComponent<P extends BaseProps, S extends BaseState> ex
 
     public abstract setValue(value: any)
 
-    componentWillMount() {
+    constructor(props: P) {
+        super(props)
+        this.setValue = this.setValue.bind(this)
+    }
+
+    public componentWillMount() {
         if (this.props.tag === undefined || this.props.tag === '') {
             console.error(`${this.constructor.name} no proper tag`)
         }
