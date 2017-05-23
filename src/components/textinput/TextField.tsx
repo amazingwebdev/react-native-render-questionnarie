@@ -20,7 +20,6 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
         this.state = {
             value: props.value
         }
-        this.onChangeText = this.onChangeText.bind(this);
     }
 
     public componentWillMount() {
@@ -38,9 +37,10 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
     public render(): JSX.Element {
         return (
             <View >
+                {this.getTitle()}
                 <Item rounded>
                     <Input
-                        onChangeText={this.onChangeText}
+                        onChangeText={this.setValue}
                         placeholder={this.props.placeholder}
                         value={this.state.value} />
                 </Item>
@@ -54,10 +54,6 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     public getValue() {
         return this.state.value ? this.state.value : undefined;
-    }
-
-    private onChangeText(value: string) {
-        this.setState({ value });
     }
 
 }
