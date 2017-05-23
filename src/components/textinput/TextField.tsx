@@ -15,7 +15,6 @@ interface TextFieldState extends BaseState {
 
 export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
-    private instance: Input
     constructor(props: TextFieldProps) {
         super(props)
         this.state = {
@@ -41,7 +40,6 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
             <View >
                 <Item rounded>
                     <Input
-                        ref={ref => this.instance = ref}
                         onChangeText={this.onChangeText}
                         placeholder={this.props.placeholder}
                         value={this.state.value} />
@@ -60,10 +58,6 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     private onChangeText(value: string) {
         this.setState({ value });
-    }
-
-    public focus() {
-        this.instance._root.focus()
     }
 
 }

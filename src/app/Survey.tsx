@@ -112,9 +112,6 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
                 let value = component.getValue()
-                if(q === 'q1') {
-                    component.focus()
-                }
                 if (value !== undefined) {
                     answers.push({ [q]: value })
                 }
@@ -124,8 +121,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     private onPress() {
-        this.getSurveyAnswers()
-        //Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers()))
+        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers()))
     }
 
 }
