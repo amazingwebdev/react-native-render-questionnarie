@@ -15,12 +15,12 @@ interface RadioButtonState extends MultiInputComponentState {
 }
 
 export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButtonState> {
+    
     constructor(props: RadioButtonProps) {
         super(props)
         this.state = {
             selection: undefined
         }
-        this.onPress = this.onPress.bind(this)
         this.renderOptions = this.renderOptions.bind(this)
     }
 
@@ -58,15 +58,11 @@ export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButt
         let checked = this.state.selection === value
         let key = this.props.tag + "_" + value
         return (
-            <ListItem key={key} onPress={this.onPress.bind(this, value)}>
+            <ListItem key={key} onPress={this.setValue.bind(this, value)}>
                 <Radio ref={value} selected={checked} />
                 <Text>{title}</Text>
             </ListItem>
         )
-    }
-
-    private onPress(selection: string) {
-        this.setState({ selection })
     }
 
 }
