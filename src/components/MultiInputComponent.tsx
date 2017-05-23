@@ -14,7 +14,7 @@ export interface MultiInputComponentState extends BaseState {
 
 export abstract class MultiInputComponent<P extends MultiInputComponentProps, S extends MultiInputComponentState> extends BaseComponent<P, S> {
 
-    protected options: Array<Map<string, string>>
+    protected options: Array<Object>
 
     constructor(props: P) {
         super(props)
