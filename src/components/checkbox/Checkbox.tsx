@@ -25,7 +25,7 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
     public componentDidMount() {
         if (this.props.defaultValue !== undefined) {
             if (this.props.defaultValue instanceof Array) {
-                this.setValue(this.props.defaultValue)
+                this.setValues(this.props.defaultValue)
             } else {
                 console.error(`CheckInput tag:${this.props.tag}", default value is not array`)
             }
@@ -43,6 +43,12 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         )
     }
 
+    public setValue(key: string) {
+        let selection = this.state.selection
+        selection.set(key, !selection.get(key))
+        this.setState({ selection })
+    }
+
     public getValue(): any | undefined {
         let selections: string[] = []
         for (let q in this.refs) {
@@ -56,9 +62,9 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         return selections.length > 0 ? selections : undefined
     }
 
-    public setValue(selections: Array<string>) {
+    public setValues(selections: Array<string>) {
         let selection = this.state.selection
-        selections.map((sel) => {
+        selections.map(sel => {
             selection.set(sel, true)
         })
         this.setState({ selection })
@@ -69,17 +75,11 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         let checked = this.state.selection.get(value)
         let key = this.props.tag + "_" + value
         return (
-            <ListItem key={key} onPress={this.onPress.bind(this, value)}>
+            <ListItem key={key} onPress={this.setValue.bind(this, value)}>
                 <CheckBox ref={value} checked={checked} />
                 <Text>{title}</Text>
             </ListItem>
         )
-    }
-
-    private onPress(key: string) {
-        let selection = this.state.selection
-        selection.set(key, !selection.get(key))
-        this.setState({ selection })
     }
 
 }
