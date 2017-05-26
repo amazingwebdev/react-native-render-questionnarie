@@ -41,6 +41,14 @@ export abstract class BaseComponent<P extends BaseProps, S extends BaseState> ex
         }
     }
 
+    public isValid(): boolean {
+        let value = this.getValue()
+        if (this.props.required && value === undefined) {
+            return false
+        }
+        return true
+    }
+
     protected getTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
             <Header style={{ height: 'auto' }}>
