@@ -13,7 +13,7 @@ import {
     DeckSwiperInput
 } from '../components'
 
-import { Content, Text, Button, View } from 'native-base'
+import { Content, Text, Button, View, Toast } from 'native-base'
 
 import Style from './SurveyStyle'
 
@@ -25,8 +25,11 @@ interface SurveyState {
     pageNumber: number
 }
 
-
 export class Survey extends React.Component<SurveyProps, SurveyState> {
+
+    private answers: Array<Object>
+    private isFormValid: boolean
+    private validationMessages: string[]
 
     constructor(props: SurveyProps) {
         super(props)
@@ -36,13 +39,12 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         this.onPress = this.onPress.bind(this)
     }
 
-
     public render(): JSX.Element {
         let elements: JSX.Element[] = []
 
         let page = this.props.form.pages[this.state.pageNumber]
 
-        page["questions"].map((question) => {
+        page["questions"].map(question => {
             let tag = question["tag"]
             let commonProps = {
                 tag: tag,
@@ -83,8 +85,8 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
                         valueKey={question["valueKey"]}
                     />)
                     break;
-                    case "checkbox":
-                    elements.push(<Checkboxx 
+                case "checkbox":
+                    elements.push(<Checkboxx
                         {...commonProps}
                         options={question["options"]}
                         titleKey={question["titleKey"]}
@@ -97,31 +99,39 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
         })
 
-        elements.push(<View key="k2"><Button onPress={this.onPress} block><Text> Çiğdem </Text></Button></View>)
-
         return (
-            <Content key="content" style={Style}>
+            <Content key="form" style={Style}>
                 {elements}
+                <View key="save"><Button onPress={this.onPress} block><Text> Çiğdem </Text></Button></View>
             </Content>
         )
     }
 
-    public getSurveyAnswers(): Array<Object> {
-        let answers: Array<Object> = []
+    public validateForm(): void {
+        this.answers = []
+        this.validationMessages = []
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
-                let value = component.getValue()
-                if (value !== undefined) {
-                    answers.push({ [q]: value })
+                if (component.isValid()) {
+                    if (component.getValue() !== undefined) {
+                        this.answers.push({ [q]: component.getValue() })
+                    }
+                } else {
+                    this.validationMessages.push(component.props.tag)
                 }
             }
         }
-        return answers
+        this.isFormValid = !(this.validationMessages.length > 0)
     }
 
     private onPress() {
-        Alert.alert("Çiğdem", JSON.stringify(this.getSurveyAnswers()))
+        this.validateForm()
+        if (this.isFormValid) {
+            Toast.show({ text: JSON.stringify(this.answers), buttonText: "Tamam", position: "bottom", duration: 10, type: "success" })
+        } else {
+            Toast.show({ text: this.validationMessages.join("\n"), buttonText: "Tamam", position: "bottom", duration: 2, type: "warning" })
+        }
     }
 
 }
