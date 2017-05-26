@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Item, Input, Icon } from 'native-base'
+import { View, Item, Input, Icon, Toast } from 'native-base'
 
 import { BaseProps, BaseState, BaseComponent } from '../'
 
@@ -15,10 +15,16 @@ interface TextFieldState extends BaseState {
 
 export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
+    regExp : RegExp
+
     constructor(props: TextFieldProps) {
         super(props)
         this.state = {
             value: props.value
+        }
+
+        if(this.props.validation !== undefined) {
+            this.regExp = new RegExp(this.props.validation)
         }
     }
 
@@ -40,6 +46,7 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
                 {this.getTitle()}
                 <Item rounded>
                     <Input
+                        onBlur={this.onBlur.bind(this)}
                         onChangeText={this.setValue}
                         placeholder={this.props.placeholder}
                         value={this.state.value} />
@@ -54,6 +61,22 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
     public getValue() {
         return this.state.value ? this.state.value : undefined;
+    }
+
+    public isValid():boolean {
+        if(this.regExp === undefined){
+            return super.isValid()
+        }
+        if(this.state.value !== undefined){
+            return this.regExp.test(this.state.value)
+        }
+        return super.isValid()
+    }
+
+    private onBlur() {
+        if(!this.isValid()) {
+            Toast.show({text:"Girdiğiniz karakterleri kontrol ediniz.", buttonText:"TAMAM", position:"bottom", type:"warning"})
+        }
     }
 
 }
