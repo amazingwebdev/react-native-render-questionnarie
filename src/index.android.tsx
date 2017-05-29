@@ -16,28 +16,40 @@ export default class App extends Component<{}, {}> {
                     "tag": "sayfa1",
                     "questions": [
                         {
-                            "title": "Asuman",
-                            "type": "checkbox",
-                            "tag": "checkbox",
+                            "title": "Tabela adı",
+                            "type": "textinput",
+                            "validation": "^[A-z]+$",
+                            "tag": "tabela_adi",
                             "required": true,
-                            "defaultValue": [
-                                "green",
-                                "blue"
-                            ],
+                        },
+                        {
+                            "title": "Metrekare bilgisi",
+                            "type": "dropdown",
+                            "tag": "metrekare",
+                            "required": true,
+                            "defaultValue": "0-50",
                             "options": {
                                 "type": "static",
                                 "values": [
                                     {
-                                        "name": "Mavi",
-                                        "value": "blue"
+                                        "name": "0-50",
+                                        "value": "0-50"
                                     },
                                     {
-                                        "name": "Yeşil",
-                                        "value": "green"
+                                        "name": "51-100",
+                                        "value": "51-100"
                                     },
                                     {
-                                        "name": "Turuncu",
-                                        "value": "orange"
+                                        "name": "101-150",
+                                        "value": "101-150"
+                                    },
+                                    {
+                                        "name": "151-200",
+                                        "value": "151-200"
+                                    },
+                                    {
+                                        "name": "201+",
+                                        "value": "201+"
                                     }
                                 ]
                             },
@@ -45,72 +57,41 @@ export default class App extends Component<{}, {}> {
                             "valueKey": "value"
                         },
                         {
-                            "title": "ülke",
-                            "type": "dropdown",
-                            "tag": "country",
-                            "defaultValue": "2",
+                            "title": "Mağazada teşhir bulunuyor mu?",
+                            "type": "radio",
+                            "tag": "teshir",
+                            "required": true,
                             "options": {
                                 "type": "static",
                                 "values": [
                                     {
-                                        "oid": "1",
-                                        "name": "Türkiye"
+                                        "name": "Evet",
+                                        "value": "1"
                                     },
                                     {
-                                        "oid": "2",
-                                        "name": "Amsterdam"
-                                    },
-                                    {
-                                        "oid": "3",
-                                        "name": "londra"
-                                    },
-                                    {
-                                        "oid": "4",
-                                        "name": "la"
-                                    },
-                                    {
-                                        "oid": "5",
-                                        "name": "angara"
+                                        "name": "Hayır",
+                                        "value": "0"
                                     }
                                 ]
                             },
                             "titleKey": "name",
-                            "valueKey": "oid"
+                            "valueKey": "value"
                         },
                         {
-                            "type": "slider",
-                            "tag": "q2",
-                            "title": "Slider sorusu",
-                            "defaultValue": 50,
-                            "min": 0,
-                            "max": 100,
-                            "step": 6
-                        },
-                        {
-                            "title": "Tabela adı",
-                            "type": "textinput",
-                            "defaultValue": "Çiğdem",
-                            "tag": "q1",
-                            "required": true,
-                            "photoRequired": true
-                        },
-                        {
-                            "title": "Segmentasyon",
+                            "title": "Alkollü içecekler için diğer alan var mı ?",
                             "type": "radio",
-                            "tag": "segmentation",
+                            "tag": "alkollu_icecek",
                             "required": true,
-                            "photoRequired": true,
-                            "defaultValue": "val2",
                             "options": {
                                 "type": "static",
                                 "values": [
                                     {
-                                        "name": "kod",
-                                        "value": "val"
+                                        "name": "Evet",
+                                        "value": "1"
                                     },
                                     {
-                                        "name": "kod2",
-                                        "value": "val2"
+                                        "name": "Hayır",
+                                        "value": "0"
                                     }
                                 ]
                             },
