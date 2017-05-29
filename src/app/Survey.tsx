@@ -9,8 +9,7 @@ import {
     QuestionType,
     Checkboxx,
     RadioButton,
-    Dropdown,
-    DeckSwiperInput
+    Dropdown
 } from '../components'
 
 import { Content, Text, Button, View, Toast } from 'native-base'
