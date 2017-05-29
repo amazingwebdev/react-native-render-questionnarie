@@ -1,4 +1,4 @@
-package com.reactnativets;
+package com.tvba;
 
 import android.app.Application;
 
