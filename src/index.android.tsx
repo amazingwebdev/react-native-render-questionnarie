@@ -55,7 +55,13 @@ export default class App extends Component<{}, {}> {
                             },
                             "titleKey": "name",
                             "valueKey": "value"
-                        },
+                        }
+                    ]
+                },
+                {
+                    "name": "sayfa2",
+                    "tag": "sayfa2",
+                    "questions": [
                         {
                             "title": "Mağazada teşhir bulunuyor mu?",
                             "type": "radio",
@@ -99,7 +105,55 @@ export default class App extends Component<{}, {}> {
                             "valueKey": "value"
                         }
                     ]
+                },
+                {
+                    "name": "sayfa3",
+                    "tag": "sayfa3",
+                    "questions": [
+                        {
+                            "title": "Müşteri Telefon Numarası",
+                            "type": "textinput",
+                            "validation": "^[A-z]+$",
+                            "tag": "mus_tel",
+                            "required": true,
+                        },
+                        {
+                            "title": "Dükkan bilgisi",
+                            "type": "dropdown",
+                            "tag": "metrekare",
+                            "required": true,
+                            "defaultValue": "0-50",
+                            "options": {
+                                "type": "static",
+                                "values": [
+                                    {
+                                        "name": "0-50",
+                                        "value": "0-50"
+                                    },
+                                    {
+                                        "name": "51-100",
+                                        "value": "51-100"
+                                    },
+                                    {
+                                        "name": "101-150",
+                                        "value": "101-150"
+                                    },
+                                    {
+                                        "name": "151-200",
+                                        "value": "151-200"
+                                    },
+                                    {
+                                        "name": "201+",
+                                        "value": "201+"
+                                    }
+                                ]
+                            },
+                            "titleKey": "name",
+                            "valueKey": "value"
+                        }
+                    ]
                 }
+
             ]
         }
         return (
