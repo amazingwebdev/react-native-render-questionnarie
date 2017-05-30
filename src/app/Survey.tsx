@@ -26,9 +26,9 @@ interface SurveyState {
 
 export class Survey extends React.Component<SurveyProps, SurveyState> {
 
-    private answers: Array<Object>
+    private pageAnswers: Array<Object>
+    private formAnswer: Object
     private isFormValid: boolean
-    //private isPageValid: boolean
     private validationMessages: string[]
     private pageCount: number
 
@@ -37,14 +37,17 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         this.state = {
             pageNumber: 0
         }
+        this.formAnswer = new Map<number,Object[]>()
         this.pageCount = props.form.pages.length
         this.onPress = this.onPress.bind(this)
         this.nextPage = this.nextPage.bind(this)
         this.prevPage = this.prevPage.bind(this)
+        this.getPageAnswer = this.getPageAnswer.bind(this)
     }
 
     public render(): JSX.Element {
         let elements: JSX.Element[] = []
+        let controlButtons : JSX.Element[] = []
 
         let page = this.props.form.pages[this.state.pageNumber]
 
@@ -104,33 +107,29 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         })
 
         if (this.state.pageNumber == 0 && this.pageCount !==1){
-            elements.push(<View key="next"><Button style={{margin:5}} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
+            controlButtons.push(<View key="next"><Button style={{margin:5, alignContent:'center'}} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
         }else if(this.state.pageNumber === this.pageCount-1){
-            elements.push(<View key="prev"><Button style={{margin:5}} onPress={this.prevPage} block><Text> Previous            </Text></Button></View>)
+            controlButtons.push(<View key="prev"><Button style={{margin:5, alignContent:'center'}} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
+            controlButtons.push( <View key="save"><Button style={{margin:5, alignContent:'center'}} onPress={this.onPress} block><Text> Save </Text></Button></View>)
         }else {
-            elements.push(<View key="prev"><Button style={{margin:5}} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
-            elements.push(<View key="next"><Button style={{margin:5}} onPress={this.nextPage} block><Text> Next</Text></Button></View>)
+            controlButtons.push(<View key="prev"><Button style={{margin:5, alignContent:'center'}} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
+            controlButtons.push(<View key="next"><Button style={{margin:5, alignContent:'center'}} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
         }
 
         return (
             <Content key="form" style={Style}>
                 {elements}
-                <View key="save"><Button style={{margin:5}} onPress={this.onPress} block><Text> Çiğdem </Text></Button></View>
+                {controlButtons}       
             </Content>
         )
     }
 
-    public validateForm(): void {
-        this.answers = []
+    public validatePage(): void {
         this.validationMessages = []
         for (let q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
-                if (component.isValid()) {
-                    if (component.getValue() !== undefined) {
-                        this.answers.push({ [q]: component.getValue() })
-                    }
-                } else {
+                if (!component.isValid()) {
                     this.validationMessages.push(component.props.tag)
                 }
             }
@@ -138,11 +137,29 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         this.isFormValid = !(this.validationMessages.length > 0)
     }
 
+    public getPageAnswer(){
+        this.pageAnswers = []
+        for (let q in this.refs){
+            if(this.refs.hasOwnProperty(q)){
+                 let component = this.refs[q] as BaseComponent<BaseProps, BaseState>
+                 if(component.isValid()){
+                     if(component.getValue() !== undefined){{
+                         this.pageAnswers.push({[q]:component.getValue()})
+                     }}
+                 }
+            }
+
+        }
+    }
+
     private nextPage(){
-        this.validateForm()
-        if(this.isFormValid){
-            let pageNum = this.state.pageNumber + 1
-            this.setState({pageNumber:pageNum})
+        this.getPageAnswer()
+        this.validatePage()
+        if(this.isFormValid ){
+            let pageNum = this.state.pageNumber
+            this.formAnswer[pageNum] = this.pageAnswers
+            let pageNumber = this.state.pageNumber + 1
+            this.setState({pageNumber})
         }else{
             Toast.show({ text: "Tüm soruların cevapladığınıza emin olunuz.", buttonText: "Tamam", position: "bottom",  type: "danger" })
         }
@@ -151,15 +168,21 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     private prevPage(){
-        let pageNum = this.state.pageNumber - 1
-        this.setState({pageNumber:pageNum})
+        this.getPageAnswer()
+        let pageNum = this.state.pageNumber
+        this.formAnswer[pageNum] = this.pageAnswers
+        let pageNumber = this.state.pageNumber - 1
+        this.setState({pageNumber})
 
     }
 
     private onPress() {
-        this.validateForm()
+        this.getPageAnswer()
+        this.validatePage()
         if (this.isFormValid) {
-            Toast.show({ text: JSON.stringify(this.answers), buttonText: "Tamam", position: "bottom",  type: "success" })
+            let pageNum = this.state.pageNumber
+            this.formAnswer[pageNum] = this.pageAnswers
+            Toast.show({ text: JSON.stringify(this.formAnswer), buttonText: "Tamam", position: "bottom",  type: "success" })
         } else {
             Toast.show({ text: this.validationMessages.join("\n"), buttonText: "Tamam", position: "bottom", duration: 12, type: "warning" })
         }
