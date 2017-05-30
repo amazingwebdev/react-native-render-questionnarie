@@ -15,16 +15,16 @@ interface TextFieldState extends BaseState {
 
 export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
 
-    regExp : RegExp
+    private regExp: RegExp
 
     constructor(props: TextFieldProps) {
         super(props)
         this.state = {
             value: props.value,
-            display: true
+            display: true,
         }
 
-        if(this.props.validation !== undefined) {
+        if (this.props.validation !== undefined) {
             this.regExp = new RegExp(this.props.validation)
         }
     }
@@ -34,10 +34,10 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
             if (typeof this.props.defaultValue === 'string') {
                 this.setValue(this.props.defaultValue)
             } else {
-                console.error(`TextInput tag:${this.props.tag}", default value is not string`)
+                console.error(`TextInput tag:${this.props.tag}', default value is not string`)
             }
         } else {
-            console.debug(`TextInput tag:${this.props.tag}", no default value`)
+            console.debug(`TextInput tag:${this.props.tag}', no default value`)
         }
     }
 
@@ -49,7 +49,7 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
                     onChangeText={this.setValue}
                     placeholder={this.props.placeholder}
                     value={this.state.value} />
-            </Item>
+            </Item>,
         )
     }
 
@@ -58,22 +58,22 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
     }
 
     public getValue() {
-        return this.state.value ? this.state.value : undefined;
+        return this.state.value ? this.state.value : undefined
     }
 
-    public isValid():boolean {
-        if(this.regExp === undefined){
+    public isValid(): boolean {
+        if (this.regExp === undefined) {
             return super.isValid()
         }
-        if(this.state.value !== undefined){
+        if (this.state.value !== undefined) {
             return this.regExp.test(this.state.value)
         }
         return super.isValid()
     }
 
     private onBlur() {
-        if(!this.isValid()) {
-            Toast.show({text:"Girdiğiniz karakterleri kontrol ediniz.", buttonText:"TAMAM", position:"bottom", type:"warning"})
+        if (!this.isValid()) {
+            Toast.show({ text: 'Girdiğiniz karakterleri kontrol ediniz.', buttonText: 'TAMAM', position: 'bottom', type: 'warning' })
         }
     }
 

@@ -2,94 +2,94 @@ import React from 'react'
 import { View, Header, Text } from 'native-base'
 
 export enum QuestionType {
-    Textfield, Slider, Checkbox, RadioButton, Dropdown
+	Textfield, Slider, Checkbox, RadioButton, Dropdown,
 }
 
 export interface BaseProps {
-    tag: string
-    required?: boolean
-    title?: string
-    trackType?: string
-    smartCode?: string
-    startDate?: number
-    endDate?: number
-    oneTime?: boolean
-    newLine?: boolean
-    visible?: boolean
-    visibleIf?: string
-    defaultValue?: string | Array<string>
+	tag: string
+	required?: boolean
+	title?: string
+	trackType?: string
+	smartCode?: string
+	startDate?: number
+	endDate?: number
+	oneTime?: boolean
+	newLine?: boolean
+	visible?: boolean
+	visibleIf?: string
+	defaultValue?: string | string[]
 }
 
 export interface BaseState {
-    display?: boolean
+	display?: boolean
 }
 
 export abstract class BaseComponent<P extends BaseProps, S extends BaseState> extends React.Component<P, S>  {
 
-    protected ruleExecutors: Array<Function>
+	protected ruleExecutors: (() => void)[]
 
-    public abstract getValue(): any | undefined
+	constructor(props: P) {
+		super(props)
+		this.ruleExecutors = []
+		this.setValue = this.setValue.bind(this)
+	}
 
-    public abstract setValue(value: any)
+	public abstract getValue(): any | undefined
 
-    constructor(props: P) {
-        super(props)
-        this.ruleExecutors = new Array<Function>()
-        this.setValue = this.setValue.bind(this)
-    }
+	public abstract setValue(value: any)
 
-    public componentWillMount() {
-        if (this.props.tag === undefined || this.props.tag === '') {
-            console.error(`${this.constructor.name} no proper tag`)
-        }
-    }
+	public componentWillMount() {
+		if (this.props.tag === undefined || this.props.tag === '') {
+			console.error(`${this.constructor.name} no proper tag`)
+		}
+	}
 
-    public componentDidUpdate() {
-        this.executeRuleListeners()
-    }
+	public componentDidUpdate() {
+		this.executeRuleListeners()
+	}
 
-    public render(...components: any[]): JSX.Element {
-        if (this.state.display) {
-            return (
-                <View>
-                    {this.getTitle()}
-                    {components}
-                </View>
-            )
-        }
-        return <View />
-    }
+	public render(...components: any[]): JSX.Element {
+		if (this.state.display) {
+			return (
+				<View>
+					{this.getTitle()}
+					{components}
+				</View>
+			)
+		}
+		return <View />
+	}
 
-    public isValid(): boolean {
-        let value = this.getValue()
-        if (this.props.required && value === undefined) {
-            return false
-        }
-        return true
-    }
+	public isValid(): boolean {
+		const value = this.getValue()
+		if (this.props.required && value === undefined) {
+			return false
+		}
+		return true
+	}
 
-    public addRuleExecutor(ruleExecutor: Function): void {
-        this.ruleExecutors.push(ruleExecutor)
-    }
+	public addRuleExecutor(ruleExecutor: () => void): void {
+		this.ruleExecutors.push(ruleExecutor)
+	}
 
-    private executeRuleListeners(): void {
-        this.ruleExecutors.map(ruleExecutor => ruleExecutor.call(null, this.getValue()))
-    }
+	public show(): void {
+		this.setState({ display: true })
+	}
 
-    public show(): void {
-        this.setState({ display: true })
-    }
+	public hide(): void {
+		this.setState({ display: false })
+	}
 
-    public hide(): void {
-        this.setState({ display: false })
-    }
+	protected getTitle(): JSX.Element | undefined {
+		return (this.props.title === undefined ? undefined :
+			<Header style={{ height: 'auto' }}>
+				<Text>{this.props.title}</Text>
+			</Header>
+		)
+	}
 
-    protected getTitle(): JSX.Element | undefined {
-        return (this.props.title === undefined ? undefined :
-            <Header style={{ height: 'auto' }}>
-                <Text>{this.props.title}</Text>
-            </Header>
-        )
-    }
+	private executeRuleListeners(): void {
+		this.ruleExecutors.map(ruleExecutor => ruleExecutor.call(null, this.getValue()))
+	}
 
 }

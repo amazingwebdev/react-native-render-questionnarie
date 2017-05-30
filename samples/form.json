@@ -1,0 +1,73 @@
+{
+    "type": "nstar",
+    "pages": [
+        {
+            "name": "sayfa1",
+            "tag": "sayfa1",
+            "questions": [
+                {
+                    "title": "Tabela adı",
+                    "type": "textinput",
+                    "tag": "tabela_adi",
+                    "required": true
+                },
+                {
+                    "title": "Metrekare bilgisi",
+                    "type": "dropdown",
+                    "tag": "metrekare",
+                    "required": true,
+                    "defaultValue": "0-50",
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "0-50",
+                                "value": "0-50"
+                            },
+                            {
+                                "name": "51-100",
+                                "value": "51-100"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value",
+                    "visibleIf": "tabela_adi == Çiğdem"
+                },
+                {
+                    "title": "Mağazada teşhir bulunuyor mu?",
+                    "type": "checkbox",
+                    "tag": "teshir",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Evet",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Hayır",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                }
+            ]
+        },
+        {
+            "name": "sayfa1",
+            "tag": "sayfa1",
+            "questions": [
+                {
+                    "title": "Müşteri Ünvanı",
+                    "type": "textinput",
+                    "tag": "mus_unvan",
+                    "required": true
+                }
+            ]
+        }
+    ]
+}
