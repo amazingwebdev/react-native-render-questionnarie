@@ -1,0 +1,42 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint-config-airbnb"
+    ],
+    "jsRules": {},
+    "rules": {
+        "indent": [
+            "tab"
+        ],
+        "ter-indent": [
+            false
+        ],
+        "semicolon": [
+            true,
+            "never"
+        ],
+        "object-literal-sort-keys": false,
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double"
+        ],
+        "ordered-imports": [
+            false
+        ],
+        "interface-name": [
+            false
+        ],
+        "max-line-length": [
+            140
+        ],
+        "no-console": [
+            false
+        ],
+        "no-empty-interface": false,
+        "no-var-requires": false,
+        "import-name": false,
+        "no-consecutive-blank-lines": [true, 0]
+    },
+    "rulesDirectory": []
+}

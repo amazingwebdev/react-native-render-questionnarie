@@ -1,3 +1,3 @@
 export default {
-    "top": 20
+    top: 20,
 }

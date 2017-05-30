@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, CheckBox, ListItem, Text } from 'native-base';
+import { View, CheckBox, ListItem, Text } from 'native-base'
 
 import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
 
@@ -13,11 +13,12 @@ interface CheckBoxState extends MultiInputComponentState {
 
 export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState> {
 
-    constructor(props: CheckBoxProps, Optionsource) {
+    constructor(props: CheckBoxProps) {
         super(props)
-        let selection: Map<string, boolean> = new Map<string, boolean>()
+        const selection: Map<string, boolean> = new Map<string, boolean>()
         this.state = {
-            selection
+            selection,
+            display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
@@ -35,26 +36,21 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
     }
 
     public render(): JSX.Element {
-        return (
-            <View>
-                {this.getTitle()}
-                {this.options.map(this.renderOptions)}
-            </View>
-        )
+        return super.render(this.options.map(this.renderOptions))
     }
 
     public setValue(key: string) {
-        let selection = this.state.selection
+        const selection = this.state.selection
         selection.set(key, !selection.get(key))
         this.setState({ selection })
     }
 
     public getValue(): any | undefined {
-        let selections: string[] = []
-        for (let q in this.refs) {
+        const selections: string[] = []
+        for (const q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
-                let component = this.refs[q] as Checkboxx
-                if (this.refs[q]["props"]["checked"]) {
+                const component: CheckBox = this.refs[q] as Checkboxx
+                if (component.props.checked) {
                     selections.push(q)
                 }
             }
@@ -62,18 +58,18 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         return selections.length > 0 ? selections : undefined
     }
 
-    public setValues(selections: Array<string>) {
-        let selection = this.state.selection
-        selections.map(sel => {
+    public setValues(selections: string[]) {
+        const selection = this.state.selection
+        selections.map((sel) => {
             selection.set(sel, true)
         })
         this.setState({ selection })
     }
 
     private renderOptions(option): JSX.Element {
-        let [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
-        let checked = this.state.selection.get(value)
-        let key = this.props.tag + "_" + value
+        const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
+        const checked = this.state.selection.get(value)
+        const key = this.props.tag + '_' + value
         return (
             <ListItem key={key} onPress={this.setValue.bind(this, value)}>
                 <CheckBox ref={value} checked={checked} />
