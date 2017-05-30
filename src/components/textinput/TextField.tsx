@@ -20,7 +20,8 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
     constructor(props: TextFieldProps) {
         super(props)
         this.state = {
-            value: props.value
+            value: props.value,
+            display: true
         }
 
         if(this.props.validation !== undefined) {
@@ -41,17 +42,14 @@ export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
     }
 
     public render(): JSX.Element {
-        return (
-            <View >
-                {this.getTitle()}
-                <Item rounded>
-                    <Input
-                        onBlur={this.onBlur.bind(this)}
-                        onChangeText={this.setValue}
-                        placeholder={this.props.placeholder}
-                        value={this.state.value} />
-                </Item>
-            </View>
+        return super.render(
+            <Item rounded>
+                <Input
+                    onBlur={this.onBlur.bind(this)}
+                    onChangeText={this.setValue}
+                    placeholder={this.props.placeholder}
+                    value={this.state.value} />
+            </Item>
         )
     }
 

@@ -13,11 +13,12 @@ interface CheckBoxState extends MultiInputComponentState {
 
 export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState> {
 
-    constructor(props: CheckBoxProps, Optionsource) {
+    constructor(props: CheckBoxProps) {
         super(props)
         let selection: Map<string, boolean> = new Map<string, boolean>()
         this.state = {
-            selection
+            selection,
+            display: true
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
@@ -35,12 +36,7 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
     }
 
     public render(): JSX.Element {
-        return (
-            <View>
-                {this.getTitle()}
-                {this.options.map(this.renderOptions)}
-            </View>
-        )
+        return super.render(this.options.map(this.renderOptions))
     }
 
     public setValue(key: string) {

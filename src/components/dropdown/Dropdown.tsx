@@ -17,6 +17,7 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
         super(props)
         this.state = {
             selection: undefined,
+            display: true
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
@@ -42,17 +43,14 @@ export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState>{
     }
 
     public render(): JSX.Element {
-        return (
-            <View>
-                {this.getTitle()}
-                <Picker
-                    ref={this.props.tag}
-                    key={this.props.tag}
-                    selectedValue={this.state.selection}
-                    onValueChange={this.setValue}>
-                    {this.options.map(this.renderOptions)}
-                </Picker>
-            </View>
+        return super.render(
+            <Picker
+                ref={this.props.tag}
+                key={this.props.tag}
+                selectedValue={this.state.selection}
+                onValueChange={this.setValue}>
+                {this.options.map(this.renderOptions)}
+            </Picker>
         )
     }
 

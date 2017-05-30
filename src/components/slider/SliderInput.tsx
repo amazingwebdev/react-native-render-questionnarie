@@ -20,8 +20,10 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
 
     constructor(props: SliderProps) {
         super(props)
-        this.state = { value: props.value || 0 }
-
+        this.state = { 
+            value: props.value || 0,
+            display: true
+        }
         this.onValueChange = this.onValueChange.bind(this)
     }
 
@@ -38,20 +40,17 @@ export class SliderInput extends BaseComponent<SliderProps, SliderState> {
     }
 
     public render(): JSX.Element {
-        return (
-            <View>
-                {this.getTitle()}
-                <Slider
-                    minimumValue={this.props.min}
-                    maximumValue={this.props.max}
-                    step={this.props.step}
-                    value={this.state.value}
-                    onValueChange={this.onValueChange}
-                />
-                <Text style={{ textAlign: 'center' }}>
-                    {this.state.value}
-                </Text>
-            </View>
+        return super.render(
+            <Slider
+                minimumValue={this.props.min}
+                maximumValue={this.props.max}
+                step={this.props.step}
+                value={this.state.value}
+                onValueChange={this.onValueChange}
+            />,
+            <Text style={{ textAlign: 'center' }}>
+                {this.state.value}
+            </Text>
         )
     }
 

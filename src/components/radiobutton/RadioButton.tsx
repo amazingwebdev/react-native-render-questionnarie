@@ -19,7 +19,8 @@ export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButt
     constructor(props: RadioButtonProps) {
         super(props)
         this.state = {
-            selection: undefined
+            selection: undefined,
+            display: true
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
@@ -37,12 +38,7 @@ export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButt
     }
 
     public render(): JSX.Element {
-        return (
-            <View>
-                {this.getTitle()}
-                {this.options.map(this.renderOptions)}
-            </View>
-        )
+        return super.render(this.options.map(this.renderOptions))
     }
 
     public setValue(selection: string) {
