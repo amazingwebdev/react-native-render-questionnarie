@@ -102,19 +102,19 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
         })
 
-        if (this.state.pageNumber == 0 && this.pageCount !==1){
-            elements.push(<View key="next"><Button style={{margin:5}} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
-        }else if(this.state.pageNumber === this.pageCount-1){
-            elements.push(<View key="prev"><Button style={{margin:5}} onPress={this.prevPage} block><Text> Previous            </Text></Button></View>)
-        }else {
-            elements.push(<View key="prev"><Button style={{margin:5}} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
-            elements.push(<View key="next"><Button style={{margin:5}} onPress={this.nextPage} block><Text> Next</Text></Button></View>)
+        if (this.state.pageNumber === 0 && this.pageCount !== 1) {
+            elements.push(<View key="next"><Button style={{ margin: 5 }} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
+        } else if (this.state.pageNumber === this.pageCount - 1) {
+            elements.push(<View key="prev"><Button style={{ margin: 5 }} onPress={this.prevPage} block><Text> Previous            </Text></Button></View>)
+        } else {
+            elements.push(<View key="prev"><Button style={{ margin: 5 }} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
+            elements.push(<View key="next"><Button style={{ margin: 5 }} onPress={this.nextPage} block><Text> Next</Text></Button></View>)
         }
 
         return (
             <Content key="form" style={Style}>
                 {elements}
-                <View key="save"><Button style={{margin:5}} onPress={this.onPress} block><Text> Çiğdem </Text></Button></View>
+                <View key="save"><Button style={{ margin: 5 }} onPress={this.onPress} block><Text> Çiğdem </Text></Button></View>
             </Content>
         )
     }
@@ -137,29 +137,27 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         this.isFormValid = !(this.validationMessages.length > 0)
     }
 
-    private nextPage(){
+    private nextPage() {
         this.validateForm()
-        if(this.isFormValid){
-            let pageNum = this.state.pageNumber + 1
-            this.setState({pageNumber:pageNum})
-        }else{
-            Toast.show({ text: "Tüm soruların cevapladığınıza emin olunuz.", buttonText: "Tamam", position: "bottom",  type: "danger" })
+        if (this.isFormValid) {
+            const pageNum = this.state.pageNumber + 1
+            this.setState({ pageNumber: pageNum })
+        } else {
+            Toast.show({ text: 'Tüm soruların cevapladığınıza emin olunuz.', buttonText: 'Tamam', position: 'bottom', type: 'danger' })
         }
-        
-
     }
 
-    private prevPage(){
-        let pageNum = this.state.pageNumber - 1
-        this.setState({pageNumber:pageNum})
+    private prevPage() {
+        const pageNum = this.state.pageNumber - 1
+        this.setState({ pageNumber: pageNum })
     }
 
     private onPress() {
         this.validateForm()
         if (this.isFormValid) {
-            Toast.show({ text: JSON.stringify(this.answers), buttonText: "Tamam", position: "bottom",  type: "success" })
+            Toast.show({ text: JSON.stringify(this.answers), buttonText: 'Tamam', position: 'bottom', type: 'success' })
         } else {
-            Toast.show({ text: this.validationMessages.join("\n"), buttonText: "Tamam", position: "bottom", duration: 12, type: "warning" })
+            Toast.show({ text: this.validationMessages.join('\n'), buttonText: 'Tamam', position: 'bottom', duration: 12, type: 'warning' })
         }
     }
 
