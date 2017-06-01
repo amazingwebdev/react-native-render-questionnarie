@@ -12,7 +12,20 @@ import {
     Dropdown,
 } from '../components'
 
-import { Content, Text, Button, View, Toast } from 'native-base'
+import {
+    Container,
+    Content,
+    Text,
+    Button,
+    View,
+    Toast,
+    Icon,
+    Header,
+    Left,
+    Right,
+    Title,
+    Body,
+} from 'native-base'
 
 import Style from './SurveyStyle'
 
@@ -28,8 +41,10 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
     private answers: {}
     private pageCount: number
+    private questionCount: number
+    private brief: string
 
-    constructor(props: SurveyProps) {
+    public constructor(props: SurveyProps) {
         super(props)
         this.state = {
             pageNumber: 0,
@@ -40,6 +55,9 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         this.prevPage = this.prevPage.bind(this)
         this.nextPage = this.nextPage.bind(this)
         this.onSave = this.onSave.bind(this)
+
+        this.countQuestions()
+        this.prepareBriefMessage()
     }
 
     public componentDidUpdate() {
@@ -58,29 +76,51 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     public render(): JSX.Element {
-        const controlButtons: JSX.Element[] = []
-
-        if (this.state.pageNumber === 0 && this.pageCount !== 1) {
-            controlButtons.push(<View key="next"><Button style={{ margin: 5, alignContent: 'center' }} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
-        } else if (this.state.pageNumber === this.pageCount - 1) {
-            controlButtons.push(<View key="prev"><Button style={{ margin: 5, alignContent: 'center' }} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
-            controlButtons.push(<View key="save"><Button style={{ margin: 5, alignContent: 'center' }} onPress={this.onSave} block><Text> Save </Text></Button></View>)
-        } else {
-            controlButtons.push(<View key="prev"><Button style={{ margin: 5, alignContent: 'center' }} onPress={this.prevPage} block><Text> Previous </Text></Button></View>)
-            controlButtons.push(<View key="next"><Button style={{ margin: 5, alignContent: 'center' }} onPress={this.nextPage} block><Text> Next </Text></Button></View>)
-        }
-
         const page = this.props.form.pages[this.state.pageNumber]
+        const questions: JSX.Element[] = page.questions.map(question => this.createQuestionComponent(question))
 
-        return (
-            <Content key="form" style={Style}>
-                {
-                    page.questions.map((question) => {
-                        return this.createQuestionComponent(question)
-                    })
-                }
-                {controlButtons}
-            </Content>
+        return ( // todo disabled button
+            <Container>
+                <Header>
+                    {!(this.state.pageNumber === 0 && this.pageCount !== 1) &&
+                        <Left>
+                            <Button onPress={this.prevPage} transparent>
+                                <Icon name="arrow-back" />
+                                <Text> Previous </Text>
+                            </Button>
+                        </Left>
+                    }
+                    {this.state.pageNumber === 0 && this.pageCount !== 1 &&
+                        <Left>
+                            <Button transparent onPress={() => Alert.alert(this.brief)}>
+                                <Icon name="clipboard" />
+                            </Button>
+                        </Left>
+                    }
+                    <Body>
+                        <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
+                    </Body>
+                    {!(this.state.pageNumber === this.pageCount - 1) &&
+                        <Right>
+                            <Button onPress={this.nextPage} transparent>
+                                <Text> Next </Text>
+                                <Icon name="arrow-forward" />
+                            </Button>
+                        </Right>
+                    }
+                    {this.state.pageNumber === this.pageCount - 1 &&
+                        <Right>
+                            <Button onPress={this.onSave} transparent>
+                                <Text> Save </Text>
+                                <Icon name="done-all" />
+                            </Button>
+                        </Right>
+                    }
+                </Header>
+                <Content key="form">
+                    {questions}
+                </Content>
+            </Container>
         )
     }
 
@@ -184,6 +224,21 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             default:
                 throw new Error('no such question type')
         }
+    }
+
+    private countQuestions() {
+        let questionCount = 0
+        this.props.form.pages.map((page) => {
+            questionCount += page.questions.length // grid içindeki soruları da saymak gerekir.
+        })
+        this.questionCount = questionCount
+    }
+
+    private prepareBriefMessage(): void {
+        const brief: string[] = []
+        brief.push(`Bu soru formu ${this.pageCount} sayfadan`)
+        brief.push(`${this.questionCount} sorudan oluşmaktadır.`)
+        this.brief = brief.join('\n')
     }
 
 }

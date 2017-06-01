@@ -2,42 +2,40 @@
     "type": "nstar",
     "pages": [
         {
-            "name": "sayfa1",
-            "tag": "sayfa1",
+            "name": "JTI Stand",
+            "tag": "jti_stand",
             "questions": [
                 {
-                    "title": "Tabela adı",
-                    "type": "textinput",
-                    "tag": "tabela_adi",
-                    "required": true
-                },
-                {
-                    "title": "Metrekare bilgisi",
-                    "type": "dropdown",
-                    "tag": "metrekare",
+                    "title": "Nokta'nın TAPDK belgesi var mı?",
+                    "type": "radio",
+                    "tag": "TP_VY",
                     "required": true,
-                    "defaultValue": "0-50",
                     "options": {
                         "type": "static",
                         "values": [
                             {
-                                "name": "0-50",
-                                "value": "0-50"
+                                "name": "Var",
+                                "value": "1"
                             },
                             {
-                                "name": "51-100",
-                                "value": "51-100"
+                                "name": "Yok",
+                                "value": "0"
                             }
                         ]
                     },
                     "titleKey": "name",
-                    "valueKey": "value",
-                    "visibleIf": "tabela_adi == Çiğdem"
+                    "valueKey": "value"
                 },
                 {
-                    "title": "Mağazada teşhir bulunuyor mu?",
-                    "type": "checkbox",
-                    "tag": "teshir",
+                    "title": "Nokta'nın TAPDK numarasını giriniz.",
+                    "type": "textinput",
+                    "tag": "TP_NO",
+                    "required": true
+                },
+                {
+                    "title": "Ruhsat almayı düşünür müsünüz?",
+                    "type": "radio",
+                    "tag": "TP_EH",
                     "required": true,
                     "options": {
                         "type": "static",
@@ -54,18 +52,406 @@
                     },
                     "titleKey": "name",
                     "valueKey": "value"
+                },
+                {
+                    "title": "Nokta'da sigara satışı var mı?",
+                    "type": "radio",
+                    "tag": "SG_VY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "JTI ürünü var mı?",
+                    "type": "radio",
+                    "tag": "JTI_VY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "JTI standı var mı?",
+                    "type": "radio",
+                    "tag": "JTI_S_VY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "JTI Stand büyüklüğünü seçiniz.",
+                    "type": "dropdown",
+                    "tag": "JTI_S_BY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Small",
+                                "value": "S"
+                            },
+                            {
+                                "name": "Medium",
+                                "value": "M"
+                            },
+                            {
+                                "name": "Large",
+                                "value": "L"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "JTI SKU Sayısı",
+                    "type": "textinput",
+                    "tag": "JTI_SKU",
+                    "required": true
+                },
+                {
+                    "title": "JTI Haftalık Satış (Karton)",
+                    "type": "textinput",
+                    "tag": "JTI_STS",
+                    "required": true
+                },
+                {
+                    "title": "JTI ürünlerini nereden alıyor?",
+                    "type": "checkbox",
+                    "tag": "JTI_DST",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Distribütor",
+                                "value": "distributor"
+                            },
+                            {
+                                "name": "Metro",
+                                "value": "metro"
+                            },
+                            {
+                                "name": "BTT",
+                                "value": "btt"
+                            },
+                            {
+                                "name": "Toptancı",
+                                "value": "toptancı"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "JTI standı doluluk oranı nedir?",
+                    "type": "slider",
+                    "tag": "JTI_DST_125",
+                    "required": true,
+                    "min": 0,
+                    "max": 100,
+                    "step": 5
+                },
+                {
+                    "title": "Toptancı adını yazınız.",
+                    "type": "textinput",
+                    "tag": "JTI_DST_51",
+                    "required": true
+                },
+                {
+                    "title": "JTI ürünleri satmama nedenleriniz nelerdir?",
+                    "type": "checkbox",
+                    "tag": "JTI_NDN",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Talep yok",
+                                "value": "talep_yok"
+                            },
+                            {
+                                "name": "Daha önce yetkili gelmedi",
+                                "value": "yetkili_gelmedi"
+                            },
+                            {
+                                "name": "Fazla marka satmak istemiyorum",
+                                "value": "satmak_istemiyorum"
+                            },
+                            {
+                                "name": "Yeni dolap için yer yok",
+                                "value": "yer_yok"
+                            },
+                            {
+                                "name": "Standım yok",
+                                "value": "stand_yok"
+                            },
+                            {
+                                "name": "Satış Temsilcisi / Distribütor ile anlaşmazlık",
+                                "value": "anlasmazlık"
+                            },
+                            {
+                                "name": "Diğer",
+                                "value": "diger"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
                 }
             ]
         },
         {
-            "name": "sayfa1",
-            "tag": "sayfa1",
+            "name": "Potansiyel",
+            "tag": "potansiyel_soruları",
             "questions": [
                 {
-                    "title": "Müşteri Ünvanı",
-                    "type": "textinput",
-                    "tag": "mus_unvan",
-                    "required": true
+                    "title": "Noktada alkol satışı var mı?",
+                    "type": "radio",
+                    "tag": "AL_VY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "dropdown",
+                    "tag": "BEV_KS",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "1",
+                                "value": "1"
+                            },
+                            {
+                                "name": "2",
+                                "value": "2"
+                            },
+                            {
+                                "name": "3",
+                                "value": "3"
+                            },
+                            {
+                                "name": "4-5",
+                                "value": "4-5"
+                            },
+                            {
+                                "name": "6-8",
+                                "value": "6-8"
+                            },
+                            {
+                                "name": "8+",
+                                "value": "8+"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                }
+            ]
+        },
+        {
+            "name": "Fiziki Durum",
+            "tag": "fiziki_durum_soruları",
+            "questions": [
+                {
+                    "title": "Nokta büyüklüğünü belirtiniz",
+                    "type": "dropdown",
+                    "tag": "NK_MK",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "0-50 m2",
+                                "value": "0-50 m2"
+                            },
+                            {
+                                "name": "51-100 m2",
+                                "value": "51-100 m2"
+                            },
+                            {
+                                "name": "101-150 m2",
+                                "value": "101-150 m2"
+                            },
+                            {
+                                "name": "151-200 m2",
+                                "value": "151-200 m2"
+                            },
+                            {
+                                "name": "201-300 m2",
+                                "value": "201-300 m2"
+                            },
+                            {
+                                "name": "301-400 m2",
+                                "value": "301-400 m2"
+                            },
+                            {
+                                "name": "401+ m2",
+                                "value": "401+ m2"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta konumu ile ilgili kriteri giriniz",
+                    "type": "dropdown",
+                    "tag": "NK_KN",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Cadde üzerinde",
+                                "value": "Cadde üzerinde"
+                            },
+                            {
+                                "name": "Sokakta",
+                                "value": "Sokakta"
+                            },
+                            {
+                                "name": "AVM içerisinde",
+                                "value": "AVM içerisinde"
+                            },
+                            {
+                                "name": "Pasaj içerisinde",
+                                "value": "Pasaj içerisinde"
+                            },
+                            {
+                                "name": "Yürüyüş yolunda",
+                                "value": "Yürüyüş yolunda"
+                            },
+                            {
+                                "name": "Otoyol kenarı",
+                                "value": "Otoyol kenarı"
+                            },
+                            {
+                                "name": "Diğer",
+                                "value": "Diğer"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta yakınlarında okul/dershane var mı?",
+                    "type": "radio",
+                    "tag": "NK_OKL",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta yakınlarında öğrenci kafeteryası var mı?",
+                    "type": "radio",
+                    "tag": "NKT_CF",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta yakınlarında kahvehane var mı?",
+                    "type": "radio",
+                    "tag": "NK_KH",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
                 }
             ]
         }
