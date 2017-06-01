@@ -39,10 +39,14 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         return super.render(this.options.map(this.renderOptions))
     }
 
-    public setValue(key: string) {
-        const selection = this.state.selection
-        selection.set(key, !selection.get(key))
-        this.setState({ selection })
+    public setValue(value: any) {
+        if (typeof value === 'string') {
+            const selection = this.state.selection
+            selection.set(value, !selection.get(value))
+            this.setState({ selection })
+        } else if (typeof value === 'object') {
+            this.setValues(value)
+        }
     }
 
     public getValue(): any | undefined {
@@ -58,7 +62,7 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         return selections.length > 0 ? selections : undefined
     }
 
-    public setValues(selections: string[]) {
+    private setValues(selections: string[]) {
         const selection = this.state.selection
         selections.map((sel) => {
             selection.set(sel, true)
