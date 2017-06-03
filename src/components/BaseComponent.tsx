@@ -1,5 +1,8 @@
 import React from 'react'
+import { Platform, StyleSheet } from 'react-native'
 import { View, Header, Text } from 'native-base'
+
+import Style from './BaseComponentStyle'
 
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown,
@@ -82,8 +85,8 @@ export abstract class BaseComponent<P extends BaseProps, S extends BaseState> ex
 
 	protected getTitle(): JSX.Element | undefined {
 		return (this.props.title === undefined ? undefined :
-			<Header style={{ height: 'auto' }}>
-				<Text>{this.props.title}</Text>
+			<Header style={Style.header}>
+				<Text style={Style.title}>{this.props.title}</Text>
 			</Header>
 		)
 	}

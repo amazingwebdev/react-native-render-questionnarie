@@ -81,7 +81,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
         return ( // todo disabled button
             <Container>
-                <Header>
+                <Header style={Style.header}>
                     {!(this.state.pageNumber === 0 && this.pageCount !== 1) &&
                         <Left>
                             <Button onPress={this.prevPage} transparent>
@@ -117,7 +117,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
                         </Right>
                     }
                 </Header>
-                <Content key="form">
+                <Content key="form" style={Style.content}>
                     {questions}
                 </Content>
             </Container>
