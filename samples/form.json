@@ -29,7 +29,7 @@
                 },
                 {
                     "title": "Nokta'nın TAPDK numarasını giriniz.",
-                    "type": "textinput",
+                    "type": "text",
                     "tag": "TP_NO",
                     "required": true
                 },
@@ -119,7 +119,7 @@
                 },
                 {
                     "title": "JTI Stand büyüklüğünü seçiniz.",
-                    "type": "dropdown",
+                    "type": "list",
                     "tag": "JTI_S_BY",
                     "required": true,
                     "options": {
@@ -144,13 +144,13 @@
                 },
                 {
                     "title": "JTI SKU Sayısı",
-                    "type": "textinput",
+                    "type": "text",
                     "tag": "JTI_SKU",
                     "required": true
                 },
                 {
                     "title": "JTI Haftalık Satış (Karton)",
-                    "type": "textinput",
+                    "type": "text",
                     "tag": "JTI_STS",
                     "required": true
                 },
@@ -194,7 +194,7 @@
                 },
                 {
                     "title": "Toptancı adını yazınız.",
-                    "type": "textinput",
+                    "type": "text",
                     "tag": "JTI_DST_51",
                     "required": true
                 },
@@ -268,7 +268,7 @@
                 },
                 {
                     "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
-                    "type": "dropdown",
+                    "type": "list",
                     "tag": "BEV_KS",
                     "required": true,
                     "options": {
@@ -311,7 +311,7 @@
             "questions": [
                 {
                     "title": "Nokta büyüklüğünü belirtiniz",
-                    "type": "dropdown",
+                    "type": "list",
                     "tag": "NK_MK",
                     "required": true,
                     "options": {
@@ -352,7 +352,7 @@
                 },
                 {
                     "title": "Nokta konumu ile ilgili kriteri giriniz",
-                    "type": "dropdown",
+                    "type": "list",
                     "tag": "NK_KN",
                     "required": true,
                     "options": {

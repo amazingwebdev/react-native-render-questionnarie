@@ -2,7 +2,7 @@ import React from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import { View, Header, Text } from 'native-base'
 
-import Style from './BaseComponentStyle'
+import Style from './BaseInputStyle'
 
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown,
@@ -27,7 +27,7 @@ export interface BaseState {
 	display?: boolean
 }
 
-export abstract class BaseComponent<P extends BaseProps, S extends BaseState> extends React.Component<P, S>  {
+export abstract class BaseInput<P extends BaseProps, S extends BaseState> extends React.Component<P, S>  {
 
 	protected ruleExecutors: (() => void)[]
 

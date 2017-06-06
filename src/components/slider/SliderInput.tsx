@@ -3,7 +3,7 @@ import { Text, Slider } from 'react-native'
 
 import { View } from 'native-base'
 
-import { BaseProps, BaseState, BaseComponent } from '../'
+import { BaseInput, BaseProps, BaseState } from '../'
 
 interface SliderProps extends BaseProps {
     min: number
@@ -16,7 +16,7 @@ interface SliderState extends BaseState {
     value?: number
 }
 
-export class SliderInput extends BaseComponent<SliderProps, SliderState> {
+export class SliderInput extends BaseInput<SliderProps, SliderState> {
 
     constructor(props: SliderProps) {
         super(props)

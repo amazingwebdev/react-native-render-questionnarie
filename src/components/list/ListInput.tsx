@@ -1,19 +1,19 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
+import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
 
-interface DropdownProps extends MultiInputComponentProps {
+interface ListInputProps extends MultiChoiceInputProps {
 
 }
 
-interface DropdownState extends MultiInputComponentState {
+interface ListInputState extends MultiChoiceInputState {
     selection: string | undefined
 }
 
-export class Dropdown extends MultiInputComponent<DropdownProps, DropdownState> {
+export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> {
 
-    constructor(props: DropdownProps) {
+    constructor(props: ListInputProps) {
         super(props)
         this.state = {
             selection: undefined,

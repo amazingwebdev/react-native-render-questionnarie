@@ -1,22 +1,19 @@
-/**
- * Created by alperen on 9.05.2017.
- */
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
+import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
 
-interface RadioButtonProps extends MultiInputComponentProps {
+interface RadioInputProps extends MultiChoiceInputProps {
 
 }
 
-interface RadioButtonState extends MultiInputComponentState {
+interface RadioInputState extends MultiChoiceInputState {
     selection: string | undefined
 }
 
-export class RadioButton extends MultiInputComponent<RadioButtonProps, RadioButtonState> {
+export class RadioInput extends MultiChoiceInput<RadioInputProps, RadioInputState> {
 
-    constructor(props: RadioButtonProps) {
+    constructor(props: RadioInputProps) {
         super(props)
         this.state = {
             selection: undefined,

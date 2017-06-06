@@ -1,23 +1,23 @@
 import React from 'react'
 import { View, Item, Input, Icon, Toast } from 'native-base'
 
-import { BaseProps, BaseState, BaseComponent } from '../'
+import { BaseInput, BaseProps, BaseState } from '../'
 
-interface TextFieldProps extends BaseProps {
+interface TextInputProps extends BaseProps {
     value?: string
     validation?: string
     placeholder?: string
 }
 
-interface TextFieldState extends BaseState {
+interface TextInputState extends BaseState {
     value?: string
 }
 
-export class TextField extends BaseComponent<TextFieldProps, TextFieldState> {
+export class TextInput extends BaseInput<TextInputProps, TextInputState> {
 
     private regExp: RegExp
 
-    constructor(props: TextFieldProps) {
+    constructor(props: TextInputProps) {
         super(props)
         this.state = {
             value: props.value,

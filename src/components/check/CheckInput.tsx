@@ -1,19 +1,19 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
-import { MultiInputComponent, MultiInputComponentProps, MultiInputComponentState } from '../MultiInputComponent'
+import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
 
-interface CheckBoxProps extends MultiInputComponentProps {
+interface CheckInputProps extends MultiChoiceInputProps {
 
 }
 
-interface CheckBoxState extends MultiInputComponentState {
+interface CheckInputState extends MultiChoiceInputState {
     selection: Map<string, boolean>
 }
 
-export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState> {
+export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputState> {
 
-    constructor(props: CheckBoxProps) {
+    constructor(props: CheckInputProps) {
         super(props)
         const selection: Map<string, boolean> = new Map<string, boolean>()
         this.state = {
@@ -53,7 +53,7 @@ export class Checkboxx extends MultiInputComponent<CheckBoxProps, CheckBoxState>
         const selections: string[] = []
         for (const q in this.refs) {
             if (this.refs.hasOwnProperty(q)) {
-                const component: CheckBox = this.refs[q] as Checkboxx
+                const component: CheckBox = this.refs[q] as CheckInput
                 if (component.props.checked) {
                     selections.push(q)
                 }

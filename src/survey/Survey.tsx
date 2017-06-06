@@ -17,15 +17,15 @@ import {
 } from 'native-base'
 
 import {
-  BaseComponent,
+  BaseInput,
   BaseProps,
   BaseState,
-  TextField,
-  SliderInput,
   QuestionType,
-  Checkboxx,
-  RadioButton,
-  Dropdown,
+  TextInput,
+  SliderInput,
+  CheckInput,
+  RadioInput,
+  ListInput,
 } from '../components'
 
 import Style from './SurveyStyle'
@@ -68,10 +68,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const question = this.refs[ref] as BaseComponent<
-            BaseProps,
-            BaseState
-          >
+          const question = this.refs[ref] as BaseInput<BaseProps, BaseState>
           question.setValue(currentPageAnswers[ref])
         }
       }
@@ -98,7 +95,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           {this.state.pageNumber === 0 &&
             this.pageCount !== 1 &&
             <Left>
-              <Button transparent onPress={() => Alert.alert(this.brief)}>
+              <Button transparent onPress={() => Alert.alert(this.props.form.name, this.brief)}>
                 <Icon name="clipboard" />
               </Button>
             </Left>}
@@ -131,7 +128,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const question = this.refs[ref] as BaseComponent<BaseProps, BaseState>
+        const question = this.refs[ref] as BaseInput<BaseProps, BaseState>
         if (!question.isValid() && question.props.title) {
           validationMessages.push(question.props.title)
         }
@@ -144,7 +141,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     const currentPageAnswers = {}
     for (const q in this.refs) {
       if (this.refs.hasOwnProperty(q)) {
-        const question = this.refs[q] as BaseComponent<BaseProps, BaseState>
+        const question = this.refs[q] as BaseInput<BaseProps, BaseState>
         if (question.isValid() && question.getValue() !== undefined) {
           currentPageAnswers[q] = question.getValue()
         }
@@ -214,17 +211,17 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             step={question.step}
           />
         )
-      case 'textinput':
+      case 'text':
         return (
-          <TextField
+          <TextInput
             {...commonProps}
             validation={question.validation}
             value={value}
           />
         )
-      case 'dropdown':
+      case 'list':
         return (
-          <Dropdown
+          <ListInput
             {...commonProps}
             options={question.options}
             titleKey={question.titleKey}
@@ -233,7 +230,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         )
       case 'radio':
         return (
-          <RadioButton
+          <RadioInput
             {...commonProps}
             options={question.options}
             titleKey={question.titleKey}
@@ -242,7 +239,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         )
       case 'checkbox':
         return (
-          <Checkboxx
+          <CheckInput
             {...commonProps}
             options={question.options}
             titleKey={question.titleKey}
@@ -268,4 +265,5 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     brief.push(`${this.questionCount} sorudan oluşmaktadır.`)
     this.brief = brief.join('\n')
   }
+
 }
