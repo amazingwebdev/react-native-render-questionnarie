@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Survey } from './app/Survey'
+import { Survey } from './survey/Survey'
 
 export default class App extends Component<{}, {}> {
 

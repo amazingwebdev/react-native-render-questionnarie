@@ -1,37 +1,70 @@
 {
   "name": "tvba",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.30",
+  "description": "React Native module to render questionnaire based on NativeBase components.",
+  "author": {
+    "name": "Adem Özay",
+    "email": "adem.ozay@gvg.com.tr",
+    "url": "https://github.com/ademozay"
+  },
+  "contributors": [
+    {
+      "name": "Çiğdem Güllü",
+      "email": "cigdem.gullu@gvg.com.tr",
+      "url": "https://github.com/cigdemgullu"
+    },
+    {
+      "name": "Alperen Karaca",
+      "email": "alperen.karaca@gvg.com.tr",
+      "url": "https://github.com/alperenkaraca"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GeovisionGroup/tvba"
+  },
+  "bugs": {
+    "url": "https://github.com/GeovisionGroup/tvba/issues"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "./lib/index",
+  "keywords": [
+    "survey",
+    "questionnaire"
+  ],
+  "license": "MIT",
   "scripts": {
     "start": "yarn run lint && node node_modules/react-native/local-cli/cli.js start --skipflow",
     "android": "yarn run lint && node node_modules/react-native/local-cli/cli.js run-android",
     "ios": "yarn run lint && node node_modules/react-native/local-cli/cli.js run-ios",
-    "prebuild": "node node_modules/.bin/rimraf build",
-    "build": "yarn run lint && node node_modules/typescript/bin/tsc --watch",
-    "release": "node node_modules/typescript/bin/tsc",
+    "prebuild": "node node_modules/.bin/rimraf lib",
+    "build": "yarn run lint && node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc --watch",
+    "release": "node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc &&  node node_modules/.bin/rimraf lib/index.ios.js lib/index.android.js",
     "lint": "node node_modules/tslint/bin/tslint src/*.tsx && node node_modules/tslint/bin/tslint src/**/*.tsx && node node_modules/tslint/bin/tslint src/**/**/*.tsx",
     "test": "jest",
     "install-icons": "rnpm link react-native-vector-icons"
   },
   "dependencies": {
-    "native-base": "^2.1.3",
     "react": "16.0.0-alpha.6",
-    "react-native": "0.44.0"
+    "react-native": "0.44.0",
+    "native-base": "2.1.3"
   },
   "devDependencies": {
-    "@types/jest": "^19.2.3",
-    "@types/react": "^15.0.24",
-    "@types/react-native": "^0.43.11",
-    "@types/react-test-renderer": "^15.5.0",
-    "babel-jest": "^19.0.0",
-    "babel-preset-react-native": "^1.9.1",
+    "@types/jest": "19.2.3",
+    "@types/react": "15.0.24",
+    "@types/react-native": "0.43.11",
+    "@types/react-test-renderer": "15.5.0",
+    "babel-jest": "19.0.0",
+    "babel-preset-react-native": "1.9.1",
     "jest": "19.0.2",
     "react-test-renderer": "16.0.0-alpha.6",
-    "rimraf": "^2.6.1",
-    "rnpm": "^1.9.0",
-    "ts-jest": "^19.0.14",
-    "tslint-config-airbnb": "^5.0.1",
-    "typescript": "^2.3.2"
+    "rimraf": "2.6.1",
+    "rnpm": "1.9.0",
+    "ts-jest": "19.0.14",
+    "tslint-config-airbnb": "5.0.1",
+    "typescript": "2.3.2"
   },
   "jest": {
     "preset": "react-native",
