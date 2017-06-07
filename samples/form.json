@@ -11,6 +11,7 @@
                     "type": "radio",
                     "tag": "TP_VY",
                     "required": true,
+                    "optionsTitle": "Seçiniz",
                     "options": {
                         "type": "static",
                         "values": [
