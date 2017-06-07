@@ -7,7 +7,6 @@ import {
   Text,
   Button,
   View,
-  Toast,
   Icon,
   Header,
   Left,
@@ -32,6 +31,8 @@ import Style from './SurveyStyle'
 
 interface SurveyProps {
   form: any
+  onSave: (answers: {}) => {}
+  onFailure: (errors: string[]) => {}
 }
 
 interface SurveyState {
@@ -39,6 +40,7 @@ interface SurveyState {
 }
 
 export class Survey extends React.Component<SurveyProps, SurveyState> {
+  
   private answers: {}
   private pageCount: number
   private questionCount: number
@@ -161,38 +163,22 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     if (validationMessages.length === 0) {
       this.storeCurrentPageAnswers()
       this.setState({ pageNumber: this.state.pageNumber + 1 })
-    } else {
-      Toast.show({
-        text: validationMessages.join('\n'),
-        buttonText: 'Tamam',
-        position: 'bottom',
-        type: 'danger',
-      })
+    } else if (this.props.onFailure) {
+      this.props.onFailure(validationMessages)
     }
   }
 
   private onSave() {
     const validationMessages = this.validatePage()
-    if (validationMessages.length === 0) {
-      Toast.show({
-        text: JSON.stringify(this.answers),
-        buttonText: 'Tamam',
-        position: 'bottom',
-        type: 'success',
-      })
-    } else {
-      Toast.show({
-        text: validationMessages.join('\n'),
-        buttonText: 'Tamam',
-        position: 'bottom',
-        type: 'danger',
-      })
+    if (validationMessages.length === 0 && this.props.onSave) {
+        this.props.onSave(this.answers)
+    } else if (this.props.onFailure) {
+        this.props.onFailure(validationMessages)
     }
   }
 
   private createQuestionComponent(question): JSX.Element {
     const tag = question.tag
-    const value = this.answers[tag] ? this.answers[tag].toString() : undefined
     const commonProps = {
       tag,
       ref: tag,
@@ -216,7 +202,6 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <TextInput
             {...commonProps}
             validation={question.validation}
-            value={value}
           />
         )
       case 'list':
@@ -226,6 +211,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             options={question.options}
             titleKey={question.titleKey}
             valueKey={question.valueKey}
+            optionsTitle={question.optionsTitle}
           />
         )
       case 'radio':
