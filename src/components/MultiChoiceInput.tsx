@@ -20,7 +20,7 @@ export abstract class MultiChoiceInput<P extends MultiChoiceInputProps, S extend
         super(props)
         this.options = []
         if (props.options.type === 'static') {
-            this.options = props.options.values
+            this.options = props.options.values.slice(0)
         }
     }
 
