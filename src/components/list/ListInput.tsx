@@ -4,11 +4,11 @@ import { View, Picker } from 'native-base'
 import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface ListInputProps extends MultiChoiceInputProps {
-
+    optionsTitle?: string
 }
 
 interface ListInputState extends MultiChoiceInputState {
-    selection: string | undefined
+    selection?: string | number
 }
 
 export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> {
@@ -16,18 +16,16 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
     constructor(props: ListInputProps) {
         super(props)
         this.state = {
-            selection: undefined,
             display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
 
     public componentWillMount() {
-        const defaultOption: object = {}
-        defaultOption[this.props.titleKey] = 'Seçiniz'
-        defaultOption[this.props.valueKey] = '-1'
-        this.options.splice(0, 0, defaultOption)
-        this.setState({ selection: defaultOption[this.props.valueKey] })
+        const defaultOptionsTitle = {}
+        defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
+        defaultOptionsTitle[this.props.valueKey] = -1
+        this.options.splice(0, 0, defaultOptionsTitle)
     }
 
     public componentDidMount() {
@@ -59,7 +57,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
     }
 
     public getValue() {
-        if (this.state.selection === undefined || this.state.selection === '-1') {
+        if (this.state.selection === undefined || this.state.selection === -1) {
             return undefined
         }
         return this.state.selection
