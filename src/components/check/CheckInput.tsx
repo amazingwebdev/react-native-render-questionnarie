@@ -31,7 +31,7 @@ export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputStat
                 console.error(`CheckInput tag:${this.props.tag}", default value is not array`)
             }
         } else {
-            console.debug(`CheckInput tag:${this.props.tag}", no default value`)
+            console.warn(`CheckInput tag:${this.props.tag}", no default value`)
         }
     }
 

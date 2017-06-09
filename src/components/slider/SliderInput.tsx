@@ -35,7 +35,7 @@ export class SliderInput extends BaseInput<SliderProps, SliderState> {
                 console.error(`SliderInput tag:${this.props.tag}, default value is not number`)
             }
         } else {
-            console.debug(`SliderInput tag:${this.props.tag}, no default value`)
+            console.warn(`SliderInput tag:${this.props.tag}, no default value`)
         }
     }
 

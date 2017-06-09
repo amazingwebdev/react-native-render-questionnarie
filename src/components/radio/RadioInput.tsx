@@ -30,7 +30,7 @@ export class RadioInput extends MultiChoiceInput<RadioInputProps, RadioInputStat
                 console.error(`RadioInput tag:${this.props.tag}, default value is not string`)
             }
         } else {
-            console.debug(`RadioInput tag:${this.props.tag}, no default value`)
+            console.warn(`RadioInput tag:${this.props.tag}, no default value`)
         }
     }
 
