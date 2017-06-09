@@ -36,7 +36,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
                 console.error(`ListInput tag:${this.props.tag}, default value is not string`)
             }
         } else {
-            console.debug(`ListInput tag:${this.props.tag}, no default value`)
+            console.warn(`ListInput tag:${this.props.tag}, no default value`)
         }
     }
 

@@ -37,7 +37,7 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
                 console.error(`TextInput tag:${this.props.tag}', default value is not string`)
             }
         } else {
-            console.debug(`TextInput tag:${this.props.tag}', no default value`)
+            console.warn(`TextInput tag:${this.props.tag}', no default value`)
         }
     }
 
