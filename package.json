@@ -43,8 +43,8 @@
     "build": "yarn run lint && node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc --watch",
     "release": "node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc &&  node node_modules/.bin/rimraf lib/index.ios.js lib/index.android.js",
     "lint": "node node_modules/tslint/bin/tslint src/*.tsx && node node_modules/tslint/bin/tslint src/**/*.tsx && node node_modules/tslint/bin/tslint src/**/**/*.tsx",
-    "test": "jest",
-    "testd": "jest --watch",
+    "test": "node_modules/jest/bin/jest.js",
+    "testd": "node_modules/jest/bin/jest.js --watch",
     "install-icons": "rnpm link react-native-vector-icons"
   },
   "dependencies": {
@@ -61,8 +61,10 @@
     "babel-preset-react-native": "1.9.2",
     "enzyme": "^2.8.2",
     "jest": "20.0.4",
+    "jsdom": "^9.0.0",
     "react-addons-test-utils": "15.5.1",
     "react-dom": "^15.5.4",
+    "react-native-mock-render": "0.0.6",
     "react-test-renderer": "^15.5.4",
     "rimraf": "2.6.1",
     "rnpm": "1.9.0",
@@ -83,7 +85,10 @@
       "js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!native-base)/"
+      "<rootDir>/node_modules/(?!native-base)/"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest/setup.js"
     ]
   }
 }
