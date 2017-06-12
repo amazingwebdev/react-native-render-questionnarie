@@ -2,7 +2,9 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { CheckInput } from '../src/components'
 
-const options = {
+describe('<TextInput />', () => {
+
+	const options = {
 	type: 'static',
 	values: [
 		{
@@ -20,14 +22,16 @@ const options = {
 	],
 }
 
-const wrapper = mount(
-	<CheckInput  tag="foo" options={options} titleKey="name"  valueKey="value"/>,
-)
-const component = wrapper.instance() as CheckInput
+	const wrapper = mount(
+		<CheckInput tag="foo" options={options} titleKey="name" valueKey="value" />,
+	)
+	const component = wrapper.instance() as CheckInput
 
-it('should receive props properly', () => {
-	expect(component.props.tag).toBe('foo')
-	expect(component.props.titleKey).toBe('name')
-	expect(component.props.valueKey).toBe('value')
-	expect(component.props.options.values.length).toBe(3)
+	it('should receive props properly', () => {
+		expect(component.props.tag).toBe('foo')
+		expect(component.props.titleKey).toBe('name')
+		expect(component.props.valueKey).toBe('value')
+		expect(component.props.options.values.length).toBe(3)
+	})
+
 })
