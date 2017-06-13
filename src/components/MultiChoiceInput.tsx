@@ -24,4 +24,8 @@ export abstract class MultiChoiceInput<P extends MultiChoiceInputProps, S extend
         }
     }
 
+    public cloneOptions(): object[] {
+        return this.options.slice(0)
+    }
+    
 }
