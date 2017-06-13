@@ -43,7 +43,7 @@ export abstract class BaseInput<P extends BaseProps, S extends BaseState> extend
 
 	public componentWillMount() {
 		if (this.props.tag === undefined || this.props.tag === '') {
-			console.error(`${this.constructor.name} no proper tag`)
+			throw new Error(`${this.constructor.name} has no proper tag.`)
 		}
 	}
 
