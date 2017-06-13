@@ -30,6 +30,7 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
     }
 
     public componentWillMount() {
+        super.componentWillMount()
         if (this.props.defaultValue !== undefined) {
             if (typeof this.props.defaultValue === 'string') {
                 this.setValue(this.props.defaultValue)

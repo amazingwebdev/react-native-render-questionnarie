@@ -28,6 +28,7 @@ export class SliderInput extends BaseInput<SliderProps, SliderState> {
     }
 
     public componentWillMount() {
+        super.componentWillMount()
         if (this.props.defaultValue !== undefined) {
             if (typeof this.props.defaultValue === 'number') {
                 this.setValue(this.props.defaultValue)

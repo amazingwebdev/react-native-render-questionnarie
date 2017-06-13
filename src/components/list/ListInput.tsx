@@ -22,6 +22,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
     }
 
     public componentWillMount() {
+        super.componentWillMount()
         const defaultOptionsTitle = {}
         defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
         defaultOptionsTitle[this.props.valueKey] = -1
