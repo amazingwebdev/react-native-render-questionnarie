@@ -39,7 +39,7 @@ describe('<TextInput />', () => {
     })
 
     it('should receive props properly', () => {
-		const wrapper = mount(getComponent(commonProps))
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as CheckInput
         component.props.tag.should.eq('foo')
         component.props.titleKey.should.eq('name')
@@ -51,9 +51,16 @@ describe('<TextInput />', () => {
         commonProps.defaultValue = ['1', '2']
         const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as CheckInput
-		const value = component.getValue()
-		should.exist(value)
+        const value = component.getValue()
+        should.exist(value)
         value.should.deep.equal(['1', '2'])
+    })
+
+    it('componentWillMount() should throw error', () => {
+        (function () {
+            delete commonProps.tag
+            mount(getComponent(commonProps))
+        }).should.throw(Error, 'CheckInput has no proper tag.')
     })
 
     it('getValue() should return nothing', () => {
