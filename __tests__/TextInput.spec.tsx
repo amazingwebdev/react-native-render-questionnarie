@@ -46,6 +46,7 @@ describe('<TextInput />', () => {
         const component = wrapper.instance() as TextInput
         component.setValue('bar')
         should.equal(component.getValue(), 'bar')
+        should.equal(component.state.value, 'bar')
     })
 
     it('isValid() should work properly', () => {
