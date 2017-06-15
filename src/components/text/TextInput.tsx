@@ -47,14 +47,18 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
             <Item rounded>
                 <Input
                     onBlur={this.onBlur.bind(this)}
-                    onChangeText={this.setValue}
+                    onChange={this.onChange.bind(this)}
                     placeholder={this.props.placeholder}
                     value={this.state.value} />
             </Item>,
         )
     }
 
-    public setValue(value: string) {
+    private onChange(event) {
+        this.setValue(event.target.value)
+    }
+
+    public setValue(value) {
         this.setState({ value })
     }
 
