@@ -15,8 +15,14 @@ describe('<SliderInput />', () => {
 		)
 	}
 
+	let commonProps
+
+	beforeEach(() => {
+		commonProps = { tag: 'foo', min: 0, max: 100, step: 5 }
+	})
+
 	it('should receive props properly', () => {
-		const wrapper = mount(getComponent({ tag: 'foo', min: 0, max: 100, step: 5 }))
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 		component.props.tag.should.equal('foo')
 		component.props.min.should.equal(0)
@@ -25,26 +31,27 @@ describe('<SliderInput />', () => {
 	})
 
 	it('componentDidMount() should set default value', () => {
-		const wrapper = mount(getComponent({ tag: 'foo', defaultValue: 30 }))
+		commonProps.defaultValue = 30
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 		should.equal(component.getValue(), 30)
 	})
 
 	it('getValue() should not return undefined', () => {
-		const wrapper = mount(getComponent({ tag: 'foo' }))
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 		should.exist(component.getValue())
 	})
 
 	it('setValue() should change state', () => {
-		const wrapper = mount(getComponent({ tag: 'foo', min: 0, max: 100, step: 5 }))
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 		component.setValue(25)
 		should.equal(component.getValue(), 25)
 	})
 
 	it('hide() should set display state to false', () => {
-		const wrapper = mount(getComponent({ tag: 'foo' }))
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 
 		component.hide()
@@ -52,7 +59,7 @@ describe('<SliderInput />', () => {
 	})
 
 	it('show() should set display state to true', () => {
-		const wrapper = mount(getComponent({ tag: 'foo' }))
+		const wrapper = mount(getComponent(commonProps))
 		const component = wrapper.instance() as SliderInput
 
 		component.show()
@@ -60,14 +67,15 @@ describe('<SliderInput />', () => {
 	})
 
 	it('isValid() should work properly', () => {
-		let wrapper = mount(getComponent({ tag: 'foo' }))
+		let wrapper = mount(getComponent(commonProps))
 		let component = wrapper.instance() as SliderInput
 
 		should.equal(component.isValid(), true)
-
-		wrapper = mount(getComponent({ tag: 'foo', required: true }))
+		commonProps.required = true
+		wrapper = mount(getComponent(commonProps))
 		component = wrapper.instance() as SliderInput
 
 		should.exist(component.getValue())
 	})
+
 })
