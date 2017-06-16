@@ -70,7 +70,7 @@ export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputStat
         this.setState({ selection })
     }
 
-    private renderOptions(option): JSX.Element {
+    private renderOptions(option: any): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
         const checked = this.state.selection.get(value)
         const key = this.props.tag + '_' + value

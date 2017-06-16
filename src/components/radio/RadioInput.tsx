@@ -46,7 +46,7 @@ export class RadioInput extends MultiChoiceInput<RadioInputProps, RadioInputStat
         return this.state.selection
     }
 
-    private renderOptions(option): JSX.Element {
+    private renderOptions(option: any): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
         const checked = this.state.selection === value
         const key = this.props.tag + '_' + value

@@ -41,7 +41,7 @@ interface SurveyState {
 
 export class Survey extends React.Component<SurveyProps, SurveyState> {
   
-  private answers: {}
+  private answers: any
   private pageCount: number
   private questionCount: number
   private brief: string
@@ -79,7 +79,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
   public render(): JSX.Element {
     const page = this.props.form.pages[this.state.pageNumber]
-    const questions: JSX.Element[] = page.questions.map(question =>
+    const questions: JSX.Element[] = page.questions.map((question: any) =>
       this.createQuestionComponent(question),
     )
 
@@ -140,7 +140,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   private storeCurrentPageAnswers(): void {
-    const currentPageAnswers = {}
+    const currentPageAnswers: any = {}
     for (const q in this.refs) {
       if (this.refs.hasOwnProperty(q)) {
         const question = this.refs[q] as BaseInput<BaseProps, BaseState>
@@ -177,7 +177,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     }
   }
 
-  private createQuestionComponent(question): JSX.Element {
+  private createQuestionComponent(question: any): JSX.Element {
     const tag = question.tag
     const commonProps = {
       tag,
@@ -239,7 +239,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
   private countQuestions() {
     let questionCount = 0
-    this.props.form.pages.map((page) => {
+    this.props.form.pages.map((page: any) => {
       questionCount += page.questions.length // grid içindeki soruları da saymak gerekir.
     })
     this.questionCount = questionCount

@@ -54,11 +54,11 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
         )
     }
 
-    private onChange(event) {
+    private onChange(event: any): void {
         this.setValue(event.target.value)
     }
 
-    public setValue(value) {
+    public setValue(value: any): void {
         this.setState({ value })
     }
 
