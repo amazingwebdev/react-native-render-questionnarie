@@ -1,6 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import * as chai from 'chai'
+import { Input, Toast } from 'native-base'
 
 import { TextInput } from '../src/components'
 
@@ -14,8 +15,15 @@ describe('<TextInput />', () => {
         )
     }
 
+    let commonProps
+
+    beforeEach(() => {
+        commonProps = { tag: 'foo' }
+    })
+
     it('componentDidMount() should set default value', () => {
-        const wrapper = mount(getComponent({ tag: 'foo', defaultValue: 'bar' }))
+        commonProps.defaultValue = 'bar'
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
         should.equal(component.getValue(), 'bar')
     })
@@ -27,7 +35,10 @@ describe('<TextInput />', () => {
     })
 
     it('should receive props properly', () => {
-        const wrapper = mount(getComponent({ tag: 'foo', value: 'bar', validation: '^[A-z]+$', placeholder: 'zar' }))
+        commonProps.value = 'bar'
+        commonProps.validation = '^[A-z]+$'
+        commonProps.placeholder = 'zar'
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
         component.props.tag.should.equal('foo')
         component.props.value.should.equal('bar')
@@ -36,13 +47,13 @@ describe('<TextInput />', () => {
     })
 
     it('getValue() should return nothing', () => {
-        const wrapper = mount(getComponent({ tag: 'foo' }))
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
         should.not.exist(component.getValue())
     })
 
     it('setValue() should change state', () => {
-        const wrapper = mount(getComponent({ tag: 'foo' }))
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
         component.setValue('bar')
         should.equal(component.getValue(), 'bar')
@@ -50,12 +61,13 @@ describe('<TextInput />', () => {
     })
 
     it('isValid() should work properly', () => {
-        let wrapper = mount(getComponent({ tag: 'foo' }))
+        let wrapper = mount(getComponent(commonProps))
         let component = wrapper.instance() as TextInput
 
         should.equal(component.isValid(), true)
 
-        wrapper = mount(getComponent({ tag: 'foo', required: true }))
+        commonProps.required = true
+        wrapper = mount(getComponent(commonProps))
         component = wrapper.instance() as TextInput
 
         should.equal(component.isValid(), false)
@@ -64,7 +76,8 @@ describe('<TextInput />', () => {
     })
 
     it('should execute regex properly', () => {
-        const wrapper = mount(getComponent({ tag: 'foo', validation: '^[A-z]+$' }))
+        commonProps.validation = '^[A-z]+$'
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
 
         component.setValue('59')
@@ -75,7 +88,7 @@ describe('<TextInput />', () => {
     })
 
     it('hide() should set display state to false', () => {
-        const wrapper = mount(getComponent({ tag: 'foo' }))
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
 
         component.hide()
@@ -83,11 +96,20 @@ describe('<TextInput />', () => {
     })
 
     it('show() should set display state to true', () => {
-        const wrapper = mount(getComponent({ tag: 'foo' }))
+        const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
 
         component.show()
         component.state.display.should.equal(true)
+    })
+
+    it('onChange()', () => {
+        const wrapper = mount(getComponent(commonProps))
+        const component = wrapper.instance() as TextInput
+
+        /*console.warn(wrapper.find(Input).first().props())*/
+        wrapper.find(Input).simulate('change', { target: { value: 'bar' } })
+        should.equal(component.getValue(), 'bar')
     })
 
 })
