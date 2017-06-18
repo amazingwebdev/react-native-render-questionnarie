@@ -1,9 +1,9 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
 import { View, Header, Text } from 'native-base'
 
 import { Question } from '../Form'
 import Style from './BaseInputStyle'
+import Component from './Component'
 
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown,

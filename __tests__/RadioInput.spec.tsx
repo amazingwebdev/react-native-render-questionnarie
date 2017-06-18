@@ -1,7 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 import { mount } from 'enzyme'
 import * as chai from 'chai'
-import { ListItem, Radio } from 'native-base'
 
 import { RadioInput } from '../src/components'
 
