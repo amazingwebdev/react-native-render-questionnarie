@@ -1,19 +1,16 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
-
-interface RadioInputProps extends MultiChoiceInputProps {
-
-}
+import { RadioInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface RadioInputState extends MultiChoiceInputState {
     selection: string | undefined
 }
 
-export class RadioInput extends MultiChoiceInput<RadioInputProps, RadioInputState> {
+export class RadioInput extends MultiChoiceInput<RadioInputQuestion, RadioInputState> {
 
-    constructor(props: RadioInputProps) {
+    constructor(props: RadioInputQuestion) {
         super(props)
         this.state = {
             selection: undefined,
@@ -46,7 +43,7 @@ export class RadioInput extends MultiChoiceInput<RadioInputProps, RadioInputStat
         return this.state.selection
     }
 
-    private renderOptions(option): JSX.Element {
+    private renderOptions(option: MultiInputQuestionOption): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
         const checked = this.state.selection === value
         const key = this.props.tag + '_' + value

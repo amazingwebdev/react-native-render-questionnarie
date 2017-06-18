@@ -1,29 +1,23 @@
 import React from 'react'
 import { View, Item, Input, Icon, Toast } from 'native-base'
 
-import { BaseInput, BaseProps, BaseState } from '../'
-
-interface TextInputProps extends BaseProps {
-    value?: string
-    validation?: string
-    placeholder?: string
-}
+import { TextInputQuestion } from '../../Form'
+import { BaseInput, BaseState } from '../'
 
 interface TextInputState extends BaseState {
     value?: string
 }
 
-export class TextInput extends BaseInput<TextInputProps, TextInputState> {
+export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
 
     private regExp: RegExp
 
-    constructor(props: TextInputProps) {
+    constructor(props: TextInputQuestion) {
         super(props)
         this.state = {
             value: props.value,
             display: true,
         }
-
         if (this.props.validation !== undefined) {
             this.regExp = new RegExp(this.props.validation)
         }
@@ -54,15 +48,15 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
         )
     }
 
-    private onChange(event) {
+    private onChange(event: any) {
         this.setValue(event.target.value)
     }
 
-    public setValue(value) {
+    public setValue(value: string) {
         this.setState({ value })
     }
 
-    public getValue() {
+    public getValue(): string | undefined {
         return this.state.value ? this.state.value : undefined
     }
 
@@ -76,7 +70,7 @@ export class TextInput extends BaseInput<TextInputProps, TextInputState> {
         return super.isValid()
     }
 
-    private onBlur() {
+    private onBlur(): void {
         if (!this.isValid()) {
             Toast.show({ text: 'Girdiğiniz karakterleri kontrol ediniz.', buttonText: 'TAMAM', position: 'bottom', type: 'warning' })
         }

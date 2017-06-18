@@ -1,4 +1,4 @@
-export { BaseInput, BaseProps, BaseState, QuestionType } from './BaseInput'
+export { BaseInput, BaseState, QuestionType } from './BaseInput'
 export { TextInput } from './text/TextInput'
 export { SliderInput } from './slider/SliderInput'
 export { CheckInput } from './check/CheckInput'
