@@ -23,7 +23,9 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
 
     public componentWillMount() {
         super.componentWillMount()
-        const defaultOptionsTitle = {}
+        const defaultOptionsTitle: {
+            [key: string]: any,
+        } = {}
         defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
         defaultOptionsTitle[this.props.valueKey] = -1
         this.options.splice(0, 0, defaultOptionsTitle)
@@ -64,7 +66,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
         return this.state.selection
     }
 
-    private renderOptions(option) {
+    private renderOptions(option: any) {
         const name = option[this.props.titleKey]
         const value = option[this.props.valueKey]
         const key = this.props.tag + '_' + value

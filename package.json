@@ -50,13 +50,15 @@
   "dependencies": {
     "native-base": "2.1.4",
     "react": "16.0.0-alpha.6",
+    "react-addons-shallow-compare": "^15.6.0",
     "react-native": "0.44.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.0",
     "@types/enzyme": "^2.8.0",
     "@types/jest": "19.2.4",
-    "@types/react": "15.0.27",
+    "@types/react": "^15.0.29",
+    "@types/react-addons-shallow-compare": "^0.14.19",
     "@types/react-native": "0.44.9",
     "babel-jest": "20.0.3",
     "babel-preset-react-native": "1.9.2",

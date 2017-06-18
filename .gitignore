@@ -56,3 +56,6 @@ fastlane/Preview.html
 fastlane/screenshots
 
 coverage
+.vscode
+/package-lock.json
+/yarn.lock
