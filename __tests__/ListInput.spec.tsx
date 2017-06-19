@@ -1,6 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import * as chai from 'chai'
+import { Picker } from 'native-base'
 
 import { ListInput } from '../src/components'
 
@@ -42,6 +43,13 @@ describe('ListInput />', () => {
 		component.props.valueKey.should.equal('value')
 		component.props.options.should.deep.equal(options)
 		component.cloneOptions().should.have.lengthOf(3)
+	})
+
+	it('componentWillMount() should throw error', () => {
+		(function () {
+			delete commonProps.tag
+			mount(getComponent(commonProps))
+		}).should.throw(Error, 'ListInput has no proper tag.')
 	})
 
 	it('componentDidMount() should set default value', () => {

@@ -30,6 +30,13 @@ describe('<SliderInput />', () => {
 		component.props.step.should.equal(5)
 	})
 
+	it('componentWillMount() should tag throw exception', () => {
+		(function () {
+			delete commonProps.tag
+			mount(getComponent(commonProps))
+		}).should.throw(Error, 'SliderInput has no proper tag.')
+	})
+
 	it('componentDidMount() should set default value', () => {
 		commonProps.defaultValue = 30
 		const wrapper = mount(getComponent(commonProps))
