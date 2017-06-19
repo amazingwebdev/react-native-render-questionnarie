@@ -1,33 +1,19 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
 import { View, Header, Text } from 'native-base'
 
+import { Question } from '../Form'
 import Style from './BaseInputStyle'
+import Component from './Component'
 
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown,
-}
-
-export interface BaseProps {
-	tag: string
-	required?: boolean
-	title?: string
-	trackType?: string
-	smartCode?: string
-	startDate?: number
-	endDate?: number
-	oneTime?: boolean
-	newLine?: boolean
-	visible?: boolean
-	visibleIf?: string
-	defaultValue?: string | string[]
 }
 
 export interface BaseState {
 	display?: boolean
 }
 
-export abstract class BaseInput<P extends BaseProps, S extends BaseState> extends React.Component<P, S>  {
+export abstract class BaseInput<P extends Question, S extends BaseState> extends React.Component<P, S>  {
 
 	protected ruleExecutors: (() => void)[]
 
@@ -39,7 +25,7 @@ export abstract class BaseInput<P extends BaseProps, S extends BaseState> extend
 
 	public abstract getValue(): any | undefined
 
-	public abstract setValue(value: any)
+	public abstract setValue(value: any): void
 
 	public componentWillMount() {
 		if (this.props.tag === undefined || this.props.tag === '') {

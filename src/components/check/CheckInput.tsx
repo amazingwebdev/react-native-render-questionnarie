@@ -1,19 +1,16 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
-import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
-
-interface CheckInputProps extends MultiChoiceInputProps {
-
-}
+import { CheckInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface CheckInputState extends MultiChoiceInputState {
     selection: Map<string, boolean>
 }
 
-export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputState> {
+export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputState> {
 
-    constructor(props: CheckInputProps) {
+    constructor(props: CheckInputQuestion) {
         super(props)
         const selection: Map<string, boolean> = new Map<string, boolean>()
         this.state = {
@@ -39,7 +36,7 @@ export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputStat
         return super.render(this.options.map(this.renderOptions))
     }
 
-    public setValue(value: any) {
+    public setValue(value: string | string[]) {
         if (typeof value === 'string') {
             const selection = this.state.selection
             selection.set(value, !selection.get(value))
@@ -70,7 +67,7 @@ export class CheckInput extends MultiChoiceInput<CheckInputProps, CheckInputStat
         this.setState({ selection })
     }
 
-    private renderOptions(option): JSX.Element {
+    private renderOptions(option: MultiInputQuestionOption): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
         const checked = this.state.selection.get(value)
         const key = this.props.tag + '_' + value

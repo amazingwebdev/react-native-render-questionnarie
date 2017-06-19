@@ -1,19 +1,16 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { MultiChoiceInput, MultiChoiceInputProps, MultiChoiceInputState } from '../MultiChoiceInput'
-
-interface ListInputProps extends MultiChoiceInputProps {
-    optionsTitle?: string
-}
+import { ListInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface ListInputState extends MultiChoiceInputState {
-    selection?: string | number
+    selection?: string | number
 }
 
-export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> {
+export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputState> {
 
-    constructor(props: ListInputProps) {
+    constructor(props: ListInputQuestion) {
         super(props)
         this.state = {
             display: true,
@@ -23,7 +20,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
 
     public componentWillMount() {
         super.componentWillMount()
-        const defaultOptionsTitle = {}
+        const defaultOptionsTitle: { [key: string]: string | number } = {}
         defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
         defaultOptionsTitle[this.props.valueKey] = -1
         this.options.splice(0, 0, defaultOptionsTitle)
@@ -64,7 +61,7 @@ export class ListInput extends MultiChoiceInput<ListInputProps, ListInputState> 
         return this.state.selection
     }
 
-    private renderOptions(option) {
+    private renderOptions(option: MultiInputQuestionOption) {
         const name = option[this.props.titleKey]
         const value = option[this.props.valueKey]
         const key = this.props.tag + '_' + value

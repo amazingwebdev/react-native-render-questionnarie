@@ -17,7 +17,6 @@ import {
 
 import {
   BaseInput,
-  BaseProps,
   BaseState,
   QuestionType,
   TextInput,
@@ -27,21 +26,35 @@ import {
   ListInput,
 } from '../components'
 
+import {
+  Form,
+  Question,
+  TextInputQuestion,
+  SliderInputQuestion,
+  ListInputQuestion,
+  RadioInputQuestion,
+  CheckInputQuestion,
+} from '../Form'
+
 import Style from './SurveyStyle'
 
 interface SurveyProps {
-  form: any
-  onSave: (answers: {}) => {}
-  onFailure: (errors: string[]) => {}
+  form: Form
+  onSave: (answers: {}) => void
+  onFailure: (errors: string[]) => void
 }
 
 interface SurveyState {
   pageNumber: number
 }
 
+interface Answers {
+  [key: string]: {}
+}
+
 export class Survey extends React.Component<SurveyProps, SurveyState> {
-  
-  private answers: {}
+
+  private answers: Answers
   private pageCount: number
   private questionCount: number
   private brief: string
@@ -63,14 +76,14 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   public componentDidUpdate() {
-    const currentPageAnswers = this.answers[this.state.pageNumber]
+    const currentPageAnswers: { [key: string]: string } = this.answers[this.state.pageNumber]
     if (currentPageAnswers === undefined) {
       return
     }
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const question = this.refs[ref] as BaseInput<BaseProps, BaseState>
+          const question = this.refs[ref] as BaseInput<Question, BaseState>
           question.setValue(currentPageAnswers[ref])
         }
       }
@@ -79,7 +92,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
 
   public render(): JSX.Element {
     const page = this.props.form.pages[this.state.pageNumber]
-    const questions: JSX.Element[] = page.questions.map(question =>
+    const questions: JSX.Element[] = page.questions.map((question: Question) =>
       this.createQuestionComponent(question),
     )
 
@@ -130,7 +143,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const question = this.refs[ref] as BaseInput<BaseProps, BaseState>
+        const question = this.refs[ref] as BaseInput<Question, BaseState>
         if (!question.isValid() && question.props.title) {
           validationMessages.push(question.props.title)
         }
@@ -140,10 +153,10 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   private storeCurrentPageAnswers(): void {
-    const currentPageAnswers = {}
+    const currentPageAnswers: { [key: string]: string } = {}
     for (const q in this.refs) {
       if (this.refs.hasOwnProperty(q)) {
-        const question = this.refs[q] as BaseInput<BaseProps, BaseState>
+        const question = this.refs[q] as BaseInput<Question, BaseState>
         if (question.isValid() && question.getValue() !== undefined) {
           currentPageAnswers[q] = question.getValue()
         }
@@ -171,65 +184,95 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   private onSave() {
     const validationMessages = this.validatePage()
     if (validationMessages.length === 0 && this.props.onSave) {
-        this.props.onSave(this.answers)
+      this.props.onSave(this.answers)
     } else if (this.props.onFailure) {
-        this.props.onFailure(validationMessages)
+      this.props.onFailure(validationMessages)
     }
   }
 
-  private createQuestionComponent(question): JSX.Element {
+  private createQuestionComponent(question: Question): JSX.Element {
     const tag = question.tag
-    const commonProps = {
+    const commonProps: { [key: string]: any } = {
       tag,
       ref: tag,
       key: tag,
       title: question.title,
       required: question.required,
-      defaultValue: question.defaultValue,
     }
     switch (question.type) {
       case 'slider':
+        const slider: SliderInputQuestion = question as SliderInputQuestion
         return (
           <SliderInput
-            {...commonProps}
-            min={question.min}
-            max={question.max}
-            step={question.step}
+            ref={slider.tag}
+            tag={slider.tag}
+            title={slider.title}
+            required={slider.required}
+            min={slider.min}
+            max={slider.max}
+            step={slider.step}
+            defaultValue={slider.defaultValue}
           />
         )
       case 'text':
+        const text: TextInputQuestion = question as TextInputQuestion
+        const commonProps: { [key: string]: any } = {
+          tag: text.tag,
+          title: text.title,
+          required: text.required,
+
+        }
         return (
           <TextInput
-            {...commonProps}
-            validation={question.validation}
+            ref={text.tag}
+            tag={text.tag}
+            title={text.title}
+            required={text.required}
+            defaultValue={text.defaultValue}
+            validation={text.validation}
           />
         )
       case 'list':
+        const list: ListInputQuestion = question as ListInputQuestion
         return (
           <ListInput
-            {...commonProps}
-            options={question.options}
-            titleKey={question.titleKey}
-            valueKey={question.valueKey}
-            optionsTitle={question.optionsTitle}
+            ref={list.tag}
+            tag={list.tag}
+            title={list.title}
+            required={list.required}
+            defaultValue={list.defaultValue}
+            options={list.options}
+            titleKey={list.titleKey}
+            valueKey={list.valueKey}
+            optionsTitle={list.optionsTitle}
           />
         )
       case 'radio':
+        const radio: RadioInputQuestion = question as RadioInputQuestion
         return (
           <RadioInput
-            {...commonProps}
-            options={question.options}
-            titleKey={question.titleKey}
-            valueKey={question.valueKey}
+            ref={radio.tag}
+            tag={radio.tag}
+            title={radio.title}
+            required={radio.required}
+            defaultValue={radio.defaultValue}
+            options={radio.options}
+            titleKey={radio.titleKey}
+            valueKey={radio.valueKey}
           />
         )
       case 'checkbox':
+        const checkbox: CheckInputQuestion = question as CheckInputQuestion
         return (
           <CheckInput
-            {...commonProps}
-            options={question.options}
-            titleKey={question.titleKey}
-            valueKey={question.valueKey}
+            ref={checkbox.tag}
+            tag={checkbox.tag}
+            title={checkbox.title}
+            required={checkbox.required}
+            defaultValue={checkbox.defaultValue}
+            options={checkbox.options}
+            titleKey={checkbox.titleKey}
+            valueKey={checkbox.valueKey}
           />
         )
       default:
@@ -240,7 +283,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   private countQuestions() {
     let questionCount = 0
     this.props.form.pages.map((page) => {
-      questionCount += page.questions.length // grid içindeki soruları da saymak gerekir.
+      questionCount += page.questions.length
     })
     this.questionCount = questionCount
   }

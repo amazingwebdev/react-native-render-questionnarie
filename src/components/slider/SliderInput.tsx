@@ -3,22 +3,16 @@ import { Text, Slider } from 'react-native'
 
 import { View } from 'native-base'
 
-import { BaseInput, BaseProps, BaseState } from '../'
-
-interface SliderProps extends BaseProps {
-    min: number
-    max: number
-    step: number
-    value?: number
-}
+import { SliderInputQuestion } from '../../Form'
+import { BaseInput, BaseState } from '../'
 
 interface SliderState extends BaseState {
     value?: number
 }
 
-export class SliderInput extends BaseInput<SliderProps, SliderState> {
+export class SliderInput extends BaseInput<SliderInputQuestion, SliderState> {
 
-    constructor(props: SliderProps) {
+    constructor(props: SliderInputQuestion) {
         super(props)
         this.state = {
             value: props.value || 0,
