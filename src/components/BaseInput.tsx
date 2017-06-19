@@ -3,7 +3,6 @@ import { View, Header, Text } from 'native-base'
 
 import { Question } from '../Form'
 import Style from './BaseInputStyle'
-import Component from './Component'
 
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown,
@@ -80,5 +79,5 @@ export abstract class BaseInput<P extends Question, S extends BaseState> extends
 	private executeRuleListeners(): void {
 		this.ruleExecutors.map(ruleExecutor => ruleExecutor.call(null, this.getValue()))
 	}
-
+	
 }
