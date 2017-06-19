@@ -4,17 +4,20 @@ import { View, CheckBox, ListItem, Text } from 'native-base'
 import { CheckInputQuestion, MultiInputQuestionOption } from '../../Form'
 import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
+interface Selection {
+    [key: string]: boolean
+}
+
 interface CheckInputState extends MultiChoiceInputState {
-    selection: Map<string, boolean>
+    selection: Selection
 }
 
 export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputState> {
 
     constructor(props: CheckInputQuestion) {
         super(props)
-        const selection: Map<string, boolean> = new Map<string, boolean>()
         this.state = {
-            selection,
+            selection: {},
             display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
@@ -38,8 +41,8 @@ export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputS
 
     public setValue(value: string | string[]) {
         if (typeof value === 'string') {
-            const selection = this.state.selection
-            selection.set(value, !selection.get(value))
+            const { selection } = this.state
+            selection[value] = !selection[value]
             this.setState({ selection })
         } else if (typeof value === 'object') {
             this.setValues(value)
@@ -48,28 +51,28 @@ export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputS
 
     public getValue(): any | undefined {
         const selections: string[] = []
-        for (const q in this.refs) {
-            if (this.refs.hasOwnProperty(q)) {
-                const component: CheckBox = this.refs[q] as CheckInput
+        for (const ref in this.refs) {
+            if (this.refs.hasOwnProperty(ref)) {
+                const component: CheckBox = this.refs[ref] as CheckInput
                 if (component.props.checked) {
-                    selections.push(q)
+                    selections.push(ref)
                 }
             }
         }
         return selections.length > 0 ? selections : undefined
     }
 
-    private setValues(selections: string[]) {
-        const selection = this.state.selection
-        selections.map((sel) => {
-            selection.set(sel, true)
+    private setValues(values: string[]) {
+        const { selection } = this.state
+        values.map((value) => {
+            selection[value] = true
         })
         this.setState({ selection })
     }
 
     private renderOptions(option: MultiInputQuestionOption): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
-        const checked = this.state.selection.get(value)
+        const checked = this.state.selection[value]
         const key = this.props.tag + '_' + value
         return (
             <ListItem key={key} onPress={this.setValue.bind(this, value)}>
