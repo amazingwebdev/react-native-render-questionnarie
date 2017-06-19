@@ -107,7 +107,7 @@ describe('<TextInput />', () => {
         const wrapper = mount(getComponent(commonProps))
         const component = wrapper.instance() as TextInput
 
-        wrapper.find(Input).simulate('change', { target: { value: 'bar' } })
+        wrapper.find(Input).simulate('change', { nativeEvent: { text: 'bar' } })
         should.equal(component.getValue(), 'bar')
     })
 

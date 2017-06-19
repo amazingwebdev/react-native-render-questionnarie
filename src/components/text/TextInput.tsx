@@ -48,11 +48,11 @@ export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
         )
     }
 
-    private onChange(event: any): void {
-        this.setValue(event.target.value)
+    private onChange(event: { nativeEvent: { text: string } }): void {
+        this.setValue(event.nativeEvent.text)
     }
 
-    public setValue(value: any): void {
+    public setValue(value: string): void {
         this.setState({ value })
     }
 
