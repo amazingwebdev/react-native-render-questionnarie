@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Item, Input, Icon, Toast } from 'native-base'
 
-import { TextInputQuestion } from '../../Form'
+import { TextInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
 
 interface TextInputState extends BaseState {

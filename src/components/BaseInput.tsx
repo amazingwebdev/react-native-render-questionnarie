@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Header, Text } from 'native-base'
 
-import { Question } from '../Form'
+import { Question } from '../survey'
 import Style from './BaseInputStyle'
 
 export enum QuestionType {

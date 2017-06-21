@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { ListInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { ListInputQuestion, MultiInputQuestionOption } from '../../survey'
 import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface ListInputState extends MultiChoiceInputState {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { MultiInputQuestion } from '../Form'
+import { MultiInputQuestion } from '../survey'
 import { BaseInput, BaseState } from './BaseInput'
 
 export interface MultiChoiceInputState extends BaseState {

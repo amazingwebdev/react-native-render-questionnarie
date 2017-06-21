@@ -34,7 +34,7 @@ import {
   ListInputQuestion,
   RadioInputQuestion,
   CheckInputQuestion,
-} from '../Form'
+} from '../survey'
 
 import Style from './SurveyStyle'
 

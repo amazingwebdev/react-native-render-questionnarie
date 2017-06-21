@@ -3,7 +3,7 @@ import { Text, Slider } from 'react-native'
 
 import { View } from 'native-base'
 
-import { SliderInputQuestion } from '../../Form'
+import { SliderInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
 
 interface SliderState extends BaseState {

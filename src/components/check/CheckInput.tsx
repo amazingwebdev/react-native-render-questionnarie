@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
-import { CheckInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { CheckInputQuestion, MultiInputQuestionOption } from '../../survey'
 import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface Selection {

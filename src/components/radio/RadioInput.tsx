@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { RadioInputQuestion, MultiInputQuestionOption } from '../../Form'
+import { RadioInputQuestion, MultiInputQuestionOption } from '../../survey'
 import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface RadioInputState extends MultiChoiceInputState {
