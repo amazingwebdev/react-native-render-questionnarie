@@ -36,7 +36,9 @@
         "no-empty-interface": false,
         "no-var-requires": false,
         "import-name": false,
-        "no-consecutive-blank-lines": [true, 0]
+        "no-consecutive-blank-lines": [true, 0],
+        "no-increment-decrement": false
+
     },
     "rulesDirectory": []
 }
