@@ -198,6 +198,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <SliderInput
             ref={slider.tag}
             tag={slider.tag}
+            type={slider.type}
             title={slider.title}
             required={slider.required}
             min={slider.min}
@@ -212,6 +213,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <TextInput
             ref={text.tag}
             tag={text.tag}
+            type={text.type}
             title={text.title}
             required={text.required}
             defaultValue={text.defaultValue}
@@ -224,6 +226,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <ListInput
             ref={list.tag}
             tag={list.tag}
+            type={list.type}
             title={list.title}
             required={list.required}
             defaultValue={list.defaultValue}
@@ -239,6 +242,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <RadioInput
             ref={radio.tag}
             tag={radio.tag}
+            type={radio.type}
             title={radio.title}
             required={radio.required}
             defaultValue={radio.defaultValue}
@@ -253,6 +257,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
           <CheckInput
             ref={checkbox.tag}
             tag={checkbox.tag}
+            type={checkbox.type}
             title={checkbox.title}
             required={checkbox.required}
             defaultValue={checkbox.defaultValue}
