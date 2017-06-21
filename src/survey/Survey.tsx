@@ -191,14 +191,6 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   private createQuestionComponent(question: Question): JSX.Element {
-    const tag = question.tag
-    const commonProps: { [key: string]: any } = {
-      tag,
-      ref: tag,
-      key: tag,
-      title: question.title,
-      required: question.required,
-    }
     switch (question.type) {
       case 'slider':
         const slider: SliderInputQuestion = question as SliderInputQuestion
@@ -216,12 +208,6 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
         )
       case 'text':
         const text: TextInputQuestion = question as TextInputQuestion
-        const commonProps: { [key: string]: any } = {
-          tag: text.tag,
-          title: text.title,
-          required: text.required,
-
-        }
         return (
           <TextInput
             ref={text.tag}
