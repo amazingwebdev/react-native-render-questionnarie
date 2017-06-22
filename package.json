@@ -43,8 +43,8 @@
     "build": "yarn run lint && node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc --watch",
     "release": "node node_modules/.bin/rimraf lib && node node_modules/typescript/bin/tsc &&  node node_modules/.bin/rimraf lib/index.ios.js lib/index.android.js",
     "lint": "node node_modules/tslint/bin/tslint src/*.tsx && node node_modules/tslint/bin/tslint src/**/*.tsx && node node_modules/tslint/bin/tslint src/**/**/*.tsx",
-    "test": "node_modules/jest/bin/jest.js",
-    "testd": "node_modules/jest/bin/jest.js --watch",
+    "test": "node node_modules/.bin/rimraf coverage && node_modules/jest/bin/jest.js",
+    "testd": "node node_modules/.bin/rimraf coverage && node_modules/jest/bin/jest.js --watch",
     "install-icons": "rnpm link react-native-vector-icons"
   },
   "dependencies": {
@@ -91,6 +91,7 @@
     ],
     "setupFiles": [
       "<rootDir>/jest/setup.js"
-    ]
+    ],
+    "collectCoverage": true
   }
 }
