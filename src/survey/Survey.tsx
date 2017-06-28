@@ -251,7 +251,7 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             valueKey={radio.valueKey}
           />
         )
-      case 'checkbox':
+      case 'check':
         const checkbox: CheckInputQuestion = question as CheckInputQuestion
         return (
           <CheckInput

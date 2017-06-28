@@ -157,7 +157,7 @@
                 },
                 {
                     "title": "JTI ürünlerini nereden alıyor?",
-                    "type": "checkbox",
+                    "type": "check",
                     "tag": "JTI_DST",
                     "required": true,
                     "options": {
@@ -201,7 +201,7 @@
                 },
                 {
                     "title": "JTI ürünleri satmama nedenleriniz nelerdir?",
-                    "type": "checkbox",
+                    "type": "check",
                     "tag": "JTI_NDN",
                     "required": true,
                     "options": {
