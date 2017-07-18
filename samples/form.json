@@ -12,6 +12,27 @@
                     "tag": "TP_VY_",
                     "required": true,
                     "photorequired":true
+                },
+                {
+                    "title": "Noktada alkol satışı var mı?",
+                    "type": "radio",
+                    "tag": "AL_VY11",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
                 }
             ]
         },

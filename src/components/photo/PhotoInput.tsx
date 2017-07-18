@@ -33,7 +33,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     constructor(props: PhotoInputQuestion) {
         super(props)
-        this.camera = null
 
         this.state = {
             camera: {
@@ -65,7 +64,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         return (this.props.title === undefined ? undefined :
             <Header style={styles.header}>
                 <Text style={styles.title}>{this.props.title}</Text>
-                <Button onPress={this.getCamera}>
+                <Button style={styles.button} onPress={this.getCamera}>
                     <Icon name="camera" />
                 </Button>
             </Header>
@@ -75,9 +74,8 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     private screen() {
         if (this.state.isRecording === false) {
             return this.getTitle()
-        }else {
-            return this.onCameraPress()
         }
+        return this.onCameraPress()
     }
 
     private getCamera() {
@@ -90,9 +88,9 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             return (
                 <View style={styles.container}>
                     <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
-                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{this.props.title} </Text>
+                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{'Çek'} </Text>
                     </Camera>
-                    <Button onPress={this.onpressBack}><Text>Back</Text></Button></View>
+                </View>
             )
         }
         return (
@@ -129,25 +127,26 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        flexDirection: 'row',
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
     },
     preview: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     capture: {
         flex: 0,
+        flexDirection:'column',
         backgroundColor: '#fff',
         borderRadius: 5,
         color: '#000',
         padding: 10,
-        margin: 40,
+        margin: 100,
     },
     header: {
         ...Platform.select({
             android: {
-                height: 'auto',
                 backgroundColor: '#3498db',
             },
         }),
@@ -157,6 +156,19 @@ const styles = StyleSheet.create({
             android: {
                 color: 'white',
                 padding: 5,
+                textAlign:'left',
+                textAlignVertical:'center',
+                
+            },
+        }),
+    },
+    button: {
+        ...Platform.select({
+            android: {
+                flex:0,
+                color: 'white',
+                textAlignVertical:'auto',
+                textAlign:'right',
             },
         }),
     },
