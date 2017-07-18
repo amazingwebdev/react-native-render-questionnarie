@@ -10,7 +10,8 @@
                     "title": "Dolabın fotoğrafını çekiniz",
                     "type": "photo",
                     "tag": "TP_VY_",
-                    "required": true
+                    "required": true,
+                    "photorequired":true
                 }
             ]
         },

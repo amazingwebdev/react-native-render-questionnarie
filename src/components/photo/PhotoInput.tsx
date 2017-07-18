@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { AppRegistry, Dimensions, StyleSheet, Text, TouchableHighlight, View, Image } from 'react-native'
-import { Button } from 'native-base'
+import { AppRegistry, Platform, Dimensions, StyleSheet, Text, TouchableHighlight, View, Image } from 'react-native'
+import { Button, Header, Icon } from 'native-base'
 
 import Camera from 'react-native-camera'
 
@@ -33,7 +33,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     constructor(props: PhotoInputQuestion) {
         super(props)
-
         this.camera = null
 
         this.state = {
@@ -48,14 +47,62 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             isRecording: false,
             isTakePicture: false,
             url: '',
+            display: true,
         }
-        this.openCamera = this.openCamera.bind(this)
+        this.onCameraPress = this.onCameraPress.bind(this)
+        this.screen = this.screen.bind(this)
+        this.getCamera = this.getCamera.bind(this)
+        this.onpressBack = this.onpressBack.bind(this)
     }
 
     public render(): JSX.Element {
         return (
-            this.openCamera()
+            this.screen()
         )
+    }
+
+    protected getTitle(): JSX.Element | undefined {
+        return (this.props.title === undefined ? undefined :
+            <Header style={styles.header}>
+                <Text style={styles.title}>{this.props.title}</Text>
+                <Button onPress={this.getCamera}>
+                    <Icon name="camera" />
+                </Button>
+            </Header>
+        )
+    }
+
+    private screen() {
+        if (this.state.isRecording === false) {
+            return this.getTitle()
+        }else {
+            return this.onCameraPress()
+        }
+    }
+
+    private getCamera() {
+        this.onCameraPress()        
+        this.setState({ isRecording:true })
+    }
+
+    private onCameraPress() {
+        if (!this.state.isTakePicture) {
+            return (
+                <View style={styles.container}>
+                    <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
+                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{this.props.title} </Text>
+                    </Camera>
+                    <Button onPress={this.onpressBack}><Text>Back</Text></Button></View>
+            )
+        }
+        return (
+            <View style={styles.container}>
+                <Image
+                    style={{ width: 300, height: 300 }}
+                    source={{ uri: this.state.url }}
+                />
+                <Button onPress={this.setValue}><Text>Back</Text></Button>
+            </View>)
     }
 
     private takePicture() {
@@ -66,32 +113,15 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         }
     }
 
-    private openCamera() {
-        if (!this.state.isTakePicture) {
-            return (
-                <View style={styles.container}>
-                    <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
-                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{this.props.title} </Text>
-                    </Camera>
-                </View>
-            )
-        }
-        return (
-            <View style={styles.container}>
-                <Image
-                    style={{ width: 300, height: 300 }}
-                    source={{ uri: this.state.url }}
-                />
-                <Button onPress={this.setValue}><Text>Geri</Text></Button>
-            </View>)
-    }
-
     public setValue() {
         this.setState({ isTakePicture: false })
     }
 
     public getValue() {
         return this.state.camera
+    }
+    public onpressBack() {
+        this.setState({ isRecording:false })
     }
 }
 
@@ -100,7 +130,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
-
     },
     preview: {
         flex: 1,
@@ -114,5 +143,21 @@ const styles = StyleSheet.create({
         color: '#000',
         padding: 10,
         margin: 40,
+    },
+    header: {
+        ...Platform.select({
+            android: {
+                height: 'auto',
+                backgroundColor: '#3498db',
+            },
+        }),
+    },
+    title: {
+        ...Platform.select({
+            android: {
+                color: 'white',
+                padding: 5,
+            },
+        }),
     },
 })
