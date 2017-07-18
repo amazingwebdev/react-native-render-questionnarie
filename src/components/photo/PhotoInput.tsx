@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AppRegistry, Platform, Dimensions, StyleSheet, Text, TouchableHighlight, View, Image } from 'react-native'
-import { Button, Header, Icon } from 'native-base'
+import { Button, Header, Icon, Card, CardItem, Thumbnail, Left, Right, Body, Container, Content } from 'native-base'
 
 import Camera from 'react-native-camera'
 
@@ -64,7 +64,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     protected getTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
             <Header style={styles.header}>
-                <Text style={styles.title}>{this.props.title}</Text>
+                <Text style={styles.left}>{this.props.title}</Text>
                 <Button onPress={this.getCamera}>
                     <Icon name="camera" />
                 </Button>
@@ -75,14 +75,14 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     private screen() {
         if (this.state.isRecording === false) {
             return this.getTitle()
-        }else {
+        } else {
             return this.onCameraPress()
         }
     }
 
     private getCamera() {
-        this.onCameraPress()        
-        this.setState({ isRecording:true })
+        this.onCameraPress()
+        this.setState({ isRecording: true })
     }
 
     private onCameraPress() {
@@ -96,13 +96,31 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             )
         }
         return (
-            <View style={styles.container}>
-                <Image
-                    style={{ width: 300, height: 300 }}
-                    source={{ uri: this.state.url }}
-                />
-                <Button onPress={this.setValue}><Text>Back</Text></Button>
-            </View>)
+            <Container>
+                <Content>
+                    <Card>
+                        <CardItem>
+                            <Left>
+                                <Body>
+                                    <Text>{this.props.title}</Text>
+                                </Body>
+                            </Left>
+                        </CardItem>
+                        <CardItem>
+                            <Image source={{ uri: this.state.url }} style={{ width: null, height: 300, flex: 1 }}></Image>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                                <Button transparent><Text>OK</Text></Button>
+                            </Left>
+                            <Right>
+                                <Button transparent><Text>CANCEL</Text></Button>
+                            </Right>
+                        </CardItem>
+                    </Card>
+                </Content>
+            </Container>
+        )
     }
 
     private takePicture() {
@@ -121,7 +139,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         return this.state.camera
     }
     public onpressBack() {
-        this.setState({ isRecording:false })
+        this.setState({ isRecording: false })
     }
 }
 
@@ -130,6 +148,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
+        height: this.height,
+        width: this.width,
     },
     preview: {
         flex: 1,
@@ -137,12 +157,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     capture: {
+        flexDirection: 'row',
         flex: 0,
         backgroundColor: '#fff',
         borderRadius: 5,
         color: '#000',
         padding: 10,
         margin: 40,
+    },
+    left: {
+        color: 'white',
+        padding: 5,
+        justifyContent: 'center',
+
     },
     header: {
         ...Platform.select({
