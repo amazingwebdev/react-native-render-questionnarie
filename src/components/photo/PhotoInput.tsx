@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { AppRegistry, Platform, Dimensions, StyleSheet, Text, TouchableHighlight, View, Image } from 'react-native'
-import { Button, Header, Icon, Card, CardItem, Thumbnail, Left, Right, Body, Container, Content } from 'native-base'
+import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image } from 'react-native'
+import { Button, Header, Icon, Card, CardItem,Left, Right, Body } from 'native-base'
 
 import Camera from 'react-native-camera'
-
 import { PhotoInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
 
@@ -19,13 +18,11 @@ interface camera {
 
 interface State extends BaseState {
     camera: camera
-    isRecording: boolean
+    isTakenPhoto: boolean
     url: string
     isTakePicture: boolean
 
 }
-
-const { height, width } = Dimensions.get('window')
 
 export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
@@ -33,7 +30,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     constructor(props: PhotoInputQuestion) {
         super(props)
-        this.camera = null
 
         this.state = {
             camera: {
@@ -44,7 +40,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                 playSoundOnCapture: true,
                 flashMode: Camera.constants.FlashMode.auto,
             },
-            isRecording: false,
+            isTakenPhoto: false,
             isTakePicture: false,
             url: '',
             display: true,
@@ -64,8 +60,8 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     protected getTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
             <Header style={styles.header}>
-                <Text style={styles.left}>{this.props.title}</Text>
-                <Button onPress={this.getCamera}>
+                <Text style={styles.title}>{this.props.title}</Text>
+                <Button style={styles.button} onPress={this.getCamera}>
                     <Icon name="camera" />
                 </Button>
             </Header>
@@ -73,16 +69,15 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     }
 
     private screen() {
-        if (this.state.isRecording === false) {
+        if (this.state.isTakenPhoto === false) {
             return this.getTitle()
-        } else {
-            return this.onCameraPress()
         }
+        return this.onCameraPress()
     }
 
     private getCamera() {
         this.onCameraPress()
-        this.setState({ isRecording: true })
+        this.setState({ isTakenPhoto: true })
     }
 
     private onCameraPress() {
@@ -90,37 +85,30 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             return (
                 <View style={styles.container}>
                     <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
-                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{this.props.title} </Text>
+                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{'Çek'} </Text>
                     </Camera>
-                    <Button onPress={this.onpressBack}><Text>Back</Text></Button></View>
+                </View>
             )
-        }
-        return (
-            <Container>
-                <Content>
-                    <Card>
-                        <CardItem>
-                            <Left>
-                                <Body>
-                                    <Text>{this.props.title}</Text>
-                                </Body>
-                            </Left>
-                        </CardItem>
-                        <CardItem>
-                            <Image source={{ uri: this.state.url }} style={{ width: null, height: 300, flex: 1 }}></Image>
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Button transparent><Text>OK</Text></Button>
-                            </Left>
-                            <Right>
-                                <Button transparent><Text>CANCEL</Text></Button>
-                            </Right>
-                        </CardItem>
-                    </Card>
-                </Content>
-            </Container>
-        )
+        } else {
+            return (
+                <Card >
+                    <CardItem>
+                        <Left>
+                            <Body>
+                                <Text>{this.props.title}</Text>
+                            </Body>
+                        </Left>
+                     </CardItem>
+                    <CardItem>
+                        <Image source={{ uri: this.state.url }} style={{ width: null, height: 300, flex: 1 }}></Image>
+                    </CardItem>
+                    <CardItem>
+                        <Body>
+                            <Button style={{ justifyContent:'center' }} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                        </Body>
+                    </CardItem>
+                </Card>)
+            }
     }
 
     private takePicture() {
@@ -139,7 +127,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         return this.state.camera
     }
     public onpressBack() {
-        this.setState({ isRecording: false })
+        this.setState({ isTakenPhoto: false })
     }
 }
 
@@ -147,34 +135,25 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        flexDirection: 'row',
-        height: this.height,
-        width: this.width,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height - (Dimensions.get('window').height / 100) * 10,
     },
     preview: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     capture: {
-        flexDirection: 'row',
         flex: 0,
         backgroundColor: '#fff',
         borderRadius: 5,
         color: '#000',
         padding: 10,
-        margin: 40,
-    },
-    left: {
-        color: 'white',
-        padding: 5,
-        justifyContent: 'center',
-
+        margin: 15,
     },
     header: {
         ...Platform.select({
             android: {
-                height: 'auto',
                 backgroundColor: '#3498db',
             },
         }),
@@ -184,6 +163,19 @@ const styles = StyleSheet.create({
             android: {
                 color: 'white',
                 padding: 5,
+                textAlign: 'left',
+                textAlignVertical: 'center',
+
+            },
+        }),
+    },
+    button: {
+        ...Platform.select({
+            android: {
+                flex: 0,
+                color: 'white',
+                textAlignVertical: 'auto',
+                textAlign: 'right',
             },
         }),
     },
