@@ -6,6 +6,7 @@ import Camera from 'react-native-camera'
 
 import { PhotoInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
+import Style from './Style'
 
 interface camera {
     aspect: any
@@ -62,9 +63,9 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     protected getTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
-            <Header style={styles.header}>
-                <Text style={styles.title}>{this.props.title}</Text>
-                <Button style={styles.button} onPress={this.getCamera}>
+            <Header style={Style.header}>
+                <Text style={Style.title}>{this.props.title}</Text>
+                <Button style={Style.button} onPress={this.getCamera}>
                     <Icon name="camera" />
                 </Button>
             </Header>
@@ -86,15 +87,15 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     private onCameraPress() {
         if (!this.state.isTakePicture) {
             return (
-                <View style={styles.container}>
-                    <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
-                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{'Çek'} </Text>
+                <View style={Style.container}>
+                    <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
+                        <Text style={Style.capture} onPress={this.takePicture.bind(this)}>{'Çek'} </Text>
                     </Camera>
                 </View>
             )
         }
         return (
-            <View style={styles.container}>
+            <View style={Style.container}>
                 <Image
                     style={{ width: 300, height: 300 }}
                     source={{ uri: this.state.url }}
@@ -122,54 +123,3 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.setState({ isRecording:false })
     }
 }
-
-const styles = StyleSheet.create({
-
-    container: {
-        flex: 1,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-    },
-    preview: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    capture: {
-        flex: 0,
-        flexDirection:'column',
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        color: '#000',
-        padding: 10,
-        margin: 100,
-    },
-    header: {
-        ...Platform.select({
-            android: {
-                backgroundColor: '#3498db',
-            },
-        }),
-    },
-    title: {
-        ...Platform.select({
-            android: {
-                color: 'white',
-                padding: 5,
-                textAlign:'left',
-                textAlignVertical:'center',
-                
-            },
-        }),
-    },
-    button: {
-        ...Platform.select({
-            android: {
-                flex:0,
-                color: 'white',
-                textAlignVertical:'auto',
-                textAlign:'right',
-            },
-        }),
-    },
-})
