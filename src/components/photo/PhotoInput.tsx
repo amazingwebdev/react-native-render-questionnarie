@@ -13,20 +13,19 @@ interface camera {
     flashMode: any
     orientation: any
     playSoundOnCapture: boolean
-
 }
 
 interface State extends BaseState {
     camera: camera
-    isTakenPhoto: boolean
+    isCaptured: boolean
     url: string
-    isTakePicture: boolean
+    isCapturing: boolean
 
 }
 
 export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
-    camera: Camera
+    private camera: Camera
 
     constructor(props: PhotoInputQuestion) {
         super(props)
@@ -40,52 +39,29 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                 playSoundOnCapture: true,
                 flashMode: Camera.constants.FlashMode.auto,
             },
-            isTakenPhoto: false,
-            isTakePicture: false,
+            isCaptured: false,
+            isCapturing: false,
             url: '',
             display: true,
         }
-        this.onCameraPress = this.onCameraPress.bind(this)
-        this.screen = this.screen.bind(this)
-        this.getCamera = this.getCamera.bind(this)
+        this.renderCamera = this.renderCamera.bind(this)
+        this.openCamera = this.openCamera.bind(this)
         this.onpressBack = this.onpressBack.bind(this)
-    }
+        this.takePicture = this.takePicture.bind(this)
+        }
 
     public render(): JSX.Element {
         return (
-            this.screen()
+            this.state.isCaptured ? this.renderCamera() : this.getTitle() 
         )
     }
 
-    protected getTitle(): JSX.Element | undefined {
-        return (this.props.title === undefined ? undefined :
-            <Header style={styles.header}>
-                <Text style={styles.title}>{this.props.title}</Text>
-                <Button style={styles.button} onPress={this.getCamera}>
-                    <Icon name="camera" />
-                </Button>
-            </Header>
-        )
-    }
-
-    private screen() {
-        if (this.state.isTakenPhoto === false) {
-            return this.getTitle()
-        }
-        return this.onCameraPress()
-    }
-
-    private getCamera() {
-        this.onCameraPress()
-        this.setState({ isTakenPhoto: true })
-    }
-
-    private onCameraPress() {
-        if (!this.state.isTakePicture) {
+     private renderCamera() {
+        if (!this.state.isCapturing) {
             return (
                 <View style={styles.container}>
                     <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={styles.preview}>
-                        <Text style={styles.capture} onPress={this.takePicture.bind(this)}>{'Çek'} </Text>
+                        <Text style={styles.capture} onPress={this.takePicture}>{'Çek'} </Text>
                     </Camera>
                 </View>
             )
@@ -100,27 +76,45 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                         </Left>
                      </CardItem>
                     <CardItem>
-                        <Image source={{ uri: this.state.url }} style={{ width: null, height: 300, flex: 1 }}></Image>
+                        <Image source={{ uri: this.state.url }} style={{ width: null, height: 400, flex: 1 }} resizeMode="stretch"></Image>
                     </CardItem>
                     <CardItem>
                         <Body>
                             <Button style={{ justifyContent:'center' }} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
                         </Body>
                     </CardItem>
-                </Card>)
+                </Card>
+                )
             }
+            
     }
 
-    private takePicture() {
+     private takePicture() {
         if (this.camera) {
             this.camera.capture()
-                .then((data) => { this.setState({ url: data.path, isTakePicture: true }) })
+                .then((data) => { this.setState({ url: data.path, isCapturing: true, isCaptured:true }) })
                 .catch((err: any) => console.error(err))
         }
+        
+    }
+
+    protected getTitle(): JSX.Element | undefined {
+        return (this.props.title === undefined ? undefined :
+            <Header style={styles.header}>
+                <Text style={styles.title}>{this.props.title}</Text>
+                <Button style={styles.button} onPress={this.openCamera}>
+                    <Icon name="camera" />
+                </Button>
+            </Header>
+        )
+    }
+
+    private openCamera() {
+       this.setState({ isCaptured: true })
     }
 
     public setValue() {
-        this.setState({ isTakePicture: false })
+        this.setState({ isCapturing: false })
     }
 
     public getValue() {
