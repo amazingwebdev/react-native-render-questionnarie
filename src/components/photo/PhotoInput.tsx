@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image } from 'react-native'
-import { Button, Header, Icon, Card, CardItem,Left, Right, Body } from 'native-base'
+import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image, Modal } from 'react-native'
+import { Button, Header, Icon, Card, CardItem, Left, Right, Body } from 'native-base'
 
 import Camera from 'react-native-camera'
 import { PhotoInputQuestion } from '../../survey'
@@ -21,6 +21,7 @@ interface State extends BaseState {
     isCaptured: boolean
     url: string
     isCapturing: boolean
+    modalVisible: boolean
 
 }
 
@@ -32,6 +33,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         super(props)
 
         this.state = {
+            modalVisible: false,
             camera: {
                 aspect: Camera.constants.Aspect.fill,
                 captureTarget: Camera.constants.CaptureTarget.disk,
@@ -48,54 +50,62 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.renderCamera = this.renderCamera.bind(this)
         this.openCamera = this.openCamera.bind(this)
         this.takePicture = this.takePicture.bind(this)
-        }
+    }
 
     public render(): JSX.Element {
         return (
-            this.state.isCaptured ? this.renderCamera() : this.getTitle() 
+            this.state.isCaptured ? this.renderCamera() : this.getTitle()
         )
     }
 
-     private renderCamera() {
+    private renderCamera() {
         if (!this.state.isCapturing) {
             return (
-                <View style={Style.container}>
-                    <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-                        <Text style={Style.capture} onPress={this.takePicture}>{'Çek'} </Text>
-                    </Camera>
-                </View>
+                <Modal
+                    animationType={'slide'}
+                    transparent={false}>
+                    <View style={Style.container}>
+                        <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
+
+                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, left: 20 }} onPress={this.takePicture}><Text>ÇEK</Text></Button>
+
+                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, right: 20 }} onPress={this.takePicture}><Text>GERİ</Text></Button>
+
+                        </Camera>
+                    </View>
+                </Modal>
+
             )
-        } else {
-            return (
-                <Card >
-                    <CardItem>
-                        <Left>
-                            <Body>
-                                <Text>{this.props.title}</Text>
-                            </Body>
-                        </Left>
-                     </CardItem>
-                    <CardItem>
-                        <Image source={{ uri: this.state.url }} style={Style.imagePreview} resizeMode="stretch"></Image>
-                    </CardItem>
-                    <CardItem>
+        }
+        return (
+            <Card >
+                <CardItem>
+                    <Left>
                         <Body>
-                            <Button style={{ justifyContent:'center' }} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                            <Text>{this.props.title}</Text>
                         </Body>
-                    </CardItem>
-                </Card>
-                )
-            }
-            
+                    </Left>
+                </CardItem>
+                <CardItem>
+                    <Image source={{ uri: this.state.url }} style={Style.imagePreview} resizeMode="stretch"></Image>
+                </CardItem>
+                <CardItem>
+                    <Body>
+                        <Button style={{ justifyContent: 'center' }} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                    </Body>
+                </CardItem>
+            </Card>
+        )
+
     }
 
-     private takePicture() {
+    private takePicture() {
         if (this.camera) {
             this.camera.capture()
-                .then((data) => { this.setState({ url: data.path, isCapturing: true, isCaptured:true }) })
+                .then((data) => { this.setState({ url: data.path, isCapturing: true, isCaptured: true }) })
                 .catch((err: any) => console.error(err))
         }
-        
+
     }
 
     protected getTitle(): JSX.Element | undefined {
@@ -110,7 +120,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     }
 
     private openCamera() {
-       this.setState({ isCaptured: true })
+        this.setState({ isCaptured: true })
     }
 
     public setValue() {

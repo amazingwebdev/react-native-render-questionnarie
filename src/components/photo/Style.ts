@@ -1,4 +1,7 @@
 import { Platform, Dimensions, StyleSheet } from 'react-native'
+
+const button = StyleSheet.create({})
+
 const style = StyleSheet.create(
     {
         container: {
@@ -7,18 +10,20 @@ const style = StyleSheet.create(
             height: Dimensions.get('window').height,
         },
         preview: {
+            ...button,
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
         },
-        capture: {
+        left: {
+            ...button,
             flex: 0,
             flexDirection: 'column',
             backgroundColor: '#fff',
             borderRadius: 5,
             color: '#000',
             padding: 10,
-            margin: 100,
+            margin: 50,
         },
         header: {
             ...Platform.select({
@@ -47,9 +52,9 @@ const style = StyleSheet.create(
             }),
         },
         imagePreview: {
-             width: null, 
-             height: Dimensions.get('window').width, 
-             flex: 1,
+            width: null,
+            height: Dimensions.get('window').width,
+            flex: 1,
         },
     },
 )
