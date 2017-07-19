@@ -50,6 +50,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.renderCamera = this.renderCamera.bind(this)
         this.openCamera = this.openCamera.bind(this)
         this.takePicture = this.takePicture.bind(this)
+        this.goBack = this.goBack.bind(this)
     }
 
     public render(): JSX.Element {
@@ -66,11 +67,8 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     transparent={false}>
                     <View style={Style.container}>
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-
                             <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, left: 20 }} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-
-                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, right: 20 }} onPress={this.takePicture}><Text>GERİ</Text></Button>
-
+                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, right: 20 }} onPress={this.goBack}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
@@ -97,6 +95,10 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             </Card>
         )
 
+    }
+
+    private goBack() {
+        this.setState({ isCaptured: false })
     }
 
     private takePicture() {
