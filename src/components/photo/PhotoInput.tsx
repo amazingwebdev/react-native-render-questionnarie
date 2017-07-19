@@ -50,6 +50,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.renderCamera = this.renderCamera.bind(this)
         this.openCamera = this.openCamera.bind(this)
         this.takePicture = this.takePicture.bind(this)
+        this.goBack = this.goBack.bind(this)
     }
 
     public render(): JSX.Element {
@@ -65,9 +66,10 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     animationType={'slide'}
                     transparent={false}>
                     <View style={Style.container}>
+                        {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
                             <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-                            <Button style={Style.rightButton} onPress={this.takePicture}><Text>GERİ</Text></Button>
+                            <Button style={Style.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
@@ -87,12 +89,16 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                 </CardItem>
                 <CardItem>
                     <Body>
-                        <Button style={{ justifyContent: 'center' }} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
                     </Body>
                 </CardItem>
             </Card>
         )
 
+    }
+
+    private goBack() {
+        this.setState({ isCaptured: false })
     }
 
     private takePicture() {
