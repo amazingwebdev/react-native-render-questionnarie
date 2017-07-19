@@ -24,6 +24,7 @@ import {
   CheckInput,
   RadioInput,
   ListInput,
+  PhotoInput,
 } from '../components'
 
 import {
@@ -34,6 +35,7 @@ import {
   ListInputQuestion,
   RadioInputQuestion,
   CheckInputQuestion,
+  PhotoInputQuestion,
 } from '../survey'
 
 import Style from './SurveyStyle'
@@ -265,6 +267,17 @@ export class Survey extends React.Component<SurveyProps, SurveyState> {
             titleKey={checkbox.titleKey}
             valueKey={checkbox.valueKey}
           />
+        )
+      case 'photo':
+        const photo : PhotoInputQuestion = question as PhotoInputQuestion
+        return (
+          <PhotoInput
+            ref={photo.tag}
+            tag={photo.tag}
+            type={photo.type}
+            title={photo.title}
+            required={photo.required}
+            />
         )
       default:
         throw new Error('no such question type')
