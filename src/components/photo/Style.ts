@@ -46,6 +46,11 @@ const style = StyleSheet.create(
                 },
             }),
         },
+        imagePreview: {
+             width: null, 
+             height: Dimensions.get('window').width, 
+             flex: 1,
+        },
     },
 )
 export default style
