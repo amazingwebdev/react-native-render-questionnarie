@@ -1,7 +1,5 @@
 import { Platform, Dimensions, StyleSheet } from 'react-native'
 
-const button = StyleSheet.create({})
-
 const style = StyleSheet.create(
     {
         container: {
@@ -10,20 +8,21 @@ const style = StyleSheet.create(
             height: Dimensions.get('window').height,
         },
         preview: {
-            ...button,
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
         },
-        left: {
-            ...button,
-            flex: 0,
-            flexDirection: 'column',
-            backgroundColor: '#fff',
-            borderRadius: 5,
-            color: '#000',
-            padding: 10,
-            margin: 50,
+        rightButton: {
+            alignItems: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+        },
+        leftButton: {
+            alignItems: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            left: 20,
         },
         header: {
             ...Platform.select({

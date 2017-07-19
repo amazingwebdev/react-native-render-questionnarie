@@ -66,15 +66,11 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     transparent={false}>
                     <View style={Style.container}>
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-
-                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, left: 20 }} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-
-                            <Button style={{ alignSelf: 'flex-end', position: 'absolute', bottom: 20, right: 20 }} onPress={this.takePicture}><Text>GERİ</Text></Button>
-
+                            <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
+                            <Button style={Style.rightButton} onPress={this.takePicture}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
-
             )
         }
         return (
