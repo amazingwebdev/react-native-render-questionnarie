@@ -15,18 +15,6 @@ const style = StyleSheet.create(
         centerButton: {
             justifyContent: 'center',
         },
-        rightButton: {
-            alignSelf: 'flex-end',
-            position: 'absolute',
-            bottom: 20,
-            right: 20,
-        },
-        leftButton: {
-            alignSelf: 'flex-end',
-            position: 'absolute',
-            bottom: 20,
-            left: 20,
-        },
         header: {
             ...Platform.select({
                 android: {
@@ -57,6 +45,18 @@ const style = StyleSheet.create(
             width: null,
             height: Dimensions.get('window').width,
             flex: 1,
+        },
+        rightButton: {
+            alignSelf: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+        },
+        leftButton: {
+            alignSelf: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            left: 20,
         },
     },
 )

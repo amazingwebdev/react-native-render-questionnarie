@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image, Modal } from 'react-native'
-import { Button, Header, Icon, Card, CardItem, Left, Right, Body } from 'native-base'
+import { Button, Header, Icon, Card, CardItem, Left, Right, Body, DeckSwiper } from 'native-base'
 
 import Camera from 'react-native-camera'
 import { PhotoInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
-import Style from './Style'
+import Style, { buttonStyle } from './Style'
 
 interface camera {
     aspect: any
@@ -28,6 +28,7 @@ interface State extends BaseState {
 export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     private camera: Camera
+    public images: string[]
 
     constructor(props: PhotoInputQuestion) {
         super(props)
@@ -47,15 +48,19 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             url: '',
             display: true,
         }
-        this.renderCamera = this.renderCamera.bind(this)
+        this.images = []
         this.openCamera = this.openCamera.bind(this)
         this.takePicture = this.takePicture.bind(this)
-        this.goBack = this.goBack.bind(this)
+        this.returnBack = this.returnBack.bind(this)
+        this.getImages = this.getImages.bind(this)
+        this.removePicture = this.removePicture.bind(this)
+        this.retakePicture = this.retakePicture.bind(this)
+        this.renderTitle = this.renderTitle.bind(this)
     }
 
     public render(): JSX.Element {
         return (
-            this.state.isCaptured ? this.renderCamera() : this.getTitle()
+            this.state.isCaptured ? this.renderCamera() : this.renderTitle()
         )
     }
 
@@ -66,10 +71,9 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     animationType={'slide'}
                     transparent={false}>
                     <View style={Style.container}>
-                        {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-                            <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-                            <Button style={Style.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
+                            <Button style={StyleSheet.flatten(Style.leftButton)} onPress={this.takePicture}><Text>ÇEK</Text></Button>
+                            <Button style={StyleSheet.flatten(Style.rightButton)} onPress={this.returnBack}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
@@ -78,39 +82,27 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         return (
             <Card >
                 <CardItem>
-                    <Left>
-                        <Body>
-                            <Text>{this.props.title}</Text>
-                        </Body>
-                    </Left>
+                    <Body>
+                        <Text>{this.props.title}</Text>
+                    </Body>
                 </CardItem>
                 <CardItem>
                     <Image source={{ uri: this.state.url }} style={Style.imagePreview} resizeMode="stretch"></Image>
                 </CardItem>
                 <CardItem>
-                    <Body>
-                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                    <Body style={{ flexDirection: 'row' }}>
+                        <Button style={Style.centerButton} transparent onPress={this.removePicture}><Text>SİL</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.retakePicture}><Text>YENİDEN ÇEK</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>RESİM EKLE</Text></Button>
                     </Body>
                 </CardItem>
             </Card>
+
         )
 
     }
 
-    private goBack() {
-        this.setState({ isCaptured: false })
-    }
-
-    private takePicture() {
-        if (this.camera) {
-            this.camera.capture()
-                .then((data) => { this.setState({ url: data.path, isCapturing: true, isCaptured: true }) })
-                .catch((err: any) => console.error(err))
-        }
-
-    }
-
-    protected getTitle(): JSX.Element | undefined {
+    protected renderTitle(): JSX.Element | undefined {
         return (this.props.title === undefined ? undefined :
             <Header style={Style.header}>
                 <Text style={Style.title}>{this.props.title}</Text>
@@ -121,8 +113,51 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         )
     }
 
+    private takePicture() {
+        if (this.camera) {
+            this.camera.capture()
+                .then((data) => {
+                    this.setState({ url: data.path, isCapturing: true })
+                    this.getImages()
+                })
+                .catch((err: any) => console.error(err))
+        }
+
+    }
+
     private openCamera() {
         this.setState({ isCaptured: true })
+    }
+
+    private getImages() {
+        this.images.push(this.state.url)
+        console.log(this.images)
+
+    }
+
+    private retakePicture() {
+        for (const i of this.images) {
+            if (this.state.url === i) {
+                const index = this.images.indexOf(i)
+                this.images.splice(index, 1)
+                this.setValue()
+            }
+        }
+        this.renderCamera()
+    }
+
+    private removePicture() {
+        for (const i of this.images) {
+            if (this.state.url === i) {
+                const index = this.images.indexOf(i)
+                this.images.splice(index, 1)
+                this.setState({ url: this.images[index - 1] })
+                if (this.images.length === 0) {
+                    this.setValue()
+                    this.returnBack()
+                }
+            }
+        }
     }
 
     public setValue() {
@@ -131,5 +166,13 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     public getValue() {
         return this.state.camera
+    }
+
+    private returnBack() {
+        if (this.images.length === 0) {
+            this.setState({ isCaptured: false })
+        } else {
+            this.setState({ isCaptured: true, isCapturing: true })
+        }
     }
 }
