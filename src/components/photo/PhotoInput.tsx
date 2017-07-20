@@ -71,7 +71,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     animationType={'slide'}
                     transparent={false}>
                     <View style={Style.container}>
-                        {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
                             <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
                             <Button style={Style.rightButton} onPress={this.returnBack}><Text>GERİ</Text></Button>

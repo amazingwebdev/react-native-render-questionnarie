@@ -11,4 +11,4 @@ export {
 	ListInputQuestion,
 	PhotoInputQuestion,
 } from './Form'
-export { Survey } from './Survey'
+export { default } from './Survey'

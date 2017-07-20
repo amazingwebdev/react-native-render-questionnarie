@@ -54,7 +54,7 @@ interface Answers {
   [key: string]: {}
 }
 
-export class Survey extends React.Component<SurveyProps, SurveyState> {
+export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
   private answers: Answers
   private pageCount: number
