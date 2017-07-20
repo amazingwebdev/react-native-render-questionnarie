@@ -46,21 +46,18 @@ const style = StyleSheet.create(
             height: Dimensions.get('window').width,
             flex: 1,
         },
+        rightButton: {
+            alignSelf: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+        },
+        leftButton: {
+            alignSelf: 'flex-end',
+            position: 'absolute',
+            bottom: 20,
+            left: 20,
+        },
     },
 )
 export default style
-
-export const buttonStyle = {
-    rightButton: {
-        alignSelf: 'flex-end',
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-    },
-    leftButton: {
-        alignSelf: 'flex-end',
-        position: 'absolute',
-        bottom: 20,
-        left: 20,
-    },
-}
