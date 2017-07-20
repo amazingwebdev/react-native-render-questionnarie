@@ -5,7 +5,6 @@ import { Button, Header, Icon, Card, CardItem, Left, Right, Body, DeckSwiper } f
 import Camera from 'react-native-camera'
 import { PhotoInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
-import Style, { buttonStyle } from './Style'
 
 interface camera {
     aspect: any
