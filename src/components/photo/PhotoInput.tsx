@@ -80,7 +80,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             )
         }
         return (
-
             <Card >
                 <CardItem>
                     <Body>
@@ -104,14 +103,18 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     }
 
     private returnBack() {
-        this.setState({ isCaptured: false })
+        if (this.images.length === 0) {
+            this.setState({ isCaptured: false })
+        } else {
+            this.setState({ isCaptured: true, isCapturing: true })
+        }
     }
 
     private takePicture() {
         if (this.camera) {
             this.camera.capture()
                 .then((data) => {
-                    this.setState({ url: data.path, isCapturing: true, isCaptured: true })
+                    this.setState({ url: data.path, isCapturing: true })
                     this.getImages()
                 })
                 .catch((err: any) => console.error(err))
