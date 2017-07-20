@@ -52,13 +52,13 @@ export default style
 
 export const buttonStyle = {
     rightButton: {
-        alignSelf: '"flex-end"',
+        alignSelf: 'flex-end',
         position: 'absolute',
         bottom: 20,
         right: 20,
     },
     leftButton: {
-        alignSelf: 'center',
+        alignSelf: 'flex-end',
         position: 'absolute',
         bottom: 20,
         left: 20,

@@ -54,7 +54,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.returnBack = this.returnBack.bind(this)
         this.getImages = this.getImages.bind(this)
         this.removePicture = this.removePicture.bind(this)
-
+        this.retakePicture = this.retakePicture.bind(this)
     }
 
     public render(): JSX.Element {
@@ -72,13 +72,8 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     <View style={Style.container}>
                         {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-<<<<<<< HEAD
                             <Button style={buttonStyle.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-                            <Button style={buttonStyle.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
-=======
-                            <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-                            <Button style={Style.rightButton} onPress={this.returnBack}><Text>GERİ</Text></Button>
->>>>>>> 812d1afd4f0fda251cabd1764dc699653faebe2f
+                            <Button style={buttonStyle.rightButton} onPress={this.returnBack}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
@@ -98,7 +93,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                 <CardItem>
                     <Body style={{ flexDirection: 'row' }}>
                         <Button style={Style.centerButton} transparent onPress={this.removePicture}><Text>SİL</Text></Button>
-                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>YENİDEN ÇEK</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.retakePicture}><Text>YENİDEN ÇEK</Text></Button>
                         <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>RESİM EKLE</Text></Button>
                     </Body>
                 </CardItem>
@@ -118,19 +113,32 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                 .then((data) => {
                     this.setState({ url: data.path, isCapturing: true, isCaptured: true })
                     this.getImages()
-
                 })
                 .catch((err: any) => console.error(err))
         }
 
     }
 
+    private retakePicture() {
+        for (const i of this.images) {
+            if (this.state.url === i) {
+                const index = this.images.indexOf(i)
+                this.images.splice(index, 1)
+                this.setValue()
+            }
+        }
+        this.renderCamera()
+    }
     private removePicture() {
         for (const i of this.images) {
             if (this.state.url === i) {
                 const index = this.images.indexOf(i)
                 this.images.splice(index, 1)
                 this.setState({ url: this.images[index - 1] })
+                if (this.images.length === 0) {
+                    this.setValue()
+                    this.returnBack()
+                }
             }
         }
     }
