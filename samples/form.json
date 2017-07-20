@@ -6,234 +6,139 @@
             "name": "JTI Stand",
             "tag": "jti_stand",
             "questions": [
-                {
-                    "title": "Nokta'nın TAPDK belgesi var mı?",
-                    "type": "radio",
-                    "tag": "TP_VY",
-                    "required": true,
-                    "optionsTitle": "Seçiniz",
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Var",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Yok",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "Nokta'nın TAPDK numarasını giriniz.",
-                    "type": "text",
-                    "tag": "TP_NO",
-                    "required": true
-                },
-                {
-                    "title": "Ruhsat almayı düşünür müsünüz?",
-                    "type": "radio",
-                    "tag": "TP_EH",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Evet",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Hayır",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "Nokta'da sigara satışı var mı?",
-                    "type": "radio",
-                    "tag": "SG_VY",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Var",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Yok",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "JTI ürünü var mı?",
-                    "type": "radio",
-                    "tag": "JTI_VY",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Var",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Yok",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "JTI standı var mı?",
-                    "type": "radio",
-                    "tag": "JTI_S_VY",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Var",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Yok",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "JTI Stand büyüklüğünü seçiniz.",
+                 {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
                     "type": "list",
-                    "tag": "JTI_S_BY",
+                    "tag": "BEV_KS_1",
                     "required": true,
                     "options": {
                         "type": "static",
                         "values": [
                             {
-                                "name": "Small",
-                                "value": "S"
+                                "name": "1",
+                                "value": "1"
                             },
                             {
-                                "name": "Medium",
-                                "value": "M"
+                                "name": "2",
+                                "value": "2"
                             },
                             {
-                                "name": "Large",
-                                "value": "L"
+                                "name": "3",
+                                "value": "3"
+                            },
+                            {
+                                "name": "4-5",
+                                "value": "4-5"
+                            },
+                            {
+                                "name": "6-8",
+                                "value": "6-8"
+                            },
+                            {
+                                "name": "8+",
+                                "value": "8+"
                             }
                         ]
                     },
                     "titleKey": "name",
                     "valueKey": "value"
                 },
-                {
-                    "title": "JTI SKU Sayısı",
-                    "type": "text",
-                    "tag": "JTI_SKU",
-                    "required": true
-                },
-                {
-                    "title": "JTI Haftalık Satış (Karton)",
-                    "type": "text",
-                    "tag": "JTI_STS",
-                    "required": true
-                },
-                {
-                    "title": "JTI ürünlerini nereden alıyor?",
-                    "type": "check",
-                    "tag": "JTI_DST",
+                 {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
+                    "tag": "BEV_KS_1",
                     "required": true,
                     "options": {
                         "type": "static",
                         "values": [
                             {
-                                "name": "Distribütor",
-                                "value": "distributor"
+                                "name": "1",
+                                "value": "1"
                             },
                             {
-                                "name": "Metro",
-                                "value": "metro"
+                                "name": "2",
+                                "value": "2"
                             },
                             {
-                                "name": "BTT",
-                                "value": "btt"
+                                "name": "3",
+                                "value": "3"
                             },
                             {
-                                "name": "Toptancı",
-                                "value": "toptancı"
+                                "name": "4-5",
+                                "value": "4-5"
+                            },
+                            {
+                                "name": "6-8",
+                                "value": "6-8"
+                            },
+                            {
+                                "name": "8+",
+                                "value": "8+"
                             }
                         ]
                     },
                     "titleKey": "name",
                     "valueKey": "value"
                 },
-                {
-                    "title": "JTI standı doluluk oranı nedir?",
-                    "type": "slider",
-                    "tag": "JTI_DST_125",
-                    "required": true,
-                    "min": 0,
-                    "max": 100,
-                    "step": 5
-                },
-                {
-                    "title": "Toptancı adını yazınız.",
-                    "type": "text",
-                    "tag": "JTI_DST_51",
-                    "required": true
-                },
-                {
-                    "title": "JTI ürünleri satmama nedenleriniz nelerdir?",
-                    "type": "check",
-                    "tag": "JTI_NDN",
+                 {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
+                    "tag": "BEV_KS_1",
                     "required": true,
                     "options": {
                         "type": "static",
                         "values": [
                             {
-                                "name": "Talep yok",
-                                "value": "talep_yok"
+                                "name": "1",
+                                "value": "1"
                             },
                             {
-                                "name": "Daha önce yetkili gelmedi",
-                                "value": "yetkili_gelmedi"
+                                "name": "2",
+                                "value": "2"
                             },
                             {
-                                "name": "Fazla marka satmak istemiyorum",
-                                "value": "satmak_istemiyorum"
+                                "name": "3",
+                                "value": "3"
                             },
                             {
-                                "name": "Yeni dolap için yer yok",
-                                "value": "yer_yok"
+                                "name": "4-5",
+                                "value": "4-5"
                             },
                             {
-                                "name": "Standım yok",
-                                "value": "stand_yok"
+                                "name": "6-8",
+                                "value": "6-8"
                             },
                             {
-                                "name": "Satış Temsilcisi / Distribütor ile anlaşmazlık",
-                                "value": "anlasmazlık"
+                                "name": "8+",
+                                "value": "8+"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                 {
+                    "title": "Dolabın fotoğrafını çekiniz",
+                    "type": "photo",
+                    "tag": "TP_VY_",
+                    "required": true,
+                    "photorequired":true
+                },
+                {
+                    "title": "Noktada alkol satışı var mı?",
+                    "type": "radio",
+                    "tag": "AL_VY11",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
                             },
                             {
-                                "name": "Diğer",
-                                "value": "diger"
+                                "name": "Yok",
+                                "value": "0"
                             }
                         ]
                     },
@@ -242,6 +147,7 @@
                 }
             ]
         },
+        
         {
             "name": "Potansiyel",
             "tag": "potansiyel_soruları",

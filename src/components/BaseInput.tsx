@@ -5,7 +5,7 @@ import { Question } from '../survey'
 import Style from './BaseInputStyle'
 
 export enum QuestionType {
-	Textfield, Slider, Checkbox, RadioButton, Dropdown,
+	Textfield, Slider, Checkbox, RadioButton, Dropdown, PhotoInput,
 }
 
 export interface BaseState {

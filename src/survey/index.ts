@@ -9,5 +9,6 @@ export {
 	CheckInputQuestion,
 	RadioInputQuestion,
 	ListInputQuestion,
+	PhotoInputQuestion,
 } from './Form'
 export { default } from './Survey'
