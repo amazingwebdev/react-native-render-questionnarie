@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image, Modal } from 'react-native'
-import { Button, Header, Icon, Card, CardItem, Left, Right, Body } from 'native-base'
+import { Button, Header, Icon, Card, CardItem, Left, Right, Body, DeckSwiper } from 'native-base'
 
 import Camera from 'react-native-camera'
 import { PhotoInputQuestion } from '../../survey'
@@ -28,6 +28,7 @@ interface State extends BaseState {
 export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     private camera: Camera
+    public images: string[]
 
     constructor(props: PhotoInputQuestion) {
         super(props)
@@ -47,10 +48,13 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
             url: '',
             display: true,
         }
-        this.renderCamera = this.renderCamera.bind(this)
+        this.images = []
         this.openCamera = this.openCamera.bind(this)
         this.takePicture = this.takePicture.bind(this)
-        this.goBack = this.goBack.bind(this)
+        this.returnBack = this.returnBack.bind(this)
+        this.getImages = this.getImages.bind(this)
+        this.removePicture = this.removePicture.bind(this)
+
     }
 
     public render(): JSX.Element {
@@ -68,45 +72,72 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     <View style={Style.container}>
                         {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
+<<<<<<< HEAD
                             <Button style={buttonStyle.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
                             <Button style={buttonStyle.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
+=======
+                            <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
+                            <Button style={Style.rightButton} onPress={this.returnBack}><Text>GERİ</Text></Button>
+>>>>>>> 812d1afd4f0fda251cabd1764dc699653faebe2f
                         </Camera>
                     </View>
                 </Modal>
             )
         }
         return (
+
             <Card >
                 <CardItem>
-                    <Left>
-                        <Body>
-                            <Text>{this.props.title}</Text>
-                        </Body>
-                    </Left>
+                    <Body>
+                        <Text>{this.props.title}</Text>
+                    </Body>
                 </CardItem>
                 <CardItem>
                     <Image source={{ uri: this.state.url }} style={Style.imagePreview} resizeMode="stretch"></Image>
                 </CardItem>
                 <CardItem>
-                    <Body>
-                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>TEKRAR ÇEK</Text></Button>
+                    <Body style={{ flexDirection: 'row' }}>
+                        <Button style={Style.centerButton} transparent onPress={this.removePicture}><Text>SİL</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>YENİDEN ÇEK</Text></Button>
+                        <Button style={Style.centerButton} transparent onPress={this.setValue}><Text>RESİM EKLE</Text></Button>
                     </Body>
                 </CardItem>
             </Card>
+
         )
 
     }
 
-    private goBack() {
+    private returnBack() {
         this.setState({ isCaptured: false })
     }
 
     private takePicture() {
         if (this.camera) {
             this.camera.capture()
-                .then((data) => { this.setState({ url: data.path, isCapturing: true, isCaptured: true }) })
+                .then((data) => {
+                    this.setState({ url: data.path, isCapturing: true, isCaptured: true })
+                    this.getImages()
+
+                })
                 .catch((err: any) => console.error(err))
         }
+
+    }
+
+    private removePicture() {
+        for (const i of this.images) {
+            if (this.state.url === i) {
+                const index = this.images.indexOf(i)
+                this.images.splice(index, 1)
+                this.setState({ url: this.images[index - 1] })
+            }
+        }
+    }
+
+    private getImages() {
+        this.images.push(this.state.url)
+        console.log(this.images)
 
     }
 
