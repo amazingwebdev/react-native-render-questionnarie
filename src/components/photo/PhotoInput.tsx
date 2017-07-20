@@ -5,7 +5,7 @@ import { Button, Header, Icon, Card, CardItem, Left, Right, Body } from 'native-
 import Camera from 'react-native-camera'
 import { PhotoInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
-import Style from './Style'
+import Style, { buttonStyle } from './Style'
 
 interface camera {
     aspect: any
@@ -68,8 +68,8 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
                     <View style={Style.container}>
                         {/* Ask Seray Uzgur */}
                         <Camera ref={(cam) => { this.camera = cam }} aspect={Camera.constants.Aspect.fill} style={Style.preview}>
-                            <Button style={Style.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
-                            <Button style={Style.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
+                            <Button style={buttonStyle.leftButton} onPress={this.takePicture}><Text>ÇEK</Text></Button>
+                            <Button style={buttonStyle.rightButton} onPress={this.goBack}><Text>GERİ</Text></Button>
                         </Camera>
                     </View>
                 </Modal>
