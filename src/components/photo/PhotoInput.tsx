@@ -55,11 +55,12 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         this.getImages = this.getImages.bind(this)
         this.removePicture = this.removePicture.bind(this)
         this.retakePicture = this.retakePicture.bind(this)
+        this.renderTitle = this.renderTitle.bind(this)
     }
 
     public render(): JSX.Element {
         return (
-            this.state.isCaptured ? this.renderCamera() : this.getTitle()
+            this.state.isCaptured ? this.renderCamera() : this.renderTitle()
         )
     }
 
@@ -103,8 +104,15 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     }
 
-    private returnBack() {
-        this.setState({ isCaptured: false })
+    protected renderTitle(): JSX.Element | undefined {
+        return (this.props.title === undefined ? undefined :
+            <Header style={Style.header}>
+                <Text style={Style.title}>{this.props.title}</Text>
+                <Button style={Style.button} onPress={this.openCamera}>
+                    <Icon name="camera" />
+                </Button>
+            </Header>
+        )
     }
 
     private takePicture() {
@@ -119,6 +127,16 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
 
     }
 
+    private openCamera() {
+        this.setState({ isCaptured: true })
+    }
+
+    private getImages() {
+        this.images.push(this.state.url)
+        console.log(this.images)
+
+    }
+
     private retakePicture() {
         for (const i of this.images) {
             if (this.state.url === i) {
@@ -129,6 +147,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         }
         this.renderCamera()
     }
+
     private removePicture() {
         for (const i of this.images) {
             if (this.state.url === i) {
@@ -143,27 +162,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
         }
     }
 
-    private getImages() {
-        this.images.push(this.state.url)
-        console.log(this.images)
-
-    }
-
-    protected getTitle(): JSX.Element | undefined {
-        return (this.props.title === undefined ? undefined :
-            <Header style={Style.header}>
-                <Text style={Style.title}>{this.props.title}</Text>
-                <Button style={Style.button} onPress={this.openCamera}>
-                    <Icon name="camera" />
-                </Button>
-            </Header>
-        )
-    }
-
-    private openCamera() {
-        this.setState({ isCaptured: true })
-    }
-
     public setValue() {
         this.setState({ isCapturing: false })
     }
@@ -171,4 +169,9 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, State> {
     public getValue() {
         return this.state.camera
     }
+
+    private returnBack() {
+        this.setState({ isCaptured: false })
+    }
+
 }
