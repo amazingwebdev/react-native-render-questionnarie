@@ -73,18 +73,18 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
                         ref={(cam) => { this.camera = cam }}
                         style={Style.preview}
                         aspect={Camera.constants.Aspect.fill} >
-                        <Button
+                        <Button style={Style.cameraButton}
                             transparent
                             onPress={this.takePhoto} >
-                            <Icon active name="camera" />
+                            <Icon active name="camera" style={Style.iconSize} />
                         </Button>
-                        <Button
+                        <Button style={Style.doneButton}
                             transparent
                             onPress={this.closeCamera}>
                             <Badge style={Style.badgeStyle}>
                                 <Text>{this.state.capturedPhotos.length}</Text>
                             </Badge>
-                            <Icon active name="done-all" />
+                            <Icon active name="done-all" style={Style.iconSize} />
                         </Button>
                     </Camera>
                 </View>
@@ -118,17 +118,17 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
                 </CardItem>
                 <CardItem>
                     <Left>
-                        <Button
+                        <Button style={Style.previousImageButton}
                             transparent
                             onPress={this.onNavigatePreviousPhoto}>
-                            <Icon name="arrow-dropleft-circle" />
+                            <Icon style={Style.iconSize} name="arrow-dropleft-circle" />
                         </Button>
                     </Left>
                     <Right>
-                        <Button
+                        <Button style={Style.nextImageButton}
                             transparent
                             onPress={this.onNavigateNextPhoto}>
-                            <Icon name="arrow-dropright-circle" />
+                            <Icon style={Style.iconSize} name="arrow-dropright-circle" />
                         </Button>
                     </Right>
                 </CardItem>
