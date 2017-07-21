@@ -47,25 +47,21 @@ const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
         },
     }),
 }
-
-const leftButton: TextStyle | TextStyleIOS | TextStyleAndroid = {
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-}
-
-const rightButton: TextStyle | TextStyleIOS | TextStyleAndroid = {
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-}
-
 const imagePreview: ViewStyle = {
     width: null,
     height: WIDTH,
     flex: 1,
+}
+
+const badgeStyle: ViewStyle = {
+    position: 'absolute',
+    right: 12,
+    top: 3,
+    paddingTop: 0,
+    paddingBottom: 0,
+    borderRadius: 100,
+    height: 18,
+    backgroundColor: 'green',
 }
 
 export default {
@@ -75,7 +71,6 @@ export default {
     title,
     button,
     centerButton,
-    leftButton,
-    rightButton,
     imagePreview,
+    badgeStyle,
 }
