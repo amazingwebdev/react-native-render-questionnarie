@@ -1,63 +1,76 @@
-import { Platform, Dimensions, StyleSheet } from 'react-native'
+import { Platform, Dimensions, StyleSheet, ViewStyle, TextStyle, TextStyleIOS, TextStyleAndroid } from 'react-native'
 
-const style = StyleSheet.create(
-    {
-        container: {
-            flex: 1,
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height,
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
+
+const container: ViewStyle = {
+    flex: 1,
+    width: WIDTH,
+    height: HEIGHT,
+}
+
+const preview: ViewStyle = {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+}
+
+const centerButton: ViewStyle = {
+    justifyContent: 'center',
+}
+
+const header: ViewStyle = {
+    ...Platform.select({
+        android: {
+            backgroundColor: '#3498db',
         },
-        preview: {
-            flex: 1,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+    }),
+}
+
+const title: TextStyle | TextStyleIOS | TextStyleAndroid = {
+    ...Platform.select({
+        android: {
+            color: 'white',
+            padding: 5,
+            textAlignVertical: 'center',
         },
-        centerButton: {
-            justifyContent: 'center',
+    }),
+}
+
+const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
+    ...Platform.select({
+        android: {
+            flex: 0,
+            color: 'white',
+            textAlignVertical: 'auto',
+            textAlign: 'right',
         },
-        rightButton: {
-            alignSelf: 'flex-end',
-            position: 'absolute',
-            bottom: 20,
-            right: 20,
-        },
-        leftButton: {
-            alignSelf: 'flex-end',
-            position: 'absolute',
-            bottom: 20,
-            left: 20,
-        },
-        header: {
-            ...Platform.select({
-                android: {
-                    backgroundColor: '#3498db',
-                },
-            }),
-        },
-        title: {
-            ...Platform.select({
-                android: {
-                    color: 'white',
-                    padding: 5,
-                    textAlignVertical: 'center',
-                },
-            }),
-        },
-        button: {
-            ...Platform.select({
-                android: {
-                    flex: 0,
-                    color: 'white',
-                    textAlignVertical: 'auto',
-                    textAlign: 'right',
-                },
-            }),
-        },
-        imagePreview: {
-            width: null,
-            height: Dimensions.get('window').width,
-            flex: 1,
-        },
-    },
-)
-export default style
+    }),
+}
+const imagePreview: ViewStyle = {
+    width: null,
+    height: WIDTH,
+    flex: 1,
+}
+
+const badgeStyle: ViewStyle = {
+    position: 'absolute',
+    right: 12,
+    top: 3,
+    paddingTop: 0,
+    paddingBottom: 0,
+    borderRadius: 100,
+    height: 18,
+    backgroundColor: 'green',
+}
+
+export default {
+    container,
+    preview,
+    header,
+    title,
+    button,
+    centerButton,
+    imagePreview,
+    badgeStyle,
+}
