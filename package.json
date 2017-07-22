@@ -51,7 +51,8 @@
     "native-base": "2.1.4",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
-    "react-native-camera": "0.9.4"
+    "react-native-camera": "0.9.4",
+    "rn-viewpager": "^1.2.3"
   },
   "devDependencies": {
     "@types/chai": "^4.0.0",
