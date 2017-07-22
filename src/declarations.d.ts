@@ -12,6 +12,29 @@ declare module "react-native-button" {
     export default class Button extends Component<Props, any> { }
 }
 
+
+declare module 'rn-viewpager' {
+    import React, { Component } from "react";
+
+    class PagerTabIndicator extends Component<any, any> {
+
+    }
+    class IndicatorViewPager extends Component<any, any> {
+
+    }
+    class PagerTitleIndicator extends Component<any, any> {
+
+    }
+    class PagerDotIndicator extends Component<any, any> {
+
+    }
+
+    export default class PageControl extends Component<any, any> {
+
+    }
+
+}
+
 /*
 // If you are lazy and don't care about the strict typings:
 
@@ -319,11 +342,11 @@ declare module "react-native-camera" {
 
     interface constants {
         Aspect: any;
-        CaptureTarget:any;
-        Type:any;
-        Orientation:any;
-        FlashMode:any;
-        CaptureMode:any;
+        CaptureTarget: any;
+        Type: any;
+        Orientation: any;
+        FlashMode: any;
+        CaptureMode: any;
     }
 
 
