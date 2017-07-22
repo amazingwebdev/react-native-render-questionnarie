@@ -82,16 +82,6 @@ const iconSize: TextStyle = {
     fontSize: 50,
 }
 
-const nextImageButton: TextStyle = {
-    height: 50,
-    width: 50,
-}
-
-const previousImageButton: TextStyle = {
-    height: 50,
-    width: 50,
-}
-
 export default {
     container,
     preview,
@@ -104,6 +94,4 @@ export default {
     cameraButton,
     doneButton,
     iconSize,
-    nextImageButton,
-    previousImageButton,
 }
