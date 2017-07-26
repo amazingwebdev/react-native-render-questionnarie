@@ -1,16 +1,16 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { RadioInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
+import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
+import { MultiChoiceInputState } from '../MultiChoiceInput'
 
 interface RadioInputState extends MultiChoiceInputState {
     selection: string | undefined
 }
 
-export class RadioInput extends MultiChoiceInput<RadioInputQuestion, RadioInputState> {
+export class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> {
 
-    constructor(props: RadioInputQuestion) {
+    constructor(props: MultiInputQuestion) {
         super(props)
         this.state = {
             selection: undefined,
@@ -32,7 +32,11 @@ export class RadioInput extends MultiChoiceInput<RadioInputQuestion, RadioInputS
     }
 
     public render(): JSX.Element {
-        return super.render(this.options.map(this.renderOptions))
+        return (
+            <View>
+                {this.props.pureOptions.map(this.renderOptions)}
+            </View>
+        )
     }
 
     public setValue(selection: string) {

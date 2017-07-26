@@ -5,7 +5,7 @@ import { BaseInput, BaseState } from './BaseInput'
 
 export interface MultiChoiceInputState extends BaseState {
 
-}
+}/* 
 
 export abstract class MultiChoiceInput<P extends MultiInputQuestion, S extends MultiChoiceInputState> extends BaseInput<P, S> {
 
@@ -24,3 +24,4 @@ export abstract class MultiChoiceInput<P extends MultiInputQuestion, S extends M
     }
 
 }
+ */

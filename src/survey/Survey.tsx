@@ -17,6 +17,7 @@ import {
 
 import {
   BaseInput,
+  DisplayInput,
   BaseState,
   QuestionType,
   TextInput,
@@ -26,6 +27,8 @@ import {
   ListInput,
   PhotoInput,
 } from '../components'
+
+import { HOCInput } from '../components/BaseInputHOC'
 
 import {
   Form,
@@ -85,7 +88,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const question = this.refs[ref] as BaseInput<Question, BaseState>
+          const question = this.refs[ref] as BaseInput
           question.setValue(currentPageAnswers[ref])
         }
       }
@@ -113,7 +116,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             this.pageCount !== 1 &&
             <Left>
               <Button transparent onPress={() => Alert.alert(this.props.form.name, this.brief)}>
-                <Icon name="clipboard" />
+                <Icon name="camera" />
               </Button>
             </Left>}
           <Body>
@@ -145,9 +148,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const question = this.refs[ref] as BaseInput<Question, BaseState>
-        if (!question.isValid() && question.props.title) {
-          validationMessages.push(question.props.title)
+        const question = this.refs[ref] as BaseInput
+        if (!question.isValid() && question.getTitle()) {
+          validationMessages.push(question.getTitle())
         }
       }
     }
@@ -155,10 +158,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   private storeCurrentPageAnswers(): void {
-    const currentPageAnswers: { [key: string]: string } = {}
+    const currentPageAnswers: { [key: string]: string | string[] | number } = {}
     for (const q in this.refs) {
       if (this.refs.hasOwnProperty(q)) {
-        const question = this.refs[q] as BaseInput<Question, BaseState>
+        const question = this.refs[q] as BaseInput
         if (question.isValid() && question.getValue() !== undefined) {
           currentPageAnswers[q] = question.getValue()
         }
@@ -222,37 +225,37 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             validation={text.validation}
           />
         )
-      case 'list':
-        const list: ListInputQuestion = question as ListInputQuestion
-        return (
-          <ListInput
-            ref={list.tag}
-            tag={list.tag}
-            type={list.type}
-            title={list.title}
-            required={list.required}
-            defaultValue={list.defaultValue}
-            options={list.options}
-            titleKey={list.titleKey}
-            valueKey={list.valueKey}
-            optionsTitle={list.optionsTitle}
-          />
-        )
-      case 'radio':
-        const radio: RadioInputQuestion = question as RadioInputQuestion
-        return (
-          <RadioInput
-            ref={radio.tag}
-            tag={radio.tag}
-            type={radio.type}
-            title={radio.title}
-            required={radio.required}
-            defaultValue={radio.defaultValue}
-            options={radio.options}
-            titleKey={radio.titleKey}
-            valueKey={radio.valueKey}
-          />
-        )
+      /*  case 'list':
+         const list: ListInputQuestion = question as ListInputQuestion
+         return (
+           <ListInput
+             ref={list.tag}
+             tag={list.tag}
+             type={list.type}
+             title={list.title}
+             required={list.required}
+             defaultValue={list.defaultValue}
+             options={list.options}
+             titleKey={list.titleKey}
+             valueKey={list.valueKey}
+             optionsTitle={list.optionsTitle}
+           />
+         ) */
+      /*  case 'radio':
+         const radio: RadioInputQuestion = question as RadioInputQuestion
+         return (
+           <RadioInput
+             ref={radio.tag}
+             tag={radio.tag}
+             type={radio.type}
+             title={radio.title}
+             required={radio.required}
+             defaultValue={radio.defaultValue}
+             options={radio.options}
+             titleKey={radio.titleKey}
+             valueKey={radio.valueKey}
+           />
+         ) */
       case 'check':
         const checkbox: CheckInputQuestion = question as CheckInputQuestion
         return (
@@ -268,8 +271,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             valueKey={checkbox.valueKey}
           />
         )
-      case 'photo':
-        const photo : PhotoInputQuestion = question as PhotoInputQuestion
+      /* case 'photo':
+        const photo: PhotoInputQuestion = question as PhotoInputQuestion
         return (
           <PhotoInput
             ref={photo.tag}
@@ -277,10 +280,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={photo.type}
             title={photo.title}
             required={photo.required}
-            />
-        )
+          />
+        ) */
       default:
-        throw new Error('no such question type')
+      /*  throw new Error('no such question type') */
     }
   }
 

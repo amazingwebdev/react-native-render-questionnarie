@@ -1,9 +1,3 @@
-import React from 'react'
-import { View, Header, Text } from 'native-base'
-
-import { Question } from '../survey'
-import Style from './BaseInputStyle'
-
 export enum QuestionType {
 	Textfield, Slider, Checkbox, RadioButton, Dropdown, PhotoInput,
 }
@@ -12,6 +6,18 @@ export interface BaseState {
 	display?: boolean
 }
 
+export interface BaseInput extends React.Component { // TODO: generics
+	getTitle: () => string
+	getValue: () => string | string[] | number
+	setValue: (value: string | string[] | number) => void
+	isValid: () => boolean
+}
+
+export interface DisplayInput {
+	show: () => void
+	hide: () => void
+}
+/* 
 export abstract class BaseInput<P extends Question, S extends BaseState> extends React.Component<P, S>  {
 
 	protected ruleExecutors: (() => void)[]
@@ -79,5 +85,6 @@ export abstract class BaseInput<P extends Question, S extends BaseState> extends
 	private executeRuleListeners(): void {
 		this.ruleExecutors.map(ruleExecutor => ruleExecutor.call(null, this.getValue()))
 	}
-	
+
 }
+ */

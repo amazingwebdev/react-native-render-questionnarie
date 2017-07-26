@@ -1,31 +1,32 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { ListInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
+import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
+import { BaseInput } from '../BaseInput'
+import { MultiChoiceInputState } from '../MultiChoiceInput'
+import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
 interface ListInputState extends MultiChoiceInputState {
     selection?: string | number
 }
 
-export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputState> {
+export class ListInput extends React.Component<MultiInputQuestion, ListInputState>  {
 
-    constructor(props: ListInputQuestion) {
+    constructor(props: MultiInputQuestion) {
         super(props)
         this.state = {
             display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
-
-    public componentWillMount() {
-        super.componentWillMount()
-        const defaultOptionsTitle: { [key: string]: string | number } = {}
-        defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
-        defaultOptionsTitle[this.props.valueKey] = -1
-        this.options.splice(0, 0, defaultOptionsTitle)
-    }
-
+    /* 
+        componentWillMount() {
+            const defaultOptionsTitle: { [key: string]: string | number } = {}
+            defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
+            defaultOptionsTitle[this.props.valueKey] = -1
+            this.options.splice(0, 0, defaultOptionsTitle)
+        }
+     */
     public componentDidMount() {
         if (this.props.defaultValue !== undefined) {
             if (typeof this.props.defaultValue === 'string') {
@@ -39,14 +40,14 @@ export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputStat
     }
 
     public render(): JSX.Element {
-        return super.render(
+        return (
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                {this.options.map(this.renderOptions)}
-            </Picker>,
+                {this.props.pureOptions.map(this.renderOptions)}
+            </Picker>
         )
     }
 

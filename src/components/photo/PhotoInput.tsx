@@ -24,7 +24,7 @@ interface PhotoInputState extends BaseState {
     shownPhoto: string
 }
 
-export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
+export class PhotoInput extends React.Component<PhotoInputQuestion, PhotoInputState> {
 
     private camera: Camera
 

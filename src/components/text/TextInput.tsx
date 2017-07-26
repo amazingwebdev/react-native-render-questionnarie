@@ -3,12 +3,13 @@ import { View, Item, Input, Icon, Toast } from 'native-base'
 
 import { TextInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
+import BaseInputHOC from '../BaseInputHOC'
 
-interface TextInputState extends BaseState {
+interface TextInputState {
     value?: string
 }
 
-export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
+class TextInput extends React.Component<TextInputQuestion, TextInputState> implements BaseInput {
 
     private regExp: RegExp
 
@@ -16,15 +17,13 @@ export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
         super(props)
         this.state = {
             value: props.value,
-            display: true,
         }
         if (this.props.validation !== undefined) {
             this.regExp = new RegExp(this.props.validation)
         }
     }
 
-    public componentWillMount() {
-        super.componentWillMount()
+    public componentDidMount() {
         if (this.props.defaultValue !== undefined) {
             if (typeof this.props.defaultValue === 'string') {
                 this.setValue(this.props.defaultValue)
@@ -37,14 +36,14 @@ export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
     }
 
     public render(): JSX.Element {
-        return super.render(
+        return (
             <Item rounded>
                 <Input
                     onBlur={this.onBlur.bind(this)}
                     onChange={this.onChange.bind(this)}
                     placeholder={this.props.placeholder}
                     value={this.state.value} />
-            </Item>,
+            </Item>
         )
     }
 
@@ -62,12 +61,12 @@ export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
 
     public isValid(): boolean {
         if (this.regExp === undefined) {
-            return super.isValid()
+            return true
         }
         if (this.state.value !== undefined) {
             return this.regExp.test(this.state.value)
         }
-        return super.isValid()
+        return true
     }
 
     private onBlur(): void {
@@ -76,4 +75,10 @@ export class TextInput extends BaseInput<TextInputQuestion, TextInputState> {
         }
     }
 
+    public getTitle(): string {
+        return this.props.title
+    }
+
 }
+
+export default BaseInputHOC(TextInput)

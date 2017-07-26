@@ -1,8 +1,10 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
-import { CheckInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
+import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
+import { BaseInput } from '../BaseInput'
+import { MultiChoiceInputState } from '../MultiChoiceInput'
+import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
 interface Selection {
     [key: string]: boolean
@@ -12,9 +14,9 @@ interface CheckInputState extends MultiChoiceInputState {
     selection: Selection
 }
 
-export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputState> {
+class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> implements BaseInput {
 
-    constructor(props: CheckInputQuestion) {
+    constructor(props: MultiInputQuestion) {
         super(props)
         this.state = {
             selection: {},
@@ -36,7 +38,11 @@ export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputS
     }
 
     public render(): JSX.Element {
-        return super.render(this.options.map(this.renderOptions))
+        return (
+            <View>
+                {this.props.pureOptions.map(this.renderOptions)}
+            </View>
+        )
     }
 
     public setValue(value: string | string[]) {
@@ -53,7 +59,7 @@ export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputS
         const selections: string[] = []
         for (const ref in this.refs) {
             if (this.refs.hasOwnProperty(ref)) {
-                const component: CheckBox = this.refs[ref] as CheckInput
+                const component: CheckBox = this.refs[ref] as CheckBox
                 if (component.props.checked) {
                     selections.push(ref)
                 }
@@ -82,4 +88,14 @@ export class CheckInput extends MultiChoiceInput<CheckInputQuestion, CheckInputS
         )
     }
 
+    public isValid(): boolean {
+        return true
+    }
+
+    public getTitle(): string {
+        return this.props.title
+    }
+
 }
+
+export default MultiChoiceInputHOC(CheckInput)

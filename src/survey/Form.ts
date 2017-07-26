@@ -25,8 +25,8 @@ export interface Question {
 	visibleIf?: string
 }
 
-export interface PhotoInputQuestion extends Question{
-	
+export interface PhotoInputQuestion extends Question {
+
 }
 
 export interface TextInputQuestion extends Question {
@@ -45,27 +45,16 @@ export interface SliderInputQuestion extends Question {
 }
 
 export interface MultiInputQuestion extends Question {
-	options: { type: string, values: MultiInputQuestionOption[] }
+	optionsTitle?: string
+	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {} } }
+	pureOptions?: MultiInputQuestionOption[]
 	titleKey: string
 	valueKey: string
+	defaultValue?: string | string[]
+	value?: string | string[]
+
 }
 
 export interface MultiInputQuestionOption {
 	[key: string]: string
-}
-
-export interface ListInputQuestion extends MultiInputQuestion {
-	optionsTitle?: string
-	value?: string
-	defaultValue?: string
-}
-
-export interface CheckInputQuestion extends MultiInputQuestion {
-	value?: string
-	defaultValue?: string[]
-}
-
-export interface RadioInputQuestion extends MultiInputQuestion {
-	value?: string
-	defaultValue?: string
 }
