@@ -3,14 +3,13 @@ import { View, CheckBox, ListItem, Text } from 'native-base'
 
 import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
 import { BaseInput } from '../BaseInput'
-import { MultiChoiceInputState } from '../MultiChoiceInput'
 import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
 interface Selection {
     [key: string]: boolean
 }
 
-interface CheckInputState extends MultiChoiceInputState {
+interface CheckInputState {
     selection: Selection
 }
 
@@ -20,20 +19,13 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         super(props)
         this.state = {
             selection: {},
-            display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
     }
 
     public componentDidMount() {
-        if (this.props.defaultValue !== undefined) {
-            if (this.props.defaultValue instanceof Array) {
-                this.setValues(this.props.defaultValue)
-            } else {
-                console.error(`CheckInput tag:${this.props.tag}", default value is not array`)
-            }
-        } else {
-            console.warn(`CheckInput tag:${this.props.tag}", no default value`)
+        if (this.props.defaultValue) {
+            this.setValue(this.props.defaultValue)
         }
     }
 

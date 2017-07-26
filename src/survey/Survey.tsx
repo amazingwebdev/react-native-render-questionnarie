@@ -225,37 +225,37 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             validation={text.validation}
           />
         )
-      /*  case 'list':
-         const list: ListInputQuestion = question as ListInputQuestion
-         return (
-           <ListInput
-             ref={list.tag}
-             tag={list.tag}
-             type={list.type}
-             title={list.title}
-             required={list.required}
-             defaultValue={list.defaultValue}
-             options={list.options}
-             titleKey={list.titleKey}
-             valueKey={list.valueKey}
-             optionsTitle={list.optionsTitle}
-           />
-         ) */
-      /*  case 'radio':
-         const radio: RadioInputQuestion = question as RadioInputQuestion
-         return (
-           <RadioInput
-             ref={radio.tag}
-             tag={radio.tag}
-             type={radio.type}
-             title={radio.title}
-             required={radio.required}
-             defaultValue={radio.defaultValue}
-             options={radio.options}
-             titleKey={radio.titleKey}
-             valueKey={radio.valueKey}
-           />
-         ) */
+      case 'list':
+        const list: ListInputQuestion = question as ListInputQuestion
+        return (
+          <ListInput
+            ref={list.tag}
+            tag={list.tag}
+            type={list.type}
+            title={list.title}
+            required={list.required}
+            defaultValue={list.defaultValue}
+            options={list.options}
+            titleKey={list.titleKey}
+            valueKey={list.valueKey}
+            optionsTitle={list.optionsTitle}
+          />
+        )
+      case 'radio':
+        const radio: RadioInputQuestion = question as RadioInputQuestion
+        return (
+          <RadioInput
+            ref={radio.tag}
+            tag={radio.tag}
+            type={radio.type}
+            title={radio.title}
+            required={radio.required}
+            defaultValue={radio.defaultValue}
+            options={radio.options}
+            titleKey={radio.titleKey}
+            valueKey={radio.valueKey}
+          />
+        )
       case 'check':
         const checkbox: CheckInputQuestion = question as CheckInputQuestion
         return (

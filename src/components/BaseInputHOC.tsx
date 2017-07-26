@@ -28,7 +28,7 @@ export default function BaseInputHOC<Props extends Question>(Component: React.Co
                 return (
                     <View>
                         <Header style={Style.header}>
-                            <Text style={Style.title}>Merhaba {this.props.title}</Text>
+                            <Text style={Style.title}>{this.props.title}</Text>
                         </Header>
                         <Component {...this.props} />
                     </View>

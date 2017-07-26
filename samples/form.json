@@ -6,7 +6,76 @@
             "name": "JTI Stand",
             "tag": "jti_stand",
             "questions": [
-                 {
+                {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "radio",
+                    "tag": "country",
+                    "optionsTitle": "Seçiniz",
+                    "required": true,
+                    "options": {
+                        "type": "http",
+                        "request": {
+                            "url": "https://restcountries.eu/rest/v2/all",
+                            "params": {
+                                "countryOid": "${country}"
+                            }
+                        }
+                    },
+                    "titleKey": "name",
+                    "valueKey": "numericCode"
+                },
+                {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
+                    "tag": "country2",
+                    "optionsTitle": "Seçiniz",
+                    "required": true,
+                    "options": {
+                        "type": "http",
+                        "request": {
+                            "url": "https://restcountries.eu/rest/v2/all",
+                            "params": {
+                                "countryOid": "${country}"
+                            }
+                        }
+                    },
+                    "titleKey": "name",
+                    "valueKey": "numericCode"
+                },
+                {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
+                    "tag": "country3",
+                    "optionsTitle": "Seçiniz",
+                    "required": true,
+                    "options": {
+                        "type": "http",
+                        "request": {
+                            "url": "https://restcountries.eu/rest/v2/all",
+                            "params": {
+                                "countryOid": "${country}"
+                            }
+                        }
+                    },
+                    "titleKey": "name",
+                    "valueKey": "numericCode"
+                },
+                {
+                    "title": "foo",
+                    "type": "text",
+                    "tag": "BEV_KS_122",
+                    "required": true
+                },
+                {
+                    "title": "bar",
+                    "type": "slider",
+                    "tag": "BEV_KS_3333",
+                    "required": true,
+                    "min": 0,
+                    "max": 100,
+                    "step": 5
+                },
+                {
                     "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
                     "type": "list",
                     "tag": "BEV_KS_1",
@@ -43,86 +112,12 @@
                     "titleKey": "name",
                     "valueKey": "value"
                 },
-                 {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
-                    "type": "list",
-                    "tag": "BEV_KS_1",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "1",
-                                "value": "1"
-                            },
-                            {
-                                "name": "2",
-                                "value": "2"
-                            },
-                            {
-                                "name": "3",
-                                "value": "3"
-                            },
-                            {
-                                "name": "4-5",
-                                "value": "4-5"
-                            },
-                            {
-                                "name": "6-8",
-                                "value": "6-8"
-                            },
-                            {
-                                "name": "8+",
-                                "value": "8+"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                 {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
-                    "type": "list",
-                    "tag": "BEV_KS_1",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "1",
-                                "value": "1"
-                            },
-                            {
-                                "name": "2",
-                                "value": "2"
-                            },
-                            {
-                                "name": "3",
-                                "value": "3"
-                            },
-                            {
-                                "name": "4-5",
-                                "value": "4-5"
-                            },
-                            {
-                                "name": "6-8",
-                                "value": "6-8"
-                            },
-                            {
-                                "name": "8+",
-                                "value": "8+"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                 {
+                {
                     "title": "Dolabın fotoğrafını çekiniz",
                     "type": "photo",
                     "tag": "TP_VY_",
                     "required": true,
-                    "photorequired":true
+                    "photorequired": true
                 },
                 {
                     "title": "Noktada alkol satışı var mı?",
@@ -147,7 +142,6 @@
                 }
             ]
         },
-        
         {
             "name": "Potansiyel",
             "tag": "potansiyel_soruları",
