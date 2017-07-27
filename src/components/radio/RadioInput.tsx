@@ -2,14 +2,14 @@ import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
 import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { BaseInput } from '../BaseInput'
+import { BaseInput } from '../'
 import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
 interface RadioInputState {
     selection: string | string[] // FIXME: 
 }
 
-class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> implements BaseInput {
+class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> implements BaseInput<MultiInputQuestion> {
 
     constructor(props: MultiInputQuestion) {
         super(props)

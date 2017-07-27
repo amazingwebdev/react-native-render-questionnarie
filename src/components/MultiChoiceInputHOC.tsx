@@ -2,33 +2,28 @@ import React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { Header, Text, View } from 'native-base'
 
-import { BaseState } from './BaseInput'
 import { MultiInputQuestion, MultiInputQuestionOption } from '../survey/Form'
-import BaseInputHOC, { HOCInput } from './BaseInputHOC'
-
+import Wrapper, { BaseState } from './Wrapper'
 import Http from './Http'
 
 import Style from './BaseInputStyle'
 
-interface MultiState extends BaseState {
+interface MultiChoiceInputState extends BaseState {
 	loading: boolean
 	options: MultiInputQuestionOption[]
-}
-
-export interface HOCInput extends React.Component {
-	show: () => void
-	hide: () => void
 }
 
 // tslint:disable-next-line:function-name
 export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Component: React.ComponentClass<Props>) {
 
-	return class HOCBase extends React.Component<Props, MultiState>  {
+	return class MultiChoiceInputHOC extends Wrapper<Props, MultiChoiceInputState>  {
+
+		private wrappedComponent: React.Component<Props>
 
 		constructor(props: Props) {
 			super(props)
 			this.state = {
-				display: true,
+				...super.getInitialState(),
 				loading: true,
 				options: [],
 			}
@@ -60,11 +55,15 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 								animating={this.state.loading}
 								color="#3498db"
 								size="large" />
-							: <Component {...this.props} pureOptions={this.state.options} />}
+							: <Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} />}
 					</View>
 				)
 			}
 			return <View />
+		}
+
+		public getWrappedComponent(): React.Component<Props> {
+			return this.wrappedComponent
 		}
 
 	}

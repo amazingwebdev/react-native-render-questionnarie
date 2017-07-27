@@ -1,7 +1,7 @@
-export { BaseInput, DisplayInput, BaseState, QuestionType } from './BaseInput'
 export { default as TextInput } from './text/TextInput'
 export { default as SliderInput } from './slider/SliderInput'
 export { default as CheckInput } from './check/CheckInput'
 export { default as RadioInput } from './radio/RadioInput'
 export { default as ListInput } from './list/ListInput'
 export { PhotoInput } from './photo/PhotoInput'
+export { BaseInput, DisplayInput, BaseState } from './Wrapper'

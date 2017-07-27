@@ -19,7 +19,6 @@ import {
   BaseInput,
   DisplayInput,
   BaseState,
-  QuestionType,
   TextInput,
   SliderInput,
   CheckInput,
@@ -27,8 +26,6 @@ import {
   ListInput,
   PhotoInput,
 } from '../components'
-
-import { HOCInput } from '../components/BaseInputHOC'
 
 import {
   Form,
@@ -88,8 +85,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const question = this.refs[ref] as BaseInput
-          question.setValue(currentPageAnswers[ref])
+          const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+          if (wrapper.isAvailable()) {
+            const question = wrapper.getWrappedComponent() as BaseInput<Question>
+            question.setValue(currentPageAnswers[ref])
+          }
         }
       }
     }
@@ -148,9 +148,12 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const question = this.refs[ref] as BaseInput
-        if (!question.isValid() && question.getTitle()) {
-          validationMessages.push(question.getTitle())
+        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        if (wrapper.isAvailable()) {
+          const question = wrapper.getWrappedComponent() as BaseInput<Question>
+          if (!question.isValid() && question.getTitle()) {
+            validationMessages.push(question.getTitle())
+          }
         }
       }
     }
@@ -159,11 +162,14 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
   private storeCurrentPageAnswers(): void {
     const currentPageAnswers: { [key: string]: string | string[] | number } = {}
-    for (const q in this.refs) {
-      if (this.refs.hasOwnProperty(q)) {
-        const question = this.refs[q] as BaseInput
-        if (question.isValid() && question.getValue() !== undefined) {
-          currentPageAnswers[q] = question.getValue()
+    for (const ref in this.refs) {
+      if (this.refs.hasOwnProperty(ref)) {
+        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        if (wrapper.isAvailable()) {
+          const question = wrapper.getWrappedComponent() as BaseInput<Question>
+          if (question.isValid() && question.getValue() !== undefined) {
+            currentPageAnswers[ref] = question.getValue()
+          }
         }
       }
     }

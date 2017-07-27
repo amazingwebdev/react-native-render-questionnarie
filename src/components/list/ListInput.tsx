@@ -2,15 +2,15 @@ import React from 'react'
 import { View, Picker } from 'native-base'
 
 import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { BaseInput } from '../BaseInput'
 import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
+import { BaseInput } from '../'
 import BaseInputHOC from '../BaseInputHOC'
 
 interface ListInputState {
     selection?: string | string[]
 }
 
-class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput {
+class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
 
     constructor(props: MultiInputQuestion) {
         super(props)

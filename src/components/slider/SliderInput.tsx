@@ -12,7 +12,7 @@ interface SliderState extends BaseState {
     value?: number
 }
 
-class SliderInput extends React.Component<SliderInputQuestion, SliderState> implements BaseInput {
+class SliderInput extends React.Component<SliderInputQuestion, SliderState> implements BaseInput<SliderInputQuestion> {
 
     constructor(props: SliderInputQuestion) {
         super(props)

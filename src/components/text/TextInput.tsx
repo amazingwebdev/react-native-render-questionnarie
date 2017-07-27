@@ -9,7 +9,7 @@ interface TextInputState {
     value?: string
 }
 
-class TextInput extends React.Component<TextInputQuestion, TextInputState> implements BaseInput {
+class TextInput extends React.Component<TextInputQuestion, TextInputState> implements BaseInput<TextInputQuestion> {
 
     private regExp: RegExp
 

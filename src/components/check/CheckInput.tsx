@@ -2,7 +2,7 @@ import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
 import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { BaseInput } from '../BaseInput'
+import { BaseInput } from '../'
 import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
 interface Selection {
@@ -13,7 +13,7 @@ interface CheckInputState {
     selection: Selection
 }
 
-class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> implements BaseInput {
+class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> implements BaseInput<MultiInputQuestion> {
 
     constructor(props: MultiInputQuestion) {
         super(props)
