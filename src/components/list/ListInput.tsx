@@ -84,4 +84,4 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
 }
 
-export default MultiChoiceInputHOC(BaseInputHOC(ListInput))
+export default MultiChoiceInputHOC(ListInput)
