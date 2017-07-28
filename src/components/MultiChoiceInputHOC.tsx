@@ -6,7 +6,7 @@ import { MultiInputQuestion, MultiInputQuestionOption } from '../survey/Form'
 import Wrapper, { BaseState } from './Wrapper'
 import Http from './Http'
 
-import Style from './BaseInputStyle'
+import Style from './Style'
 
 interface MultiChoiceInputState extends BaseState {
 	loading: boolean
@@ -39,7 +39,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				})
 				options = await response.json()
 			}
-			console.warn({ options })
 			this.setState({ options, loading: false })
 		}
 
@@ -47,15 +46,8 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			if (this.state.display) {
 				return (
 					<View>
-						<Header style={Style.header}>
-							<Text style={Style.title}>{this.props.title}</Text>
-						</Header>
-						{this.state.loading
-							? <ActivityIndicator
-								animating={this.state.loading}
-								color="#3498db"
-								size="large" />
-							: <Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} />}
+						{super.renderTitle()}
+						<Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} />
 					</View>
 				)
 			}

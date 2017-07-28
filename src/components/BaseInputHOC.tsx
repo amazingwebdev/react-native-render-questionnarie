@@ -1,11 +1,14 @@
 import React from 'react'
-import { Header, Text, View } from 'native-base'
+import { Header, Text, View, Button, Icon, Left, Right, Body } from 'native-base'
+
+import FCamera from './camera/Camera'
+import Gallery from './gallery/Gallery'
 
 import Wrapper, { BaseState } from './Wrapper'
 
 import { Question } from '../survey/Form'
 
-import Style from './BaseInputStyle'
+import Style from './Style'
 
 // tslint:disable-next-line:function-name
 export default function BaseInputHOC<Props extends Question>(Component: React.ComponentClass<Props>) {
@@ -16,16 +19,16 @@ export default function BaseInputHOC<Props extends Question>(Component: React.Co
 
         constructor(props: Props) {
             super(props)
-            this.state = super.getInitialState()
+            this.state = {
+                ...super.getInitialState(),
+            }
         }
 
         render() {
             if (this.state.display) {
                 return (
                     <View>
-                        <Header style={Style.header}>
-                            <Text style={Style.title}>{this.props.title}</Text>
-                        </Header>
+                        {super.renderTitle()}
                         <Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} />
                     </View>
                 )

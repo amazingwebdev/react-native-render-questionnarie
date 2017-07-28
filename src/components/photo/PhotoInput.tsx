@@ -27,7 +27,7 @@ interface PhotoInputState extends BaseState {
 interface pageNumber {
     position : number
 }
-export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
+export class PhotoInput extends React.Component<PhotoInputQuestion, PhotoInputState> {
 
     private camera: Camera
 
@@ -42,6 +42,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
                 playSoundOnCapture: true,
                 flashMode: Camera.constants.FlashMode.auto,
             },
+            isGalleryOpen: false,
             isCapturing: false,
             capturedPhotos: [],
             display: true,
@@ -59,7 +60,7 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
         if (this.state.isCapturing) {
             return this.renderCamera()
         } else if (this.state.capturedPhotos.length > 0) {
-            return this.renderGallery()
+            // return this.renderGallery()
         }
         return this.renderTitle()
     }
@@ -102,51 +103,6 @@ export class PhotoInput extends BaseInput<PhotoInputQuestion, PhotoInputState> {
                     <Icon name="camera" />
                 </Button>
             </Header>
-        )
-    }
-
-    private renderGallery() {
-        const images = []
-        for (const imagePath of this.state.capturedPhotos) {
-            images.push(<View key={ imagePath } >
-                            <Image
-                                style={Style.imagePreview}
-                                source={{ uri: imagePath }}
-                                resizeMode="stretch">
-                            </Image>
-                        </View>)
-        }
-        return (
-            <View >
-                <CardItem style={Style.header} >
-                    <Text style={Style.title}>{this.props.title}</Text>
-                </CardItem>
-                <IndicatorViewPager
-                    style={Style.imagePreview}
-                    indicator={this.renderDotIndicator()}
-                    onPageSelected = {(page:pageNumber) => this.currentPage(page)}
-                >
-                {images}
-                </IndicatorViewPager>
-                <Card>
-                    <CardItem>
-                        <Left>
-                            <Button
-                                transparent
-                                onPress={this.removeShownPhoto}>
-                                <Icon name="trash" />
-                            </Button>
-                        </Left>
-                        <Right>
-                            <Button
-                                transparent
-                                onPress={this.openCamera}>
-                                <Icon name="camera" />
-                            </Button>
-                        </Right>
-                    </CardItem>
-                </Card >
-            </View>
         )
     }
 

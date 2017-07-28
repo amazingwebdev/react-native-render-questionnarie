@@ -30,11 +30,9 @@ import {
 import {
   Form,
   Question,
+  MultiInputQuestion,
   TextInputQuestion,
   SliderInputQuestion,
-  ListInputQuestion,
-  RadioInputQuestion,
-  CheckInputQuestion,
   PhotoInputQuestion,
 } from '../survey'
 
@@ -212,6 +210,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={slider.type}
             title={slider.title}
             required={slider.required}
+            photoRequired={slider.photoRequired}
             min={slider.min}
             max={slider.max}
             step={slider.step}
@@ -227,12 +226,13 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={text.type}
             title={text.title}
             required={text.required}
+            photoRequired={text.photoRequired}
             defaultValue={text.defaultValue}
             validation={text.validation}
           />
         )
       case 'list':
-        const list: ListInputQuestion = question as ListInputQuestion
+        const list: MultiInputQuestion = question as MultiInputQuestion
         return (
           <ListInput
             ref={list.tag}
@@ -240,6 +240,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={list.type}
             title={list.title}
             required={list.required}
+            photoRequired={list.photoRequired}
             defaultValue={list.defaultValue}
             options={list.options}
             titleKey={list.titleKey}
@@ -248,7 +249,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           />
         )
       case 'radio':
-        const radio: RadioInputQuestion = question as RadioInputQuestion
+        const radio: MultiInputQuestion = question as MultiInputQuestion
         return (
           <RadioInput
             ref={radio.tag}
@@ -256,6 +257,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={radio.type}
             title={radio.title}
             required={radio.required}
+            photoRequired={radio.photoRequired}
             defaultValue={radio.defaultValue}
             options={radio.options}
             titleKey={radio.titleKey}
@@ -263,7 +265,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           />
         )
       case 'check':
-        const checkbox: CheckInputQuestion = question as CheckInputQuestion
+        const checkbox: MultiInputQuestion = question as MultiInputQuestion
         return (
           <CheckInput
             ref={checkbox.tag}
@@ -271,6 +273,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={checkbox.type}
             title={checkbox.title}
             required={checkbox.required}
+            photoRequired={checkbox.photoRequired}
             defaultValue={checkbox.defaultValue}
             options={checkbox.options}
             titleKey={checkbox.titleKey}

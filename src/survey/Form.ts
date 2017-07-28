@@ -15,6 +15,7 @@ export interface Question {
 	type?: string
 	tag: string
 	required: boolean
+	photoRequired: boolean
 	trackType?: string
 	smartCode?: string
 	startDate?: number
