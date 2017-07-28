@@ -1,52 +1,49 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { ListInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
+import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
+import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
+import { BaseInput } from '../'
+import BaseInputHOC from '../BaseInputHOC'
 
-interface ListInputState extends MultiChoiceInputState {
-    selection?: string | number
+interface ListInputState {
+    selection?: string | string[]
 }
 
-export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputState> {
+class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
 
-    constructor(props: ListInputQuestion) {
+    constructor(props: MultiInputQuestion) {
         super(props)
         this.state = {
-            display: true,
+            selection: undefined,
         }
         this.renderOptions = this.renderOptions.bind(this)
+        this.setValue = this.setValue.bind(this)
     }
 
-    public componentWillMount() {
-        super.componentWillMount()
-        const defaultOptionsTitle: { [key: string]: string | number } = {}
-        defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
-        defaultOptionsTitle[this.props.valueKey] = -1
-        this.options.splice(0, 0, defaultOptionsTitle)
+    componentWillMount() {
+        this.props.pureOptions.splice(0, 0, this.createOptionTitle())
     }
-
-    public componentDidMount() {
-        if (this.props.defaultValue !== undefined) {
-            if (typeof this.props.defaultValue === 'string') {
-                this.setValue(this.props.defaultValue)
-            } else {
-                console.error(`ListInput tag:${this.props.tag}, default value is not string`)
-            }
+    
+    componentDidMount() {
+        if (this.props.defaultValue) {
+            this.setState({ selection: this.props.defaultValue })
         } else {
-            console.warn(`ListInput tag:${this.props.tag}, no default value`)
+            this.setState({ selection: '-' })
         }
     }
 
     public render(): JSX.Element {
-        return super.render(
+        return (
+            // FIXME: default option ayrı render edilecek. 
+            // https://github.com/facebook/react-native/issues/11682
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                {this.options.map(this.renderOptions)}
-            </Picker>,
+                {this.props.pureOptions.map(this.renderOptions)}
+            </Picker>
         )
     }
 
@@ -55,7 +52,7 @@ export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputStat
     }
 
     public getValue() {
-        if (this.state.selection === undefined || this.state.selection === -1) {
+        if (this.state.selection === undefined || this.state.selection === '-1') {
             return undefined
         }
         return this.state.selection
@@ -70,4 +67,21 @@ export class ListInput extends MultiChoiceInput<ListInputQuestion, ListInputStat
         )
     }
 
+    private createOptionTitle(): MultiInputQuestionOption {
+        const defaultOptionsTitle: MultiInputQuestionOption = {}
+        defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
+        defaultOptionsTitle[this.props.valueKey] = '-1'
+        return defaultOptionsTitle
+    }
+
+    public isValid(): boolean {
+        return true
+    }
+
+    public getTitle(): string {
+        return this.props.title
+    }
+
 }
+
+export default MultiChoiceInputHOC(ListInput)

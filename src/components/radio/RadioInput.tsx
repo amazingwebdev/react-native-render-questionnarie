@@ -1,38 +1,37 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { RadioInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { MultiChoiceInput, MultiChoiceInputState } from '../MultiChoiceInput'
+import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
+import { BaseInput } from '../'
+import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
 
-interface RadioInputState extends MultiChoiceInputState {
-    selection: string | undefined
+interface RadioInputState {
+    selection: string | string[] // FIXME: 
 }
 
-export class RadioInput extends MultiChoiceInput<RadioInputQuestion, RadioInputState> {
+class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> implements BaseInput<MultiInputQuestion> {
 
-    constructor(props: RadioInputQuestion) {
+    constructor(props: MultiInputQuestion) {
         super(props)
         this.state = {
             selection: undefined,
-            display: true,
         }
         this.renderOptions = this.renderOptions.bind(this)
+        this.setValue = this.setValue.bind(this)
     }
 
     public componentDidMount() {
-        if (this.props.defaultValue !== undefined) {
-            if (typeof this.props.defaultValue === 'string') {
-                this.setValue(this.props.defaultValue)
-            } else {
-                console.error(`RadioInput tag:${this.props.tag}, default value is not string`)
-            }
-        } else {
-            console.warn(`RadioInput tag:${this.props.tag}, no default value`)
+        if (this.props.defaultValue) {
+            this.setState({ selection: this.props.defaultValue })
         }
     }
 
     public render(): JSX.Element {
-        return super.render(this.options.map(this.renderOptions))
+        return (
+            <View>
+                {this.props.pureOptions.map(this.renderOptions)}
+            </View>
+        )
     }
 
     public setValue(selection: string) {
@@ -55,4 +54,14 @@ export class RadioInput extends MultiChoiceInput<RadioInputQuestion, RadioInputS
         )
     }
 
+    public getTitle(): string {
+        return this.props.title
+    }
+
+    public isValid(): boolean {
+        return true
+    }
+
 }
+
+export default MultiChoiceInputHOC(RadioInput)

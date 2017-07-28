@@ -17,8 +17,8 @@ import {
 
 import {
   BaseInput,
+  DisplayInput,
   BaseState,
-  QuestionType,
   TextInput,
   SliderInput,
   CheckInput,
@@ -30,11 +30,9 @@ import {
 import {
   Form,
   Question,
+  MultiInputQuestion,
   TextInputQuestion,
   SliderInputQuestion,
-  ListInputQuestion,
-  RadioInputQuestion,
-  CheckInputQuestion,
   PhotoInputQuestion,
 } from '../survey'
 
@@ -85,8 +83,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const question = this.refs[ref] as BaseInput<Question, BaseState>
-          question.setValue(currentPageAnswers[ref])
+          const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+          if (wrapper.isAvailable()) {
+            const question = wrapper.getWrappedComponent() as BaseInput<Question>
+            question.setValue(currentPageAnswers[ref])
+          }
         }
       }
     }
@@ -113,7 +114,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             this.pageCount !== 1 &&
             <Left>
               <Button transparent onPress={() => Alert.alert(this.props.form.name, this.brief)}>
-                <Icon name="clipboard" />
+                <Icon name="camera" />
               </Button>
             </Left>}
           <Body>
@@ -145,9 +146,12 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const question = this.refs[ref] as BaseInput<Question, BaseState>
-        if (!question.isValid() && question.props.title) {
-          validationMessages.push(question.props.title)
+        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        if (wrapper.isAvailable()) {
+          const question = wrapper.getWrappedComponent() as BaseInput<Question>
+          if (!question.isValid() && question.getTitle()) {
+            validationMessages.push(question.getTitle())
+          }
         }
       }
     }
@@ -155,12 +159,15 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   private storeCurrentPageAnswers(): void {
-    const currentPageAnswers: { [key: string]: string } = {}
-    for (const q in this.refs) {
-      if (this.refs.hasOwnProperty(q)) {
-        const question = this.refs[q] as BaseInput<Question, BaseState>
-        if (question.isValid() && question.getValue() !== undefined) {
-          currentPageAnswers[q] = question.getValue()
+    const currentPageAnswers: { [key: string]: string | string[] | number } = {}
+    for (const ref in this.refs) {
+      if (this.refs.hasOwnProperty(ref)) {
+        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        if (wrapper.isAvailable()) {
+          const question = wrapper.getWrappedComponent() as BaseInput<Question>
+          if (question.isValid() && question.getValue() !== undefined) {
+            currentPageAnswers[ref] = question.getValue()
+          }
         }
       }
     }
@@ -203,6 +210,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={slider.type}
             title={slider.title}
             required={slider.required}
+            photoRequired={slider.photoRequired}
             min={slider.min}
             max={slider.max}
             step={slider.step}
@@ -218,12 +226,13 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={text.type}
             title={text.title}
             required={text.required}
+            photoRequired={text.photoRequired}
             defaultValue={text.defaultValue}
             validation={text.validation}
           />
         )
       case 'list':
-        const list: ListInputQuestion = question as ListInputQuestion
+        const list: MultiInputQuestion = question as MultiInputQuestion
         return (
           <ListInput
             ref={list.tag}
@@ -231,6 +240,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={list.type}
             title={list.title}
             required={list.required}
+            photoRequired={list.photoRequired}
             defaultValue={list.defaultValue}
             options={list.options}
             titleKey={list.titleKey}
@@ -239,7 +249,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           />
         )
       case 'radio':
-        const radio: RadioInputQuestion = question as RadioInputQuestion
+        const radio: MultiInputQuestion = question as MultiInputQuestion
         return (
           <RadioInput
             ref={radio.tag}
@@ -247,6 +257,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={radio.type}
             title={radio.title}
             required={radio.required}
+            photoRequired={radio.photoRequired}
             defaultValue={radio.defaultValue}
             options={radio.options}
             titleKey={radio.titleKey}
@@ -254,7 +265,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           />
         )
       case 'check':
-        const checkbox: CheckInputQuestion = question as CheckInputQuestion
+        const checkbox: MultiInputQuestion = question as MultiInputQuestion
         return (
           <CheckInput
             ref={checkbox.tag}
@@ -262,14 +273,15 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={checkbox.type}
             title={checkbox.title}
             required={checkbox.required}
+            photoRequired={checkbox.photoRequired}
             defaultValue={checkbox.defaultValue}
             options={checkbox.options}
             titleKey={checkbox.titleKey}
             valueKey={checkbox.valueKey}
           />
         )
-      case 'photo':
-        const photo : PhotoInputQuestion = question as PhotoInputQuestion
+      /* case 'photo':
+        const photo: PhotoInputQuestion = question as PhotoInputQuestion
         return (
           <PhotoInput
             ref={photo.tag}
@@ -277,10 +289,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={photo.type}
             title={photo.title}
             required={photo.required}
-            />
-        )
+          />
+        ) */
       default:
-        throw new Error('no such question type')
+      /*  throw new Error('no such question type') */
     }
   }
 

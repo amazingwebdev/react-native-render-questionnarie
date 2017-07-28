@@ -6,23 +6,23 @@ import { View } from 'native-base'
 import { SliderInputQuestion } from '../../survey'
 import { BaseInput, BaseState } from '../'
 
+import BaseInputHOC from '../BaseInputHOC'
+
 interface SliderState extends BaseState {
     value?: number
 }
 
-export class SliderInput extends BaseInput<SliderInputQuestion, SliderState> {
+class SliderInput extends React.Component<SliderInputQuestion, SliderState> implements BaseInput<SliderInputQuestion> {
 
     constructor(props: SliderInputQuestion) {
         super(props)
         this.state = {
             value: props.value || 0,
-            display: true,
         }
         this.onValueChange = this.onValueChange.bind(this)
     }
 
     public componentWillMount() {
-        super.componentWillMount()
         if (this.props.defaultValue !== undefined) {
             if (typeof this.props.defaultValue === 'number') {
                 this.setValue(this.props.defaultValue)
@@ -35,17 +35,19 @@ export class SliderInput extends BaseInput<SliderInputQuestion, SliderState> {
     }
 
     public render(): JSX.Element {
-        return super.render(
-            <Slider
-                minimumValue={this.props.min}
-                maximumValue={this.props.max}
-                step={this.props.step}
-                value={this.state.value}
-                onValueChange={this.onValueChange}
-            />,
-            <Text style={{ textAlign: 'center' }}>
-                {this.state.value}
-            </Text>,
+        return (
+            <View>
+                <Slider
+                    minimumValue={this.props.min}
+                    maximumValue={this.props.max}
+                    step={this.props.step}
+                    value={this.state.value}
+                    onValueChange={this.onValueChange}
+                />
+                <Text style={{ textAlign: 'center' }}>
+                    {this.state.value}
+                </Text>
+            </View>
         )
     }
 
@@ -61,4 +63,14 @@ export class SliderInput extends BaseInput<SliderInputQuestion, SliderState> {
         this.setState({ value })
     }
 
+    public isValid(): boolean {
+        return true
+    }
+
+    public getTitle(): string {
+        return this.props.title
+    }
+
 }
+
+export default BaseInputHOC(SliderInput)
