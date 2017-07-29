@@ -19,10 +19,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         this.setValue = this.setValue.bind(this)
     }
 
-    componentWillMount() {
-        this.props.pureOptions.splice(0, 0, this.createOptionTitle())
-    }
-
     componentDidMount() {
         if (this.props.defaultValue) {
             this.setState({ selection: this.props.defaultValue })
@@ -31,15 +27,17 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         }
     }
 
-    public render(): JSX.Element {
+    render(): JSX.Element {
         return (
-            // FIXME: default option ayrı render edilecek. 
-            // https://github.com/facebook/react-native/issues/11682
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
+                <Picker.Item
+                    key="-1"
+                    label={this.props.optionsTitle ? this.props.optionsTitle : 'Seçiniz'}
+                    value="-1" />
                 {this.props.pureOptions.map(this.renderOptions)}
             </Picker>
         )
@@ -52,13 +50,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         return (
             <Picker.Item key={key} label={name} value={value} />
         )
-    }
-
-    private createOptionTitle(): MultiInputQuestionOption {
-        const defaultOptionsTitle: MultiInputQuestionOption = {}
-        defaultOptionsTitle[this.props.titleKey] = this.props.optionsTitle ? this.props.optionsTitle : '-'
-        defaultOptionsTitle[this.props.valueKey] = '-1'
-        return defaultOptionsTitle
     }
 
     public getTitle(): string {
