@@ -1,23 +1,23 @@
-import React, { Component } from 'react'
-import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image, Modal } from 'react-native'
-import { Button, Header, Icon, Card, CardItem, Left, Right, Body, DeckSwiper, Badge } from 'native-base'
-import Camera from 'react-native-camera'
+import React from 'react'
+import { Image, Modal } from 'react-native'
+import { Button, View, Text, Icon, Badge } from 'native-base'
+import RNCamera from 'react-native-camera'
 
 import Style from './Style'
 
 interface CameraProps {
 	visible: boolean
-	onClose: (capturedPhotos: string[]) => void
 	captureQuality?: 'low' | 'medium' | 'high'
+	onClose: (capturedPhotos: string[]) => void
 }
 
 interface CameraState {
 	capturedPhotos: string[]
 }
 
-export default class FCamera extends React.Component<CameraProps, CameraState> {
+export default class Camera extends React.Component<CameraProps, CameraState> {
 
-	private camera: Camera
+	private camera: RNCamera
 
 	constructor(props: CameraProps) {
 		super(props)
@@ -36,10 +36,10 @@ export default class FCamera extends React.Component<CameraProps, CameraState> {
 				onRequestClose={this.closeCamera}
 				visible={this.props.visible} >
 				<View style={Style.container}>
-					<Camera
+					<RNCamera
 						ref={(cam) => { this.camera = cam }}
 						style={Style.preview}
-						aspect={Camera.constants.Aspect.fill}
+						aspect={RNCamera.constants.Aspect.fill}
 						captureQuality={this.props.captureQuality} >
 						<Button
 							transparent
@@ -56,14 +56,10 @@ export default class FCamera extends React.Component<CameraProps, CameraState> {
 							</Badge>
 							<Icon active style={Style.icon} name="done-all" />
 						</Button>
-					</Camera>
+					</RNCamera>
 				</View>
 			</Modal>
 		)
-	}
-
-	private closeCamera() {
-		this.props.onClose(this.state.capturedPhotos)
 	}
 
 	private takePhoto() {
@@ -76,4 +72,9 @@ export default class FCamera extends React.Component<CameraProps, CameraState> {
 				})
 		}
 	}
+
+	private closeCamera() {
+		this.props.onClose(this.state.capturedPhotos)
+	}
+
 }

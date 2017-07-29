@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { BaseInput } from '../'
-import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
+import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
+import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface RadioInputState {
     selection: string | string[] // FIXME: 
@@ -34,14 +33,6 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
         )
     }
 
-    public setValue(selection: string) {
-        this.setState({ selection })
-    }
-
-    public getValue() {
-        return this.state.selection
-    }
-
     private renderOptions(option: MultiInputQuestionOption): JSX.Element {
         const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
         const checked = this.state.selection === value
@@ -56,6 +47,14 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
 
     public getTitle(): string {
         return this.props.title
+    }
+
+    public getValue() {
+        return this.state.selection
+    }
+
+    public setValue(selection: string) {
+        this.setState({ selection })
     }
 
     public isValid(): boolean {

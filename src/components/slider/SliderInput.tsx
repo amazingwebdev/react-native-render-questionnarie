@@ -1,14 +1,11 @@
 import React from 'react'
 import { Text, Slider } from 'react-native'
-
 import { View } from 'native-base'
 
-import { SliderInputQuestion } from '../../survey'
-import { BaseInput, BaseState } from '../'
+import BaseInputHOC from '../base/BaseInputHOC'
+import { BaseInput, SliderInputQuestion } from '../'
 
-import BaseInputHOC from '../BaseInputHOC'
-
-interface SliderState extends BaseState {
+interface SliderState {
     value?: number
 }
 
@@ -23,14 +20,8 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
     }
 
     public componentWillMount() {
-        if (this.props.defaultValue !== undefined) {
-            if (typeof this.props.defaultValue === 'number') {
-                this.setValue(this.props.defaultValue)
-            } else {
-                console.error(`SliderInput tag:${this.props.tag}, default value is not number`)
-            }
-        } else {
-            console.warn(`SliderInput tag:${this.props.tag}, no default value`)
+        if (this.props.defaultValue) {
+            this.setValue(this.props.defaultValue)
         }
     }
 
@@ -51,24 +42,24 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
         )
     }
 
-    public setValue(value: number) {
+    private onValueChange(value: number) {
         this.setState({ value })
+    }
+
+    public getTitle(): string {
+        return this.props.title
     }
 
     public getValue() {
         return this.state.value
     }
 
-    private onValueChange(value: number) {
+    public setValue(value: number) {
         this.setState({ value })
     }
 
     public isValid(): boolean {
         return true
-    }
-
-    public getTitle(): string {
-        return this.props.title
     }
 
 }

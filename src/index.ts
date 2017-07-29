@@ -1,1 +1,1 @@
- export { default } from './survey'
+export { default as Survey } from './components'

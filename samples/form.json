@@ -7,11 +7,12 @@
             "tag": "jti_stand",
             "questions": [
                 {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
-                    "type": "radio",
+                    "title": "foo Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
                     "tag": "country",
                     "optionsTitle": "Seçiniz",
                     "required": true,
+                    "photoRequired": true,
                     "options": {
                         "type": "http",
                         "request": {

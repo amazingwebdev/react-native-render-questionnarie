@@ -1,6 +1,6 @@
 import React from 'react'
 import { Toast } from 'native-base'
-import Survey from './survey'
+import Survey from './components/survey/Survey'
 
 export default class App extends React.Component<{}, {}> {
 

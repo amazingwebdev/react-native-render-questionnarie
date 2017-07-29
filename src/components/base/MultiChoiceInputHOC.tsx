@@ -1,12 +1,9 @@
 import React from 'react'
-import { ActivityIndicator } from 'react-native'
-import { Header, Text, View } from 'native-base'
+import { View } from 'native-base'
 
-import { MultiInputQuestion, MultiInputQuestionOption } from '../survey/Form'
-import Wrapper, { BaseState } from './Wrapper'
-import Http from './Http'
-
-import Style from './Style'
+import Wrapper from './Wrapper'
+import { BaseState, MultiInputQuestion, MultiInputQuestionOption } from '../'
+import Http from '../../utility/Http'
 
 interface MultiChoiceInputState extends BaseState {
 	loading: boolean

@@ -1,6 +1,4 @@
 import React from 'react'
-import { Alert } from 'react-native'
-
 import {
   Container,
   Content,
@@ -16,6 +14,11 @@ import {
 } from 'native-base'
 
 import {
+  Form,
+  Question,
+  MultiInputQuestion,
+  TextInputQuestion,
+  SliderInputQuestion,
   BaseInput,
   DisplayInput,
   BaseState,
@@ -25,18 +28,9 @@ import {
   RadioInput,
   ListInput,
   PhotoInput,
-} from '../components'
+} from '../'
 
-import {
-  Form,
-  Question,
-  MultiInputQuestion,
-  TextInputQuestion,
-  SliderInputQuestion,
-  PhotoInputQuestion,
-} from '../survey'
-
-import Style from './SurveyStyle'
+import Style from './Style'
 
 interface SurveyProps {
   form: Form
@@ -83,7 +77,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
         if (currentPageAnswers[ref]) {
-          const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+          const wrapper = this.refs[ref] as DisplayInput<Question>
           if (wrapper.isAvailable()) {
             const question = wrapper.getWrappedComponent() as BaseInput<Question>
             question.setValue(currentPageAnswers[ref])
@@ -113,7 +107,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           {this.state.pageNumber === 0 &&
             this.pageCount !== 1 &&
             <Left>
-              <Button transparent onPress={() => Alert.alert(this.props.form.name, this.brief)}>
+              <Button transparent>
                 <Icon name="camera" />
               </Button>
             </Left>}
@@ -146,7 +140,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages: string[] = []
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        const wrapper = this.refs[ref] as DisplayInput<Question>
         if (wrapper.isAvailable()) {
           const question = wrapper.getWrappedComponent() as BaseInput<Question>
           if (!question.isValid() && question.getTitle()) {
@@ -162,7 +156,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const currentPageAnswers: { [key: string]: string | string[] | number } = {}
     for (const ref in this.refs) {
       if (this.refs.hasOwnProperty(ref)) {
-        const wrapper = this.refs[ref] as DisplayInput<Question> // FIXME:
+        const wrapper = this.refs[ref] as DisplayInput<Question>
         if (wrapper.isAvailable()) {
           const question = wrapper.getWrappedComponent() as BaseInput<Question>
           if (question.isValid() && question.getValue() !== undefined) {
@@ -280,8 +274,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             valueKey={checkbox.valueKey}
           />
         )
-      /* case 'photo':
-        const photo: PhotoInputQuestion = question as PhotoInputQuestion
+      case 'photo':
+        const photo: Question = question as Question
         return (
           <PhotoInput
             ref={photo.tag}
@@ -289,10 +283,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             type={photo.type}
             title={photo.title}
             required={photo.required}
+            photoRequired={photo.required}
           />
-        ) */
+        )
       default:
-      /*  throw new Error('no such question type') */
+        throw new Error('no such question type')
     }
   }
 

@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Item, Input, Icon, Toast } from 'native-base'
+import { Item, Input } from 'native-base'
 
-import { TextInputQuestion } from '../../survey'
-import { BaseInput, BaseState } from '../'
-import BaseInputHOC from '../BaseInputHOC'
+import BaseInputHOC from '../base/BaseInputHOC'
+import { BaseInput, TextInputQuestion } from '../'
 
 interface TextInputState {
     value?: string
@@ -24,14 +23,8 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
 
     public componentDidMount() {
-        if (this.props.defaultValue !== undefined) {
-            if (typeof this.props.defaultValue === 'string') {
-                this.setValue(this.props.defaultValue)
-            } else {
-                console.error(`TextInput tag:${this.props.tag}', default value is not string`)
-            }
-        } else {
-            console.warn(`TextInput tag:${this.props.tag}', no default value`)
+        if (this.props.defaultValue) {
+            this.setValue(this.props.defaultValue)
         }
     }
 
@@ -39,10 +32,10 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
         return (
             <Item rounded>
                 <Input
-                    onBlur={this.onBlur.bind(this)}
                     onChange={this.onChange.bind(this)}
                     placeholder={this.props.placeholder}
-                    value={this.state.value} />
+                    value={this.state.value}
+                />
             </Item>
         )
     }
@@ -51,12 +44,15 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
         this.setValue(event.nativeEvent.text)
     }
 
-    public setValue(value: string): void {
-        this.setState({ value })
+    public getTitle(): string {
+        return this.props.title
     }
 
     public getValue(): string | undefined {
         return this.state.value ? this.state.value : undefined
+    }
+    public setValue(value: string): void {
+        this.setState({ value })
     }
 
     public isValid(): boolean {
@@ -67,16 +63,6 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
             return this.regExp.test(this.state.value)
         }
         return true
-    }
-
-    private onBlur(): void {
-        if (!this.isValid()) {
-            Toast.show({ text: 'Girdiğiniz karakterleri kontrol ediniz.', buttonText: 'TAMAM', position: 'bottom', type: 'warning' })
-        }
-    }
-
-    public getTitle(): string {
-        return this.props.title
     }
 
 }

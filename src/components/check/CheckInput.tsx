@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
 
-import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import { BaseInput } from '../'
-import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
+import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
+import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface Selection {
     [key: string]: boolean
@@ -37,14 +36,20 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         )
     }
 
-    public setValue(value: string | string[]) {
-        if (typeof value === 'string') {
-            const { selection } = this.state
-            selection[value] = !selection[value]
-            this.setState({ selection })
-        } else if (typeof value === 'object') {
-            this.setValues(value)
-        }
+    private renderOptions(option: MultiInputQuestionOption): JSX.Element {
+        const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
+        const checked = this.state.selection[value]
+        const key = this.props.tag + '_' + value
+        return (
+            <ListItem key={key} onPress={this.setValue.bind(this, value)}>
+                <CheckBox ref={value} checked={checked} />
+                <Text>{title}</Text>
+            </ListItem>
+        )
+    }
+
+    public getTitle(): string {
+        return this.props.title
     }
 
     public getValue(): any | undefined {
@@ -60,6 +65,16 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         return selections.length > 0 ? selections : undefined
     }
 
+    public setValue(value: string | string[]) {
+        if (typeof value === 'string') {
+            const { selection } = this.state
+            selection[value] = !selection[value]
+            this.setState({ selection })
+        } else if (typeof value === 'object') {
+            this.setValues(value)
+        }
+    }
+
     private setValues(values: string[]) {
         const { selection } = this.state
         values.map((value) => {
@@ -68,24 +83,8 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         this.setState({ selection })
     }
 
-    private renderOptions(option: MultiInputQuestionOption): JSX.Element {
-        const [title, value] = [option[this.props.titleKey], option[this.props.valueKey]]
-        const checked = this.state.selection[value]
-        const key = this.props.tag + '_' + value
-        return (
-            <ListItem key={key} onPress={this.setValue.bind(this, value)}>
-                <CheckBox ref={value} checked={checked} />
-                <Text>{title}</Text>
-            </ListItem>
-        )
-    }
-
     public isValid(): boolean {
         return true
-    }
-
-    public getTitle(): string {
-        return this.props.title
     }
 
 }

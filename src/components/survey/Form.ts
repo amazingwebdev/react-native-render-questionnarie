@@ -26,10 +26,6 @@ export interface Question {
 	visibleIf?: string
 }
 
-export interface PhotoInputQuestion extends Question {
-
-}
-
 export interface TextInputQuestion extends Question {
 	placeholder?: string
 	validation?: string

@@ -1,8 +1,6 @@
 import React from 'react'
-import { AppRegistry, Platform, Dimensions, StyleSheet, Text, View, Image, Modal } from 'react-native'
-
-import { Button, Header, Icon, Card, CardItem, Left, Right, Body, DeckSwiper, Badge } from 'native-base'
-
+import { Image, Modal } from 'react-native'
+import { View, Header, Left, Right, Icon, Button } from 'native-base'
 import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager'
 
 import Style from './Style'

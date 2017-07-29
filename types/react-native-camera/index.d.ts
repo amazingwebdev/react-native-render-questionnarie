@@ -1,52 +1,7 @@
-// It is necessary to add the typings of imported oomponents
-
-declare module "react-native-button" {
-    import React, { Component } from "react";
-
-    interface Props {
-        style?: React.ViewStyle;
-        styleDisabled?: React.ViewStyle;
-        onPress?: () => any;
-    }
-
-    export default class Button extends Component<Props, any> { }
-}
-
-
-declare module 'rn-viewpager' {
-    import React, { Component } from "react";
-
-    class PagerTabIndicator extends Component<any, any> {
-
-    }
-    class IndicatorViewPager extends Component<any, any> {
-
-    }
-    class PagerTitleIndicator extends Component<any, any> {
-
-    }
-    class PagerDotIndicator extends Component<any, any> {
-
-    }
-
-    export default class PageControl extends Component<any, any> {
-
-    }
-
-}
-
-/*
-// If you are lazy and don't care about the strict typings:
-
-declare module "react-native-button" {
-    const value: any;
-    export default value;
-}
-*/
 declare module "react-native-camera" {
-    import React, { Component } from "react";
+    import React, { Component } from 'react'
 
-    interface Props {
+	interface Props {
         /**
          * "fill" (default) 
          * 
@@ -60,7 +15,7 @@ declare module "react-native-camera" {
          * The other option is "fit", 
          * which ensures the camera's entire view fits inside your viewfinder without altering the aspect ratio.
          */
-        aspect?: "Camera.constants.Aspect.fit" | "fit" | "Camera.constants.Aspect.fill" | "fill"/** (default) */ | "Camera.constants.Aspect.stretch" | "stretch";
+		aspect?: "Camera.constants.Aspect.fit" | "fit" | "Camera.constants.Aspect.fill" | "fill"/** (default) */ | "Camera.constants.Aspect.stretch" | "stretch";
         /**
          * iOS captureAudio
          * 
@@ -68,7 +23,7 @@ declare module "react-native-camera" {
          * 
          * Applies to video capture mode only. Specifies whether or not audio should be captured with the video.
          */
-        captureAudio?: boolean;
+		captureAudio?: boolean;
         /**
          * captureMode
          * 
@@ -80,7 +35,7 @@ declare module "react-native-camera" {
          * 
          * The type of capture that will be performed by the camera - either a still image or video.
          */
-        captureMode?: "Camera.constants.CaptureMode.still" | "Camera.constants.CaptureMode.video";
+		captureMode?: "Camera.constants.CaptureMode.still" | "Camera.constants.CaptureMode.video";
         /**
          * captureTarget
          * 
@@ -100,7 +55,7 @@ declare module "react-native-camera" {
          * so that is the recommended value. When using the deprecated memory output, 
          * the image binary is sent back as a base64-encoded string.
          */
-        captureTarget?: "Camera.constants.CaptureTarget.cameraRoll" | "Camera.constants.CaptureTarget.disk" | "Camera.constants.CaptureTarget.temp" | "Camera.constants.CaptureTarget.memory";
+		captureTarget?: "Camera.constants.CaptureTarget.cameraRoll" | "Camera.constants.CaptureTarget.disk" | "Camera.constants.CaptureTarget.temp" | "Camera.constants.CaptureTarget.memory";
         /**
          * captureQuality
          * 
@@ -141,7 +96,7 @@ declare module "react-native-camera" {
          *  you might consider manually determine the actual resolution itself after capture has completed (particularly for 480p on Android).
          * 
          */
-        captureQuality?: "low" | "medium" | "high" | 'photo' | "1080p" | "720p" | "480p" | "preview";
+		captureQuality?: "low" | "medium" | "high" | 'photo' | "1080p" | "720p" | "480p" | "preview";
         /**
          * type
          * 
@@ -153,7 +108,7 @@ declare module "react-native-camera" {
          * 
          * Use the type property to specify which camera to use.
          */
-        type?: "back" | "front";
+		type?: "back" | "front";
         /**
          * orientation
          * 
@@ -170,7 +125,7 @@ declare module "react-native-camera" {
          * 
          * The orientation property allows you to specify the current orientation of the phone to ensure the viewfinder is "the right way up."
          */
-        orientation?: "auto" | "landscapeLeft" | "landscapeRight" | "portrait" | "portraitUpsideDown";
+		orientation?: "auto" | "landscapeLeft" | "landscapeRight" | "portrait" | "portraitUpsideDown";
         /**
          * Android playSoundOnCapture
          * 
@@ -179,7 +134,7 @@ declare module "react-native-camera" {
          * 
          * It is currently android only, pending a reasonable mute implementation in iOS.
          */
-        playSoundOnCapture?: boolean;
+		playSoundOnCapture?: boolean;
         /**
          * onBarCodeRead
          * 
@@ -204,7 +159,7 @@ declare module "react-native-camera" {
          * 
          * The barcode type is provided in the data object.
          */
-        onBarCodeRead?: () => any;
+		onBarCodeRead?: () => any;
         /**
          * barCodeTypes
          * 
@@ -226,7 +181,7 @@ declare module "react-native-camera" {
          * 
          * Defaults to all types listed above. No effect if onBarCodeRead is undefined.
          */
-        barCodeTypes?: string[];
+		barCodeTypes?: string[];
         /**
          * flashMode
          * 
@@ -240,7 +195,7 @@ declare module "react-native-camera" {
          * 
          * Use the flashMode property to specify the camera flash mode.
          */
-        flashMode?: any;
+		flashMode?: any;
         /**
          * torchMode
          * 
@@ -254,13 +209,13 @@ declare module "react-native-camera" {
          * 
          * Use the torchMode property to specify the camera torch mode.
          */
-        torchMode?: any;
+		torchMode?: any;
         /**
          * onFocusChanged: Event { nativeEvent: { touchPoint: { x, y } }
          * 
          * Called when a touch focus gesture has been made. By default, onFocusChanged is not defined and tap-to-focus is disabled.
          */
-        onFocusChanged?: () => any;
+		onFocusChanged?: () => any;
         /**
          * defaultOnFocusComponent
          * 
@@ -269,7 +224,7 @@ declare module "react-native-camera" {
          * If defaultOnFocusComponent set to false, 
          * default internal implementation of visual feedback for tap-to-focus gesture will be disabled.
          */
-        defaultOnFocusComponent?: boolean;
+		defaultOnFocusComponent?: boolean;
         /**
          * onZoomChanged: Event { nativeEvent: { velocity, zoomFactor } }
          * 
@@ -277,7 +232,7 @@ declare module "react-native-camera" {
          * 
          * By default, onZoomChanged is not defined and pinch-to-zoom is disabled.
          */
-        onZoomChanged?: () => any;
+		onZoomChanged?: () => any;
         /**
          * iOS keepAwake
          * 
@@ -285,16 +240,16 @@ declare module "react-native-camera" {
          * 
          * This mimics the behavior of the default camera app, which keeps the device awake while open.
          */
-        keepAwake?: boolean;
+		keepAwake?: boolean;
         /**
          * mirrorImage
          * 
          * If set to true, the image returned will be mirrored.
          */
-        mirrorImage?: boolean;
-        defaultTouchToFocus?: boolean;
-        style?: any;
-    }
+		mirrorImage?: boolean;
+		defaultTouchToFocus?: boolean;
+		style?: any;
+	}
 
 
     /**
@@ -311,9 +266,9 @@ declare module "react-native-camera" {
      *
      * rotation This will rotate the image by the number of degrees specified.
      */
-    interface captureOptions {
+	interface captureOptions {
 
-    }
+	}
     /**
      * The promise will be fulfilled with an object with some of the following properties:
      * 
@@ -331,31 +286,31 @@ declare module "react-native-camera" {
      * 
      */
 
-    interface CaptureReturned {
-        data?: string;
-        path?: any;
-        width?: number;
-        height?: number;
-        duration?: number;
-        size?: any;
-    }
+	interface CaptureReturned {
+		data?: string;
+		path?: any;
+		width?: number;
+		height?: number;
+		duration?: number;
+		size?: any;
+	}
 
-    interface constants {
-        Aspect: any;
-        CaptureTarget: any;
-        Type: any;
-        Orientation: any;
-        FlashMode: any;
-        CaptureMode: any;
-    }
+	interface constants {
+		Aspect: any;
+		CaptureTarget: any;
+		Type: any;
+		Orientation: any;
+		FlashMode: any;
+		CaptureMode: any;
+	}
 
 
     /**
      * You can access component methods by adding a ref (ie. ref="camera") prop to your <Camera> element, 
      * then you can use this.refs.camera.capture(cb), etc. inside your component.
      */
-    export default class Camera extends Component<Props, any> {
-        static constants: constants;
+	export default class Camera extends Component<Props, any> {
+		static constants: constants;
         /**
          * capture([options]): Promise
          * 
@@ -365,25 +320,25 @@ declare module "react-native-camera" {
          * captureTarget allows you to specify how you want the data to be captured and sent back to you. 
          * See captureTarget under Properties to see the available values.
          */
-        capture([]?: captureOptions): Promise<CaptureReturned>
+		capture([]?: captureOptions): Promise<CaptureReturned>
         /**
          * iOS getFOV(): Promise
          * 
          * Returns the camera's current field of view.
          */
-        getFOV(): Promise<any>
+		getFOV(): Promise<any>
         /**
          * hasFlash(): Promise
          * 
          * Returns whether or not the camera has flash capabilities.
          */
-        hasFlash(): Promise<any>;
+		hasFlash(): Promise<any>;
         /**
          * stopCapture()
          * 
          * Ends the current capture session for video captures. Only applies when the current captureMode is video.
          */
-        stopCapture(): void;
+		stopCapture(): void;
         /**
          * iOS Camera.checkDeviceAuthorizationStatus(): Promise
          * 
@@ -392,19 +347,19 @@ declare module "react-native-camera" {
          * 
          * The promise will be fulfilled with true or false depending on whether the device is authorized.
          */
-        static checkDeviceAuthorizationStatus(): Promise<boolean>;
+		static checkDeviceAuthorizationStatus(): Promise<boolean>;
         /**
          * iOS Camera.checkVideoAuthorizationStatus(): Promise
          * 
          * The same as Camera.checkDeviceAuthorizationStatus() but only checks the camera permission.
          */
-        static checkVideoAuthorizationStatus(): Promise<boolean>
+		static checkVideoAuthorizationStatus(): Promise<boolean>
         /**
          * iOS Camera.checkAudioAuthorizationStatus(): Promise
          * 
          * The same as Camera.checkDeviceAuthorizationStatus() but only checks the microphone permission.
          */
-        static checkAudioAuthorizationStatus(): Promise<boolean>
+		static checkAudioAuthorizationStatus(): Promise<boolean>
 
-    }
+	}
 }

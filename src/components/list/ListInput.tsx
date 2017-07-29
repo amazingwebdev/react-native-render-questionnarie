@@ -1,10 +1,8 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { MultiInputQuestion, MultiInputQuestionOption } from '../../survey'
-import MultiChoiceInputHOC from '../MultiChoiceInputHOC'
-import { BaseInput } from '../'
-import BaseInputHOC from '../BaseInputHOC'
+import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
+import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
     selection?: string | string[]
@@ -24,7 +22,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     componentWillMount() {
         this.props.pureOptions.splice(0, 0, this.createOptionTitle())
     }
-    
+
     componentDidMount() {
         if (this.props.defaultValue) {
             this.setState({ selection: this.props.defaultValue })
@@ -47,17 +45,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         )
     }
 
-    public setValue(selection: string) {
-        this.setState({ selection })
-    }
-
-    public getValue() {
-        if (this.state.selection === undefined || this.state.selection === '-1') {
-            return undefined
-        }
-        return this.state.selection
-    }
-
     private renderOptions(option: MultiInputQuestionOption) {
         const name = option[this.props.titleKey]
         const value = option[this.props.valueKey]
@@ -74,12 +61,23 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         return defaultOptionsTitle
     }
 
-    public isValid(): boolean {
-        return true
-    }
-
     public getTitle(): string {
         return this.props.title
+    }
+
+    public getValue() {
+        if (this.state.selection === undefined || this.state.selection === '-1') {
+            return undefined
+        }
+        return this.state.selection
+    }
+
+    public setValue(selection: string) {
+        this.setState({ selection })
+    }
+
+    public isValid(): boolean {
+        return true
     }
 
 }

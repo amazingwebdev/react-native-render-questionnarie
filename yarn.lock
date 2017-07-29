@@ -4520,7 +4520,7 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
 
-rn-viewpager@^1.2.3:
+rn-viewpager@1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/rn-viewpager/-/rn-viewpager-1.2.3.tgz#e2183f379586d44a7827b3d8bc566c71045e7544"
 

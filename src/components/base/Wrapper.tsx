@@ -1,15 +1,14 @@
 import React from 'react'
-import { Header, Text, View, Button, Icon, Left, Right, Body } from 'native-base'
+import { Header, Text, View, Button, Icon, Body } from 'native-base'
 
-import { Question } from '../survey/Form'
-import FCamera from './camera/Camera'
-import Gallery from './gallery/Gallery'
-import Style from './Style'
+import { Question, Camera, Gallery } from '../'
+
+import Style from './WrapperStyle'
 
 interface PhotoState {
-	isCapturing: boolean
+	capturing: boolean
 	capturedPhotos: string[]
-	isGalleryOpen: boolean
+	showGallery: boolean
 }
 
 export interface BaseState extends PhotoState {
@@ -41,16 +40,17 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		this.onGalleryClose = this.onGalleryClose.bind(this)
 
 	}
+
+	abstract getWrappedComponent(): React.Component<P>
+
 	protected getInitialState(): BaseState {
 		return {
 			display: true,
-			isCapturing: false,
-			isGalleryOpen: false,
+			capturing: false,
+			showGallery: false,
 			capturedPhotos: [],
 		}
 	}
-
-	abstract getWrappedComponent(): React.Component<P>
 
 	protected renderTitle() {
 		if (this.state.display) {
@@ -79,11 +79,12 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 							</Button>
 						}
 					</Header>
-					<FCamera
-						visible={this.state.isCapturing}
-						onClose={this.onCameraClose} />
+					<Camera
+						visible={this.state.capturing}
+						onClose={this.onCameraClose}
+					/>
 					<Gallery
-						visible={this.state.isGalleryOpen}
+						visible={this.state.showGallery}
 						photos={this.state.capturedPhotos}
 						onPhotoDelete={this.onPhotoDelete}
 						onGalleryClose={this.onGalleryClose}
@@ -107,28 +108,29 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 	}
 
 	private openCamera() {
-		this.setState({ isCapturing: true })
+		this.setState({ capturing: true })
 	}
 
 	private openGallery() {
-		this.setState({ isGalleryOpen: true })
+		this.setState({ showGallery: true })
 	}
 
 	private onCameraClose(capturedPhotos: string[]) {
-		this.setState({ capturedPhotos, isCapturing: false })
+		this.setState({ capturedPhotos, capturing: false })
+	}
+
+	private onGalleryClose() {
+		this.setState({ showGallery: false })
 	}
 
 	private onPhotoDelete(deletedPhoto: string) {
 		const { capturedPhotos } = this.state
 		capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
 		if (capturedPhotos.length === 0) {
-			this.setState({ isGalleryOpen: false })
+			this.setState({ showGallery: false })
 		} else {
 			this.setState({ capturedPhotos })
 		}
 	}
 
-	private onGalleryClose() {
-		this.setState({ isGalleryOpen: false })
-	}
 }
