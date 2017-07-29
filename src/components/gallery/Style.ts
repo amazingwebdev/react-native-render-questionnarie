@@ -25,7 +25,10 @@ const imagePreview: ViewStyle = {
 }
 
 const icon: TextStyle = {
-	color: 'white',
+	color: Platform.select({
+		ios: '#3498db',
+		android: 'white',
+	}),
 	fontSize: 35,
 }
 

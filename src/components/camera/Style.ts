@@ -42,7 +42,10 @@ const badgeStyle: ViewStyle = {
 
 const icon: TextStyle = {
 	color: 'white',
-	fontSize: 50,
+	fontSize: Platform.select({
+		ios: 100,
+		android: 50,
+	}),
 }
 
 export default {
