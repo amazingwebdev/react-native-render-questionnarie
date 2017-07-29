@@ -36,7 +36,7 @@ import Style from './Style'
 
 interface SurveyProps {
   form: Form
-  onSave: (answers: {}) => void
+  onSave: (answers: Answers, media: Media) => void
   onFailure: (errors: string[]) => void
   answers?: { [key: string]: string | string[] | number }
 }
@@ -52,6 +52,11 @@ interface Answers {
   [key: string]: {}
 }
 
+interface Media {
+  form: string[]
+  question: { [key: string]: string[] }
+}
+
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
   private answers: Answers
@@ -59,6 +64,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private questionCount: number
   private brief: string
   private prevAnswers: Answers
+  private media: Media
 
   public constructor(props: SurveyProps) {
     super(props)
@@ -71,7 +77,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.answers = {}
     this.prevAnswers = {}
     this.pageCount = props.form.pages.length
-
+    this.media = {
+      form: [],
+      question: {},
+    }
     this.prevPage = this.prevPage.bind(this)
     this.nextPage = this.nextPage.bind(this)
     this.onSave = this.onSave.bind(this)
@@ -176,7 +185,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           {!(this.state.pageNumber === this.pageCount - 1) &&
             <Right>
               <Button onPress={this.nextPage} transparent>
-                <Text> Next </Text>
                 <Icon name="arrow-forward" />
               </Button>
             </Right>}
@@ -230,6 +238,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           const question = wrapper.getWrappedComponent() as BaseInput<Question>
           if (question.isValid() && question.getValue() !== undefined) {
             currentPageAnswers[ref] = question.getValue()
+            if (wrapper.getCapturedPhotos().length > 0) {
+              this.media.question[ref] = wrapper.getCapturedPhotos()
+            }
           }
         }
       }
@@ -257,7 +268,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages = this.validatePage()
     if (validationMessages.length === 0 && this.props.onSave) {
       this.storeCurrentPageAnswers()
-      this.props.onSave(this.answers)
+      this.props.onSave(this.answers, this.media)
     } else if (this.props.onFailure) {
       this.props.onFailure(validationMessages)
     }

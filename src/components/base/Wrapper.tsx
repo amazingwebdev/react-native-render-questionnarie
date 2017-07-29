@@ -20,6 +20,7 @@ export interface DisplayInput<P> extends React.Component<P> {
 	hide: () => void
 	isAvailable: () => void
 	getWrappedComponent: () => React.Component<P>
+	getCapturedPhotos: () => any
 }
 
 export interface BaseInput<P> extends React.Component<P> {
@@ -27,6 +28,7 @@ export interface BaseInput<P> extends React.Component<P> {
 	getValue: () => string | string[] | number
 	setValue: (value: string | string[] | number) => void
 	isValid: () => boolean
+
 }
 
 export default abstract class Wrapper<P extends Question, S extends BaseState> extends React.Component<P, S> implements DisplayInput<P> {
@@ -105,6 +107,10 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 
 	public isAvailable(): boolean {
 		return this.state.display
+	}
+
+	public getCapturedPhotos(): string[] {
+		return this.state.capturedPhotos
 	}
 
 	private openCamera() {
