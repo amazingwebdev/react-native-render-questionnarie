@@ -17,6 +17,10 @@ interface CameraState {
 
 export default class Camera extends React.Component<CameraProps, CameraState> {
 
+	public static defaultProps = {
+		captureQuality: '720p',
+	}
+
 	private camera: RNCamera
 
 	constructor(props: CameraProps) {
