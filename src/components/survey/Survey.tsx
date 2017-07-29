@@ -268,6 +268,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const validationMessages = this.validatePage()
     if (validationMessages.length === 0 && this.props.onSave) {
       this.storeCurrentPageAnswers()
+      if (this.state.capturedPhotos.length > 0) {
+        this.media.form = this.state.capturedPhotos
+      }
       this.props.onSave(this.answers, this.media)
     } else if (this.props.onFailure) {
       this.props.onFailure(validationMessages)
