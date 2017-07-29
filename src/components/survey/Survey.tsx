@@ -36,6 +36,7 @@ interface SurveyProps {
   form: Form
   onSave: (answers: {}) => void
   onFailure: (errors: string[]) => void
+  answers?: { [key: string]: string | string[] | number }
 }
 
 interface SurveyState {
@@ -52,6 +53,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private pageCount: number
   private questionCount: number
   private brief: string
+  private prevAnswers: Answers
 
   public constructor(props: SurveyProps) {
     super(props)
@@ -59,6 +61,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
       pageNumber: 0,
     }
     this.answers = {}
+    this.prevAnswers = {}
     this.pageCount = props.form.pages.length
 
     this.prevPage = this.prevPage.bind(this)
@@ -69,9 +72,39 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.prepareBriefMessage()
   }
 
+  public componentDidMount() {
+    if (this.props.answers) {
+      for (const ref in this.refs) {
+        if (this.refs.hasOwnProperty(ref)) {
+          if (this.props.answers[ref]) {
+            const wrapper = this.refs[ref] as DisplayInput<Question>
+            if (wrapper.isAvailable()) {
+              const question = wrapper.getWrappedComponent() as BaseInput<Question>
+              question.setValue(this.props.answers[ref])
+            }
+          }
+        }
+      }
+    }
+  }
+
   public componentDidUpdate() {
     const currentPageAnswers: { [key: string]: string } = this.answers[this.state.pageNumber]
     if (currentPageAnswers === undefined) {
+      if (this.props.answers) {
+        for (const ref in this.refs) {
+          if (this.refs.hasOwnProperty(ref)) {
+            if (this.props.answers[ref]) {
+              const wrapper = this.refs[ref] as DisplayInput<Question>
+              if (wrapper.isAvailable()) {
+                const question = wrapper.getWrappedComponent() as BaseInput<Question>
+                question.setValue(this.props.answers[ref])
+              }
+            }
+          }
+        }
+      }
+
       return
     }
     for (const ref in this.refs) {
@@ -101,7 +134,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             <Left>
               <Button onPress={this.prevPage} transparent>
                 <Icon name="arrow-back" />
-                <Text> Previous </Text>
               </Button>
             </Left>}
           {this.state.pageNumber === 0 &&
@@ -187,6 +219,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private onSave() {
     const validationMessages = this.validatePage()
     if (validationMessages.length === 0 && this.props.onSave) {
+      this.storeCurrentPageAnswers()
       this.props.onSave(this.answers)
     } else if (this.props.onFailure) {
       this.props.onFailure(validationMessages)
@@ -200,6 +233,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <SliderInput
             ref={slider.tag}
+            key={slider.tag}
             tag={slider.tag}
             type={slider.type}
             title={slider.title}
@@ -216,6 +250,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <TextInput
             ref={text.tag}
+            key={text.tag}
             tag={text.tag}
             type={text.type}
             title={text.title}
@@ -230,6 +265,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <ListInput
             ref={list.tag}
+            key={list.tag}
             tag={list.tag}
             type={list.type}
             title={list.title}
@@ -247,6 +283,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <RadioInput
             ref={radio.tag}
+            key={radio.tag}
             tag={radio.tag}
             type={radio.type}
             title={radio.title}
@@ -263,6 +300,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <CheckInput
             ref={checkbox.tag}
+            key={checkbox.tag}
             tag={checkbox.tag}
             type={checkbox.type}
             title={checkbox.title}
@@ -279,6 +317,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         return (
           <PhotoInput
             ref={photo.tag}
+            key={photo.tag}
             tag={photo.tag}
             type={photo.type}
             title={photo.title}
