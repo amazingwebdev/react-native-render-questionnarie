@@ -12,6 +12,7 @@ import {
   Title,
   Body,
 } from 'native-base'
+import * as _ from 'lodash'
 
 import {
   Form,
@@ -46,10 +47,12 @@ interface SurveyState {
   showGallery: boolean,
   capturedPhotos: string[],
   capturing: boolean
+  answers: Answers
+  medias: Media
 }
 
 interface Answers {
-  [key: string]: {}
+  [key: string]: string | string[] | number
 }
 
 interface Media {
@@ -59,12 +62,10 @@ interface Media {
 
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
-  private answers: Answers
   private pageCount: number
   private questionCount: number
   private brief: string
   private prevAnswers: Answers
-  private media: Media
 
   public constructor(props: SurveyProps) {
     super(props)
@@ -73,14 +74,13 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
       capturing: false,
       showGallery: false,
       capturedPhotos: [],
+      answers: this.props.answers ? this.props.answers : {},
+      medias: {
+        form: [],
+        question: {},
+      },
     }
-    this.answers = {}
     this.prevAnswers = {}
-    this.pageCount = props.form.pages.length
-    this.media = {
-      form: [],
-      question: {},
-    }
     this.prevPage = this.prevPage.bind(this)
     this.nextPage = this.nextPage.bind(this)
     this.onSave = this.onSave.bind(this)
@@ -89,63 +89,14 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.onCameraClose = this.onCameraClose.bind(this)
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
-
-    this.countQuestions()
-    this.prepareBriefMessage()
   }
 
   public componentDidMount() {
-    if (this.props.answers) {
-      for (const ref in this.refs) {
-        if (this.refs.hasOwnProperty(ref)) {
-          if (this.props.answers[ref]) {
-            const wrapper = this.refs[ref] as DisplayInput<Question>
-            if (wrapper.isAvailable()) {
-              const question = wrapper.getWrappedComponent() as BaseInput<Question>
-              question.setValue(this.props.answers[ref])
-            }
-          }
-        }
-      }
-    }
+    this.loadAnswers()
   }
 
   public componentDidUpdate() {
-    const currentPageAnswers: { [key: string]: string } = this.answers[this.state.pageNumber]
-    if (currentPageAnswers === undefined) {
-      if (this.props.answers) {
-        for (const ref in this.refs) {
-          if (this.refs.hasOwnProperty(ref)) {
-            if (this.props.answers[ref]) {
-              const wrapper = this.refs[ref] as DisplayInput<Question>
-              if (wrapper.isAvailable()) {
-                const question = wrapper.getWrappedComponent() as BaseInput<Question>
-                question.setValue(this.props.answers[ref])
-                if (this.media.question[ref] && this.media.question[ref].length > 0) {
-                  wrapper.setPhotosURLs(this.media.question[ref])
-                }
-              }
-            }
-          }
-        }
-      }
-
-      return
-    }
-    for (const ref in this.refs) {
-      if (this.refs.hasOwnProperty(ref)) {
-        if (currentPageAnswers[ref]) {
-          const wrapper = this.refs[ref] as DisplayInput<Question>
-          if (wrapper.isAvailable()) {
-            const question = wrapper.getWrappedComponent() as BaseInput<Question>
-            question.setValue(currentPageAnswers[ref])
-            if (this.media.question[ref] && this.media.question[ref].length > 0) {
-              wrapper.setPhotosURLs(this.media.question[ref])
-            }
-          }
-        }
-      }
-    }
+    this.loadAnswers()
   }
 
   public render(): JSX.Element {
@@ -217,70 +168,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         </Content>
       </Container>
     )
-  }
-
-  private validatePage(): string[] {
-    const validationMessages: string[] = []
-    for (const ref in this.refs) {
-      if (this.refs.hasOwnProperty(ref)) {
-        const wrapper = this.refs[ref] as DisplayInput<Question>
-        if (wrapper.isAvailable()) {
-          const question = wrapper.getWrappedComponent() as BaseInput<Question>
-          if (!question.isValid() && question.getTitle()) {
-            validationMessages.push(question.getTitle())
-          }
-        }
-      }
-    }
-    return validationMessages
-  }
-
-  private storeCurrentPageAnswers(): void {
-    const currentPageAnswers: { [key: string]: string | string[] | number } = {}
-    for (const ref in this.refs) {
-      if (this.refs.hasOwnProperty(ref)) {
-        const wrapper = this.refs[ref] as DisplayInput<Question>
-        if (wrapper.isAvailable()) {
-          const question = wrapper.getWrappedComponent() as BaseInput<Question>
-          if (question.getValue() !== undefined) {
-            currentPageAnswers[ref] = question.getValue()
-            if (wrapper.getPhotosURLs().length > 0) {
-              this.media.question[ref] = wrapper.getPhotosURLs()
-            }
-          }
-        }
-      }
-    }
-    this.answers[this.state.pageNumber] = currentPageAnswers
-  }
-
-  private prevPage() {
-    this.storeCurrentPageAnswers()
-    const pageNumber = this.state.pageNumber - 1
-    this.setState({ pageNumber })
-  }
-
-  private nextPage() {
-    const validationMessages = this.validatePage()
-    if (validationMessages.length === 0) {
-      this.storeCurrentPageAnswers()
-      this.setState({ pageNumber: this.state.pageNumber + 1 })
-    } else if (this.props.onFailure) {
-      this.props.onFailure(validationMessages)
-    }
-  }
-
-  private onSave() {
-    const validationMessages = this.validatePage()
-    if (validationMessages.length === 0 && this.props.onSave) {
-      this.storeCurrentPageAnswers()
-      if (this.state.capturedPhotos.length > 0) {
-        this.media.form = this.state.capturedPhotos
-      }
-      this.props.onSave(this.answers, this.media)
-    } else if (this.props.onFailure) {
-      this.props.onFailure(validationMessages)
-    }
   }
 
   private createQuestionComponent(question: Question): JSX.Element {
@@ -387,19 +274,79 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
   }
 
-  private countQuestions() {
-    let questionCount = 0
-    this.props.form.pages.map((page) => {
-      questionCount += page.questions.length
+  private loadAnswers() {
+    if (_.isEmpty(this.state.answers)) {
+      return
+    }
+    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
+      if (_.has(this.state.answers, ref)) {
+        if (wrapper.isAvailable()) {
+          const question = wrapper.getWrappedComponent() as BaseInput<Question>
+          question.setValue(this.state.answers[ref])
+        }
+      }
+      if (_.has(this.state.medias.question, ref)) {
+        wrapper.setPhotosURLs(this.state.medias.question[ref])
+      }
     })
-    this.questionCount = questionCount
   }
 
-  private prepareBriefMessage(): void {
-    const brief: string[] = []
-    brief.push(`Bu soru formu ${this.pageCount} sayfadan`)
-    brief.push(`${this.questionCount} sorudan oluşmaktadır.`)
-    this.brief = brief.join('\n')
+  private validatePage(): string[] {
+    const validationMessages: string[] = []
+    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
+      if (wrapper.isAvailable()) {
+        const question = wrapper.getWrappedComponent() as BaseInput<Question>
+        if (!question.isValid() && question.getTitle()) {
+          validationMessages.push(question.getTitle())
+        }
+      }
+    })
+    return validationMessages
+  }
+
+  private storeCurrentPageAnswers(): void {
+    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
+      if (wrapper.isAvailable()) {
+        const question = wrapper.getWrappedComponent() as BaseInput<Question>
+        const answer = question.getValue()
+        if (question.getValue() !== undefined) {
+          this.state.answers[ref] = question.getValue()
+        }
+        const media = wrapper.getPhotosURLs()
+        if (!_.isEmpty(media)) {
+          this.state.medias.question[ref] = wrapper.getPhotosURLs()
+        }
+      }
+    })
+  }
+
+  private prevPage() {
+    this.storeCurrentPageAnswers()
+    const pageNumber = this.state.pageNumber - 1
+    this.setState({ pageNumber })
+  }
+
+  private nextPage() {
+    const validationMessages = this.validatePage()
+    if (_.isEmpty(validationMessages)) {
+      this.storeCurrentPageAnswers()
+      this.setState({ pageNumber: this.state.pageNumber + 1 })
+    } else if (this.props.onFailure) {
+      this.props.onFailure(validationMessages)
+    }
+  }
+
+  private onSave() {
+    const validationMessages = this.validatePage()
+    if (_.isEmpty(validationMessages) && this.props.onSave) {
+      this.storeCurrentPageAnswers()
+      if (this.state.capturedPhotos.length > 0) {
+        this.state.medias.form = this.state.capturedPhotos
+      }
+      this.props.onSave(this.state.answers, this.state.medias)
+    } else if (this.props.onFailure) {
+      this.props.onFailure(validationMessages)
+    }
   }
 
   private openCamera() {
@@ -421,10 +368,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private onPhotoDelete(deletedPhoto: string) {
     const { capturedPhotos } = this.state
     capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
-    if (capturedPhotos.length === 0) {
+    if (_.isEmpty(capturedPhotos)) {
       this.setState({ showGallery: false })
     } else {
       this.setState({ capturedPhotos })
     }
   }
+
 }
