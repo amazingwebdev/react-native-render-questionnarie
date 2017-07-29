@@ -1,15 +1,31 @@
-import { Platform } from 'react-native'
+import { Platform, TextStyle, TextStyleIOS, TextStyleAndroid, ViewStyle } from 'react-native'
+
+const content: ViewStyle = {
+	top: 1,
+}
+
+const header: ViewStyle = {
+	...Platform.select({
+		android: {
+			height: 'auto',
+			backgroundColor: '#3498db',
+		},
+	}),
+}
+
+const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
+	...Platform.select({
+		android: {
+			flex: 0,
+			color: 'white',
+			textAlignVertical: 'auto',
+			textAlign: 'right',
+		},
+	}),
+}
 
 export default {
-    content: {
-        top: 1,
-    },
-	header: {
-		...Platform.select({
-			android: {
-				height: 'auto',
-				backgroundColor: '#3498db',
-			},
-		}),
-	},
+	content,
+	button,
+	header,
 }

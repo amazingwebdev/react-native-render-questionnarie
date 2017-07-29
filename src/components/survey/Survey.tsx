@@ -28,6 +28,8 @@ import {
   RadioInput,
   ListInput,
   PhotoInput,
+  Gallery,
+  Camera,
 } from '../'
 
 import Style from './Style'
@@ -40,6 +42,9 @@ interface SurveyProps {
 
 interface SurveyState {
   pageNumber: number
+  showGallery: boolean,
+  capturedPhotos: string[],
+  capturing: boolean
 }
 
 interface Answers {
@@ -57,6 +62,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     super(props)
     this.state = {
       pageNumber: 0,
+      capturing: false,
+      showGallery: false,
+      capturedPhotos: [],
     }
     this.answers = {}
     this.pageCount = props.form.pages.length
@@ -64,6 +72,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.prevPage = this.prevPage.bind(this)
     this.nextPage = this.nextPage.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.openCamera = this.openCamera.bind(this)
+    this.openGallery = this.openGallery.bind(this)
+    this.onCameraClose = this.onCameraClose.bind(this)
+    this.onPhotoDelete = this.onPhotoDelete.bind(this)
+    this.onGalleryClose = this.onGalleryClose.bind(this)
 
     this.countQuestions()
     this.prepareBriefMessage()
@@ -101,15 +114,28 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             <Left>
               <Button onPress={this.prevPage} transparent>
                 <Icon name="arrow-back" />
-                <Text> Previous </Text>
               </Button>
             </Left>}
           {this.state.pageNumber === 0 &&
             this.pageCount !== 1 &&
             <Left>
-              <Button transparent>
-                <Icon name="camera" />
-              </Button>
+              {
+                <Button transparent style={Style.button} onPress={this.openCamera}>
+                  <Icon name="camera" />
+                </Button>
+              }
+              {
+                this.state.capturedPhotos.length === 1 &&
+                <Button transparent style={Style.button} onPress={this.openGallery}>
+                  <Icon name="image" />
+                </Button>
+              }
+              {
+                this.state.capturedPhotos.length > 1 &&
+                <Button transparent style={Style.button} onPress={this.openGallery}>
+                  <Icon name="images" />
+                </Button>
+              }
             </Left>}
           <Body>
             <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
@@ -129,6 +155,16 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
               </Button>
             </Right>}
         </Header>
+        <Camera
+          visible={this.state.capturing}
+          onClose={this.onCameraClose}
+        />
+        <Gallery
+          visible={this.state.showGallery}
+          photos={this.state.capturedPhotos}
+          onPhotoDelete={this.onPhotoDelete}
+          onGalleryClose={this.onGalleryClose}
+        />
         <Content key="form" style={Style.content}>
           {questions}
         </Content>
@@ -306,4 +342,29 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.brief = brief.join('\n')
   }
 
+  private openCamera() {
+    this.setState({ capturing: true })
+  }
+
+  private openGallery() {
+    this.setState({ showGallery: true })
+  }
+
+  private onCameraClose(capturedPhotos: string[]) {
+    this.setState({ capturedPhotos, capturing: false })
+  }
+
+  private onGalleryClose() {
+    this.setState({ showGallery: false })
+  }
+
+  private onPhotoDelete(deletedPhoto: string) {
+    const { capturedPhotos } = this.state
+    capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
+    if (capturedPhotos.length === 0) {
+      this.setState({ showGallery: false })
+    } else {
+      this.setState({ capturedPhotos })
+    }
+  }
 }
