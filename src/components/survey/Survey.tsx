@@ -121,6 +121,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
               if (wrapper.isAvailable()) {
                 const question = wrapper.getWrappedComponent() as BaseInput<Question>
                 question.setValue(this.props.answers[ref])
+                if (this.media.question[ref] && this.media.question[ref].length > 0) {
+                  wrapper.setPhotosURLs(this.media.question[ref])
+                }
               }
             }
           }
@@ -136,6 +139,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           if (wrapper.isAvailable()) {
             const question = wrapper.getWrappedComponent() as BaseInput<Question>
             question.setValue(currentPageAnswers[ref])
+            if (this.media.question[ref] && this.media.question[ref].length > 0) {
+              wrapper.setPhotosURLs(this.media.question[ref])
+            }
           }
         }
       }
@@ -236,10 +242,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         const wrapper = this.refs[ref] as DisplayInput<Question>
         if (wrapper.isAvailable()) {
           const question = wrapper.getWrappedComponent() as BaseInput<Question>
-          if (question.isValid() && question.getValue() !== undefined) {
+          if (question.getValue() !== undefined) {
             currentPageAnswers[ref] = question.getValue()
-            if (wrapper.getCapturedPhotos().length > 0) {
-              this.media.question[ref] = wrapper.getCapturedPhotos()
+            if (wrapper.getPhotosURLs().length > 0) {
+              this.media.question[ref] = wrapper.getPhotosURLs()
             }
           }
         }

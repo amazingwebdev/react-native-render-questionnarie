@@ -20,7 +20,8 @@ export interface DisplayInput<P> extends React.Component<P> {
 	hide: () => void
 	isAvailable: () => void
 	getWrappedComponent: () => React.Component<P>
-	getCapturedPhotos: () => any
+	getPhotosURLs: () => string[]
+	setPhotosURLs: (urls: string[]) => void
 }
 
 export interface BaseInput<P> extends React.Component<P> {
@@ -109,8 +110,12 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		return this.state.display
 	}
 
-	public getCapturedPhotos(): string[] {
+	public getPhotosURLs(): string[] {
 		return this.state.capturedPhotos
+	}
+
+	public setPhotosURLs(urls: string[]): void {
+		this.setState({ capturedPhotos: urls })
 	}
 
 	private openCamera() {
