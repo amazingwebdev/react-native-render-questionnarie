@@ -36,7 +36,7 @@ interface SurveyProps {
   form: Form
   onSave: (answers: {}) => void
   onFailure: (errors: string[]) => void
-  answers: { [key: string]: string | string[] | number }
+  answers?: { [key: string]: string | string[] | number }
 }
 
 interface SurveyState {
@@ -91,6 +91,20 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   public componentDidUpdate() {
     const currentPageAnswers: { [key: string]: string } = this.answers[this.state.pageNumber]
     if (currentPageAnswers === undefined) {
+      if (this.props.answers) {
+        for (const ref in this.refs) {
+          if (this.refs.hasOwnProperty(ref)) {
+            if (this.props.answers[ref]) {
+              const wrapper = this.refs[ref] as DisplayInput<Question>
+              if (wrapper.isAvailable()) {
+                const question = wrapper.getWrappedComponent() as BaseInput<Question>
+                question.setValue(this.props.answers[ref])
+              }
+            }
+          }
+        }
+      }
+
       return
     }
     for (const ref in this.refs) {
@@ -120,7 +134,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             <Left>
               <Button onPress={this.prevPage} transparent>
                 <Icon name="arrow-back" />
-                <Text> Previous </Text>
               </Button>
             </Left>}
           {this.state.pageNumber === 0 &&
@@ -206,6 +219,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private onSave() {
     const validationMessages = this.validatePage()
     if (validationMessages.length === 0 && this.props.onSave) {
+      this.storeCurrentPageAnswers()
       this.props.onSave(this.answers)
     } else if (this.props.onFailure) {
       this.props.onFailure(validationMessages)
