@@ -1,9 +1,12 @@
 import { Platform, Dimensions, StyleSheet, ViewStyle, TextStyle, TextStyleIOS, TextStyleAndroid } from 'react-native'
 
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
+
 const container: ViewStyle = {
 	flex: 1,
-	width: Dimensions.get('window').width,
-	height: Dimensions.get('window').height,
+	width: WIDTH,
+	height: HEIGHT,
 }
 
 const preview: ViewStyle = {
