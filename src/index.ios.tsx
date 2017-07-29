@@ -2,14 +2,18 @@ import React from 'react'
 import { Toast } from 'native-base'
 import Survey from './components/survey/Survey'
 
+const PrevAnswer = require('../samples/answers.json')
+const form = require('../samples/form.json')
+
 export default class App extends React.Component<{}, {}> {
 
 	public render() {
 		return (
 			<Survey
-				form={require('../samples/form.json')}
+				form={form}
 				onSave={this.onSave.bind(this)}
-				onFailure={this.onFailure.bind(this)} />
+				onFailure={this.onFailure.bind(this)}
+				answers={PrevAnswer} />
 		)
 	}
 
