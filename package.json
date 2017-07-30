@@ -1,6 +1,6 @@
 {
   "name": "tvba",
-  "version": "0.4.0",
+  "version": "0.4.3",
   "description": "React Native module to render questionnaire based on NativeBase components.",
   "author": {
     "name": "Adem Özay",
