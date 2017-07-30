@@ -80,6 +80,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         question: {},
       },
     }
+    this.pageCount = this.props.form.pages.length
     this.prevAnswers = {}
     this.prevPage = this.prevPage.bind(this)
     this.nextPage = this.nextPage.bind(this)
