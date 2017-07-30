@@ -1,6 +1,6 @@
 import React from 'react'
-import { Image, Modal } from 'react-native'
-import { View, Header, Left, Right, Icon, Button } from 'native-base'
+import { Image, Modal, View } from 'react-native'
+import { Header, Left, Right, Icon, Button } from 'native-base'
 import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager'
 
 import Style from './Style'
@@ -31,16 +31,6 @@ export default class Gallery extends React.Component<GalleryProps, GalleryState>
 	}
 
 	render() {
-		const images = []
-		for (const imagePath of this.props.photos) {
-			images.push(<View key={imagePath} >
-				<Image
-					style={Style.imagePreview}
-					source={{ uri: imagePath }}
-					resizeMode="stretch">
-				</Image>
-			</View>)
-		}
 		return (
 			<Modal
 				animationType={'slide'}
@@ -48,34 +38,52 @@ export default class Gallery extends React.Component<GalleryProps, GalleryState>
 				onRequestClose={this.props.onGalleryClose}
 				visible={this.props.visible} >
 				<View style={Style.galleryContainer}>
-					<Header style={Style.header}>
-						<Left>
-							<Button
-								transparent
-								onPress={this.props.onGalleryClose} >
-								<Icon active style={Style.icon} name="arrow-back" />
-							</Button>
-						</Left>
-						<Right>
-							<Button
-								transparent
-								onPress={this.removeShownPhoto} >
-								<Icon active style={Style.icon} name="trash" />
-							</Button>
-						</Right>
-					</Header>
+					{this.renderTitle()}
 					<IndicatorViewPager
 						style={Style.imagePreview}
 						indicator={this.renderDotIndicator()}
 						onPageSelected={(photo: CurrentPhoto) => this.onPhotoChanged(photo)} >
-						{images}
+						{this.props.photos.map(this.renderPhotos)}
 					</IndicatorViewPager>
 				</View>
 			</Modal>
 		)
 	}
 
-	public renderDotIndicator() {
+	private renderTitle(): JSX.Element {
+		return (
+			<Header style={Style.header}>
+				<Left>
+					<Button
+						transparent
+						onPress={this.props.onGalleryClose} >
+						<Icon active style={Style.icon} name="arrow-back" />
+					</Button>
+				</Left>
+				<Right>
+					<Button
+						transparent
+						onPress={this.removeShownPhoto} >
+						<Icon active style={Style.icon} name="trash" />
+					</Button>
+				</Right>
+			</Header>
+		)
+	}
+
+	private renderPhotos(photo: string): JSX.Element {
+		return (
+			<View key={photo} >
+				<Image
+					style={Style.imagePreview}
+					source={{ uri: photo }}
+					resizeMode="stretch">
+				</Image>
+			</View>
+		)
+	}
+
+	private renderDotIndicator() {
 		return <PagerDotIndicator pageCount={this.props.photos.length} />
 	}
 
