@@ -2,6 +2,7 @@ declare module "react-native-camera" {
     import React, { Component } from 'react'
 
 	interface Props {
+        fixOrientation?: boolean
         /**
          * "fill" (default) 
          * 

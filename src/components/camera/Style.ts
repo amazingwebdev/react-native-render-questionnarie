@@ -5,8 +5,6 @@ const HEIGHT = Dimensions.get('window').height
 
 const container: ViewStyle = {
 	flex: 1,
-	width: WIDTH,
-	height: HEIGHT,
 }
 
 const preview: ViewStyle = {

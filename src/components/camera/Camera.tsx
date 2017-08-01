@@ -45,7 +45,8 @@ export default class Camera extends React.Component<CameraProps, CameraState> {
 						style={Style.preview}
 						aspect={RNCamera.constants.Aspect.fill}
 						captureQuality={this.props.captureQuality}
-						captureTarget={RNCamera.constants.CaptureTarget.disk}>
+						captureTarget={RNCamera.constants.CaptureTarget.disk}
+						fixOrientation>
 						<Button
 							transparent
 							style={Style.cameraButton}
