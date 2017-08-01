@@ -14,9 +14,13 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
     constructor(props: SliderInputQuestion) {
         super(props)
         this.state = {
-            value: props.value || 0,
+
         }
         this.onValueChange = this.onValueChange.bind(this)
+    }
+
+    private getInitialState(): SliderState {
+        return { value: this.props.value || 0 } // TODO: bitwise?
     }
 
     public componentWillMount() {
@@ -60,6 +64,18 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
 
     public isValid(): boolean {
         return true
+    }
+
+    public triggerCascadedQuestions(value: number) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
+        this.triggerCascadedQuestions(initialState.value)
     }
 
 }

@@ -25,6 +25,8 @@ export interface Question {
 	visible?: boolean
 	visibleIf?: string
 	onChange?: string[]
+	trigger?: (tag: string, value: string | string[] | number, cascadedTags: string[]) => void
+	reset?: boolean
 }
 
 export interface TextInputQuestion extends Question {
@@ -50,7 +52,7 @@ export interface MultiInputQuestion extends Question {
 	valueKey: string
 	defaultValue?: string | string[]
 	value?: string | string[]
-	trigger?: (tag: string, value: string, cascadedTags: string[]) => void
+
 }
 
 export interface MultiInputQuestionOption {

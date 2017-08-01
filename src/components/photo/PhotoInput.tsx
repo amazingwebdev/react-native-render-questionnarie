@@ -27,6 +27,14 @@ class PhotoInput extends React.Component<Question> implements BaseInput<Question
         return this.props.title
     }
 
+    public triggerCascadedQuestions(value: number) {
+
+    }
+
+    public reset(): void {
+
+    }
+
 }
 
 export default BaseInputHOC(PhotoInput)

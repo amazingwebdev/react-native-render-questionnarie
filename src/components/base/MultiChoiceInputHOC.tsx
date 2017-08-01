@@ -8,6 +8,7 @@ import Http, { HttpRequest } from '../../utility/Http'
 
 interface MultiChoiceInputState extends BaseState {
 	options: MultiInputQuestionOption[]
+	optionsLoaded: boolean
 }
 
 // tslint:disable-next-line:function-name
@@ -22,20 +23,12 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			this.state = {
 				...super.getInitialState(),
 				options: [],
+				optionsLoaded: false,
 			}
 
 		}
 
 		componentDidMount() {
-			/* if (this.isOptionsComesFromHttp && this.doesHttpRequiresParameters()) {
-				const { requestParams } = this.state
-				_.forEach(this.props.options.request.params, (value: string, name: string) => {
-					if (!_.startsWith(value, '$')) {
-						requestParams[name] = value
-					}
-				})
-				this.setState({ requestParams })
-			} */
 			this.loadOptions()
 		}
 
@@ -49,7 +42,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				return (
 					<View>
 						{super.renderTitle()}
-						<Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} />
+						<Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} reset={!this.state.optionsLoaded} />
 					</View>
 				)
 			}
@@ -60,22 +53,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			return this.wrappedComponent
 		}
 
-		shouldComponentUpdate(nextProps: Props, nextState: MultiChoiceInputState): boolean {
-			if (_.isEqual(this.state.options, nextState.options)) {
-
-			}
-				
-			return true
-			/* 	if (_.isEmpty(this.state.options))
-					return true
-				if (_.isEqual(this.state.requestParams, nextState.requestParams)) {
-					return false
-				}
-				console.warn('cidok')
-				return true */
-		}
-
-		private async loadOptions() {
+		private loadOptions() {
 			console.warn(this.props.tag, 'loadOptions')
 			let options: MultiInputQuestionOption[]
 			switch (this.props.options.type) {
@@ -84,27 +62,35 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					this.setState({ options })
 					break
 				case 'http':
-					const request = this.props.options.request
-					const httpRequest: HttpRequest = {}
+					if (!this.state.optionsLoaded) {
+						const request = this.props.options.request
+						const httpRequest: HttpRequest = {}
 
-					if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
-						httpRequest.url = request.url
-						httpRequest.query = this.state.requestParams
-					} else if (request.url && _.isEmpty(request.params)) {
-						httpRequest.url = request.url
-					}
+						if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
+							httpRequest.url = request.url
+							httpRequest.query = this.state.requestParams
+						} else if (request.url && _.isEmpty(request.params)) {
+							httpRequest.url = request.url
+						}
 
-					if (!_.isEmpty(httpRequest)) {
-						const response = await Http.request(httpRequest)
-						const options = await response.json()
-						this.setState({ options })
+						if (!_.isEmpty(httpRequest)) {
+							Http.request(httpRequest).then((response) => {
+								response.json().then((options) => {
+									if (_.isEmpty(options)) { // if options is empty then hide the question.
+										this.setState({ optionsLoaded: true, display: false })
+									} else {
+										this.setState({ options, optionsLoaded: true, display: true })
+									}
+								})
+							})
+						}
 					}
 					break
 			}
 		}
 
-		public onDependedAnswerChanged(tag: string, value: string) {
-			console.warn(this.props.tag, 'onDependedAnswerChanged')
+		public onCascadedAnswerChanged(tag: string, value: string) {
+			console.warn(this.props.tag, 'onCascadedAnswerChanged')
 			_.forEach(this.props.options.request.params, (paramValue, paramName) => {
 				if (paramValue === `$\{${tag}}`) {
 					const requestParams = _.clone(this.state.requestParams)
@@ -113,22 +99,14 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					} else {
 						requestParams[paramName] = value
 					}
-					this.setState({ requestParams })
+					this.setState({ requestParams, options: [], display: false, optionsLoaded: false })
 				}
 			})
 		}
 
-		private isOptionsComesFromHttp(): boolean {
-			return this.props.options.type === 'http'
-		}
-
-		private doesHttpRequiresParameters(): boolean {
-			return !_.isEmpty(this.props.options.request.params)
-		}
-
 		private isParamsReadyForRequest(): boolean {
 			console.warn(this.props.tag, 'isParamsReadyForRequest')
-			return this.isOptionsComesFromHttp &&
+			return this.props.options.type === 'http' &&
 				!_.isEmpty(this.props.options.request.params) &&
 				_.isEqual(_.keys(this.state.requestParams), _.keys(this.props.options.request.params))
 		}

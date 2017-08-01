@@ -12,24 +12,33 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     constructor(props: MultiInputQuestion) {
         super(props)
-        this.state = {
-            selection: undefined,
-        }
+        this.state = this.getInitialState()
         this.renderOptions = this.renderOptions.bind(this)
         this.setValue = this.setValue.bind(this)
+        this.reset = this.reset.bind(this)
+    }
+
+    private getInitialState(): ListInputState {
+        return { selection: undefined }
     }
 
     componentDidMount() {
+        let defaultSelection
         if (this.props.defaultValue) {
-            this.setState({ selection: this.props.defaultValue.toString() }) // TODO: 
-        } else {
-            this.setState({ selection: '-' })
+            defaultSelection = this.props.defaultValue.toString()
+            this.setState({ selection: defaultSelection })
+            this.triggerCascadedQuestions(defaultSelection)
         }
+
     }
 
     componentDidUpdate() {
-        if (this.props.trigger) {
-            this.props.trigger(this.props.tag, this.state.selection, this.props.onChange)
+        this.triggerCascadedQuestions(this.state.selection)
+    }
+
+    componentWillReceiveProps(props: MultiInputQuestion) {
+        if (props.reset) {
+            this.triggerCascadedQuestions(undefined)
         }
     }
 
@@ -40,7 +49,9 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                {this.props.pureOptions.map(this.renderOptions)}
+                {!this.props.reset &&
+                    this.props.pureOptions.map(this.renderOptions)
+                }
             </Picker>
         )
     }
@@ -67,10 +78,23 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.triggerCascadedQuestions(selection)
     }
 
     public isValid(): boolean {
         return true
+    }
+
+    public triggerCascadedQuestions(value: string) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
+        this.triggerCascadedQuestions(initialState.selection)
     }
 
 }

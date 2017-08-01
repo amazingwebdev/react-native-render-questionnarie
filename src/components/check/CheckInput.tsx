@@ -16,10 +16,12 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
 
     constructor(props: MultiInputQuestion) {
         super(props)
-        this.state = {
-            selection: {},
-        }
+        this.state = this.getInitialState()
         this.renderOptions = this.renderOptions.bind(this)
+    }
+
+    private getInitialState(): CheckInputState {
+        return { selection: {} }
     }
 
     public componentDidMount() {
@@ -85,6 +87,18 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
 
     public isValid(): boolean {
         return true
+    }
+
+    public triggerCascadedQuestions(value: string[]) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
+        this.triggerCascadedQuestions(Object.keys(initialState.selection)) // checkinput cevapları []. tetiklenen soruda nasıl kontrol yapılabilir. yoksa cascaded sorularda checkinput olmamalı mı??
     }
 
 }

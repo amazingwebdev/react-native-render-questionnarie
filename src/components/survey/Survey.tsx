@@ -176,7 +176,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     _.forEach(cascadedTags, (cascadedTag) => {
       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
       if (!_.isEmpty(wrapper)) {
-        wrapper.onDependedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
+        wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
+        const input = wrapper.getWrappedComponent() as BaseInput<Question>
+        if (input) {
+          input.reset()
+        }
       }
     })
   }
