@@ -67,7 +67,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     public setValue(selection: string) {
         this.setState({ selection })
-        this.triggerCascadedQuestions(selection)
     }
 
     public isValid(): boolean {
@@ -83,7 +82,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     public reset(): void {
         const initialState = this.getInitialState()
         this.setState(initialState)
-        this.triggerCascadedQuestions(initialState.selection)
     }
 
 }
