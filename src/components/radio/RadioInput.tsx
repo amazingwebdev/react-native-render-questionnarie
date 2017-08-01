@@ -21,13 +21,19 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
         return { selection: undefined }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if (this.props.defaultValue) {
             this.setState({ selection: this.props.defaultValue.toString() })
         }
     }
 
-    render(): JSX.Element {
+    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: RadioInputState) {
+        if (this.state.selection !== nextState.selection) {
+            this.triggerCascadedQuestions(nextState.selection)
+        }
+    }
+
+    public render(): JSX.Element {
         return (
             <View>
                 {this.props.pureOptions.map(this.renderOptions)}
@@ -72,7 +78,6 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
     public reset(): void {
         const initialState = this.getInitialState()
         this.setState(initialState)
-        this.triggerCascadedQuestions(initialState.selection)
     }
 
 }

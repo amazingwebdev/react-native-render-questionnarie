@@ -30,6 +30,12 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
         }
     }
 
+    public componentWillUpdate(nextProps: TextInputQuestion, nextState: TextInputState) {
+        if (this.state.value !== nextState.value) {
+            this.triggerCascadedQuestions(nextState.value)
+        }
+    }
+
     public render(): JSX.Element {
         return (
             <Item rounded>
@@ -76,7 +82,6 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     public reset(): void {
         const initialState = this.getInitialState()
         this.setState(initialState)
-        this.triggerCascadedQuestions(initialState.value)
     }
 
 }

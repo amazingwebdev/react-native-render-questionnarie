@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
+import * as _ from 'lodash'
 
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
@@ -27,6 +28,12 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
     public componentDidMount() {
         if (this.props.defaultValue) {
             this.setValue(this.props.defaultValue)
+        }
+    }
+
+    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: CheckInputState) {
+        if (!_.isEqual(this.state.selection, nextState.selection)) {
+            this.triggerCascadedQuestions(_.keys(nextState.selection))
         }
     }
 
@@ -98,7 +105,6 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
     public reset(): void {
         const initialState = this.getInitialState()
         this.setState(initialState)
-        this.triggerCascadedQuestions(Object.keys(initialState.selection)) // checkinput cevapları []. tetiklenen soruda nasıl kontrol yapılabilir. yoksa cascaded sorularda checkinput olmamalı mı??
     }
 
 }

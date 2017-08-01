@@ -15,43 +15,32 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         this.state = this.getInitialState()
         this.renderOptions = this.renderOptions.bind(this)
         this.setValue = this.setValue.bind(this)
-        this.reset = this.reset.bind(this)
     }
 
     private getInitialState(): ListInputState {
         return { selection: undefined }
     }
 
-    componentDidMount() {
-        let defaultSelection
+    public componentDidMount() {
         if (this.props.defaultValue) {
-            defaultSelection = this.props.defaultValue.toString()
-            this.setState({ selection: defaultSelection })
-            this.triggerCascadedQuestions(defaultSelection)
-        }
-
-    }
-
-    componentDidUpdate() {
-        this.triggerCascadedQuestions(this.state.selection)
-    }
-
-    componentWillReceiveProps(props: MultiInputQuestion) {
-        if (props.reset) {
-            this.triggerCascadedQuestions(undefined)
+            this.setState({ selection: this.props.defaultValue.toString() })
         }
     }
 
-    render(): JSX.Element {
+    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
+        if (this.state.selection !== nextState.selection) {
+            this.triggerCascadedQuestions(nextState.selection)
+        }
+    }
+
+    public render(): JSX.Element {
         return (
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                {!this.props.reset &&
-                    this.props.pureOptions.map(this.renderOptions)
-                }
+                {this.props.pureOptions.map(this.renderOptions)}
             </Picker>
         )
     }
