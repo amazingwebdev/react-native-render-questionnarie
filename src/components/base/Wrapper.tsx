@@ -1,5 +1,6 @@
 import React from 'react'
 import { Header, Text, View, Button, Icon, Body } from 'native-base'
+import * as _ from 'lodash'
 
 import { Question, Camera, Gallery } from '../'
 
@@ -11,7 +12,11 @@ interface PhotoState {
 	showGallery: boolean
 }
 
-export interface BaseState extends PhotoState {
+interface RequestState {
+	requestParams: { [key: string]: string }
+}
+
+export interface BaseState extends PhotoState, RequestState {
 	display?: boolean
 }
 
@@ -22,6 +27,7 @@ export interface DisplayInput<P> extends React.Component<P> {
 	getWrappedComponent: () => React.Component<P>
 	getPhotosURLs: () => string[]
 	setPhotosURLs: (urls: string[]) => void
+	onDependedAnswerChanged: (tag: string, value: string) => void
 }
 
 export interface BaseInput<P> extends React.Component<P> {
@@ -29,7 +35,6 @@ export interface BaseInput<P> extends React.Component<P> {
 	getValue: () => string | string[] | number
 	setValue: (value: string | string[] | number) => void
 	isValid: () => boolean
-
 }
 
 export default abstract class Wrapper<P extends Question, S extends BaseState> extends React.Component<P, S> implements DisplayInput<P> {
@@ -41,10 +46,11 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		this.onCameraClose = this.onCameraClose.bind(this)
 		this.onPhotoDelete = this.onPhotoDelete.bind(this)
 		this.onGalleryClose = this.onGalleryClose.bind(this)
-
 	}
 
 	abstract getWrappedComponent(): React.Component<P>
+
+	abstract onDependedAnswerChanged(tag: string, value: string): void
 
 	protected getInitialState(): BaseState {
 		return {
@@ -52,6 +58,7 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 			capturing: false,
 			showGallery: false,
 			capturedPhotos: [],
+			requestParams: {},
 		}
 	}
 
@@ -142,6 +149,10 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		} else {
 			this.setState({ capturedPhotos })
 		}
+	}
+
+	public getRequestParams(): {} {
+		return this.state.requestParams
 	}
 
 }

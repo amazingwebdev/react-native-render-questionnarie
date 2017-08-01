@@ -7,139 +7,59 @@
             "tag": "jti_stand",
             "questions": [
                 {
-                    "title": "foo Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "title": "Ülke",
                     "type": "list",
                     "tag": "country",
-                    "optionsTitle": "Seçiniz",
                     "required": true,
                     "photoRequired": true,
                     "options": {
                         "type": "http",
                         "request": {
-                            "url": "https://restcountries.eu/rest/v2/all",
-                            "params": {
-                                "countryOid": "${country}"
-                            }
+                            "url": "http://guanyin.gvg.com.tr/service/rest/country"
                         }
                     },
                     "titleKey": "name",
-                    "valueKey": "numericCode"
+                    "valueKey": "oid",
+                    "onChange": [
+                        "city"
+                    ]
                 },
                 {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "title": "Şehir",
                     "type": "list",
-                    "tag": "country2",
-                    "optionsTitle": "Seçiniz",
+                    "tag": "city",
                     "required": true,
                     "options": {
                         "type": "http",
                         "request": {
-                            "url": "https://restcountries.eu/rest/v2/all",
+                            "url": "http://guanyin.gvg.com.tr/service/rest/city",
                             "params": {
                                 "countryOid": "${country}"
                             }
                         }
                     },
                     "titleKey": "name",
-                    "valueKey": "numericCode"
+                    "valueKey": "oid",
+                    "onChange": [
+                        "county"
+                    ]
                 },
                 {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "title": "İlçe",
                     "type": "list",
-                    "tag": "country3",
-                    "optionsTitle": "Seçiniz",
+                    "tag": "county",
                     "required": true,
                     "options": {
                         "type": "http",
                         "request": {
-                            "url": "https://restcountries.eu/rest/v2/all",
+                            "url": "http://guanyin.gvg.com.tr/service/rest/county/getbycity",
                             "params": {
-                                "countryOid": "${country}"
+                                "cityOid": "${city}"
                             }
                         }
                     },
                     "titleKey": "name",
-                    "valueKey": "numericCode"
-                },
-                {
-                    "title": "foo",
-                    "type": "text",
-                    "tag": "BEV_KS_122",
-                    "required": true
-                },
-                {
-                    "title": "bar",
-                    "type": "slider",
-                    "tag": "BEV_KS_3333",
-                    "required": true,
-                    "min": 0,
-                    "max": 100,
-                    "step": 5
-                },
-                {
-                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
-                    "type": "list",
-                    "tag": "BEV_KS_1",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "1",
-                                "value": "1"
-                            },
-                            {
-                                "name": "2",
-                                "value": "2"
-                            },
-                            {
-                                "name": "3",
-                                "value": "3"
-                            },
-                            {
-                                "name": "4-5",
-                                "value": "4-5"
-                            },
-                            {
-                                "name": "6-8",
-                                "value": "6-8"
-                            },
-                            {
-                                "name": "8+",
-                                "value": "8+"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
-                },
-                {
-                    "title": "Dolabın fotoğrafını çekiniz",
-                    "type": "photo",
-                    "tag": "TP_VY_",
-                    "required": true,
-                    "photorequired": true
-                },
-                {
-                    "title": "Noktada alkol satışı var mı?",
-                    "type": "radio",
-                    "tag": "AL_VY11",
-                    "required": true,
-                    "options": {
-                        "type": "static",
-                        "values": [
-                            {
-                                "name": "Var",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Yok",
-                                "value": "0"
-                            }
-                        ]
-                    },
-                    "titleKey": "name",
-                    "valueKey": "value"
+                    "valueKey": "oid"
                 }
             ]
         },

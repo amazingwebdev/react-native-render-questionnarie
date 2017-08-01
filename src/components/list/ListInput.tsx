@@ -5,7 +5,7 @@ import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: string | string[]
+    selection?: string
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
@@ -21,9 +21,15 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     componentDidMount() {
         if (this.props.defaultValue) {
-            this.setState({ selection: this.props.defaultValue })
+            this.setState({ selection: this.props.defaultValue.toString() }) // TODO: 
         } else {
             this.setState({ selection: '-' })
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.trigger) {
+            this.props.trigger(this.props.tag, this.state.selection, this.props.onChange)
         }
     }
 
@@ -34,10 +40,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                <Picker.Item
-                    key="-1"
-                    label={this.props.optionsTitle ? this.props.optionsTitle : 'Seçiniz'}
-                    value="-1" />
                 {this.props.pureOptions.map(this.renderOptions)}
             </Picker>
         )

@@ -90,6 +90,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.onCameraClose = this.onCameraClose.bind(this)
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
+    this.onChange = this.onChange.bind(this)
   }
 
   public componentDidMount() {
@@ -171,6 +172,15 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     )
   }
 
+  private onChange(tag: string, value: string, cascadedTags: string[]) {
+    _.forEach(cascadedTags, (cascadedTag) => {
+      const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
+      if (!_.isEmpty(wrapper)) {
+        wrapper.onDependedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
+      }
+    })
+  }
+
   private createQuestionComponent(question: Question): JSX.Element {
     switch (question.type) {
       case 'slider':
@@ -221,6 +231,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             titleKey={list.titleKey}
             valueKey={list.valueKey}
             optionsTitle={list.optionsTitle}
+            onChange={list.onChange}
+            trigger={this.onChange} // TODO:  yalnızca onChange doluysa
           />
         )
       case 'radio':

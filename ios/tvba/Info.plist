@@ -42,14 +42,20 @@
     <string/>
     <key>NSAppTransportSecurity</key>
     <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
+      <key>NSAllowsArbitraryLoads</key>
           <true/>
+          <key>NSAllowsArbitraryLoadsInWebContent</key>
+          <true/>
+          <key>NSAllowsLocalNetworking</key>
+          <true/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>guanyin.gvg.com.tr</key>
+            <dict>
+                <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
         </dict>
-      </dict>
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Your message to user when the camera is accessed for the first time</string>
