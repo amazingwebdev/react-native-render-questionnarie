@@ -42,7 +42,11 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				return (
 					<View>
 						{super.renderTitle()}
-						<Component ref={(ref) => { this.wrappedComponent = ref }} {...this.props} pureOptions={this.state.options} reset={!this.state.optionsLoaded} />
+						<Component
+							ref={(ref) => { this.wrappedComponent = ref }}
+							{...this.props}
+							pureOptions={this.state.options}
+						/>
 					</View>
 				)
 			}
