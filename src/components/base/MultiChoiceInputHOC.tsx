@@ -82,7 +82,11 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 										this.setState({ options, optionsLoaded: true, display: true })
 									}
 								})
+							}).catch(() => {
+								this.setState({ optionsLoaded: true, display: false })
 							})
+						} else {
+							this.setState({ optionsLoaded: true, display: false })
 						}
 					}
 					break
