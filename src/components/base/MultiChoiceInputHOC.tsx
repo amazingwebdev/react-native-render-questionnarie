@@ -33,7 +33,10 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		componentDidUpdate() {
-			this.loadOptions()
+			if (!this.state.optionsLoaded) {
+				this.loadOptions()
+			}
+
 		}
 
 		render() {
@@ -63,35 +66,34 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			switch (this.props.options.type) {
 				case 'static':
 					options = this.props.options.values.slice(0)
-					this.setState({ options })
+					this.setState({ options, optionsLoaded: true, display: true })
 					break
+
 				case 'http':
-					if (!this.state.optionsLoaded) {
-						const request = this.props.options.request
-						const httpRequest: HttpRequest = {}
+					const request = this.props.options.request
+					const httpRequest: HttpRequest = {}
 
-						if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
-							httpRequest.url = request.url
-							httpRequest.query = this.state.requestParams
-						} else if (request.url && _.isEmpty(request.params)) {
-							httpRequest.url = request.url
-						}
+					if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
+						httpRequest.url = request.url
+						httpRequest.query = this.state.requestParams
+					} else if (request.url && _.isEmpty(request.params)) {
+						httpRequest.url = request.url
+					}
 
-						if (!_.isEmpty(httpRequest)) {
-							Http.request(httpRequest).then((response) => {
-								response.json().then((options) => {
-									if (_.isEmpty(options)) { // if options is empty then hide the question.
-										this.setState({ optionsLoaded: true, display: false })
-									} else {
-										this.setState({ options, optionsLoaded: true, display: true })
-									}
-								})
-							}).catch(() => {
-								this.setState({ optionsLoaded: true, display: false })
+					if (!_.isEmpty(httpRequest)) {
+						Http.request(httpRequest).then((response) => {
+							response.json().then((options) => {
+								if (_.isEmpty(options)) { // if options is empty then hide the question.
+									this.setState({ optionsLoaded: true, display: false })
+								} else {
+									this.setState({ options, optionsLoaded: true, display: true })
+								}
 							})
-						} else {
+						}).catch(() => {
 							this.setState({ optionsLoaded: true, display: false })
-						}
+						})
+					} else {
+						this.setState({ optionsLoaded: true, display: false })
 					}
 					break
 			}
