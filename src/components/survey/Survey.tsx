@@ -98,7 +98,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   public componentDidUpdate() {
-    this.loadAnswers()
+    // this.loadAnswers()
   }
 
   public render(): JSX.Element {
@@ -175,24 +175,16 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private onChange(tag: string, value: string, cascadedTags: string[]) {
     _.forEach(cascadedTags, (cascadedTag) => {
       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
-
       if (!_.isEmpty(wrapper)) {
         wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
-        const input = wrapper.getWrappedComponent() as BaseInput<Question>
-        if (input) {
-          input.reset()
-        }
         if (!_.isEmpty(wrapper.props.onChange)) {
           _.forEach(wrapper.props.onChange, (a) => {
             const cascadedList = this.refs[a] as DisplayInput<Question>
-            const cascadedInput = cascadedList.getWrappedComponent() as BaseInput<Question>
-            if (cascadedInput) {
-              cascadedInput.reset()
-              cascadedList.hide()
+            cascadedList.reset()
 
-            }
           })
         }
+        wrapper.reset()
       }
 
     })
@@ -234,6 +226,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         )
       case 'list':
         const list: MultiInputQuestion = question as MultiInputQuestion
+        const selection = this.state.answers[list.tag] ? this.state.answers[list.tag].toString() : undefined
         return (
           <ListInput
             ref={list.tag}
@@ -243,13 +236,13 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             title={list.title}
             required={list.required}
             photoRequired={list.photoRequired}
-            defaultValue={list.defaultValue}
             options={list.options}
             titleKey={list.titleKey}
             valueKey={list.valueKey}
             optionsTitle={list.optionsTitle}
             onChange={list.onChange}
             trigger={this.onChange} // TODO:  yalnızca onChange doluysa
+            answer={selection ? selection : list.defaultValue}
           />
         )
       case 'radio':

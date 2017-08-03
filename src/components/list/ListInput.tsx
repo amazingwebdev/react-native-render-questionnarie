@@ -5,7 +5,7 @@ import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: string
+    selection?: string | string[] | number
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
@@ -18,19 +18,12 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     private getInitialState(): ListInputState {
-        return { selection: undefined }
-    }
-
-    public componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setState({ selection: this.props.defaultValue.toString() })
-        }
+        const state = { selection: this.props.answer }
+        return state
     }
 
     public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
-        if (this.state.selection !== nextState.selection) {
-            this.triggerCascadedQuestions(nextState.selection)
-        }
+        this.triggerCascadedQuestions(nextState.selection)
     }
 
     public render(): JSX.Element {
@@ -73,17 +66,10 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         return true
     }
 
-    public triggerCascadedQuestions(value: string) {
+    public triggerCascadedQuestions(value: string | string[] | number) {
         if (this.props.trigger && this.props.onChange) {
             this.props.trigger(this.props.tag, value, this.props.onChange)
         }
     }
 
-    public reset(): void {
-        const initialState = this.getInitialState()
-        this.setState(initialState)
-    }
-
-}
-
-export default MultiChoiceInputHOC(ListInput)
+} export default MultiChoiceInputHOC(ListInput)

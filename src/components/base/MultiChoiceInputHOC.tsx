@@ -40,7 +40,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		render() {
-			console.warn(this.props.tag, 'render')
+			console.warn(this.props.tag, 'render', this.state.display)
 			if (this.state.display) {
 				return (
 					<View>
@@ -68,7 +68,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					options = this.props.options.values.slice(0)
 					this.setState({ options, optionsLoaded: true, display: true })
 					break
-
 				case 'http':
 					const request = this.props.options.request
 					const httpRequest: HttpRequest = {}
@@ -84,16 +83,16 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 						Http.request(httpRequest).then((response) => {
 							response.json().then((options) => {
 								if (_.isEmpty(options)) { // if options is empty then hide the question.
-									this.setState({ optionsLoaded: true, display: false })
+									this.setState({ options: [], optionsLoaded: true, display: true })
 								} else {
 									this.setState({ options, optionsLoaded: true, display: true })
 								}
 							})
 						}).catch(() => {
-							this.setState({ optionsLoaded: true, display: false })
+							this.setState({ options: [], optionsLoaded: true, display: true })
 						})
 					} else {
-						this.setState({ optionsLoaded: true, display: false })
+						this.setState({ options: [], optionsLoaded: true, display: true })
 					}
 					break
 			}
@@ -104,12 +103,12 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			_.forEach(this.props.options.request.params, (paramValue, paramName) => {
 				if (paramValue === `$\{${tag}}`) {
 					const requestParams = _.clone(this.state.requestParams)
-					if (_.isUndefined(value) || value === '-') {
+					if (_.isUndefined(value) || _.isEmpty(value) || _.isNull(value) || value === '-') {
 						delete requestParams[paramName]
 					} else {
 						requestParams[paramName] = value
 					}
-					this.setState({ requestParams, options: [], display: false, optionsLoaded: false })
+					this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
 				}
 			})
 		}
@@ -119,6 +118,10 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			return this.props.options.type === 'http' &&
 				!_.isEmpty(this.props.options.request.params) &&
 				_.isEqual(_.keys(this.state.requestParams), _.keys(this.props.options.request.params))
+		}
+
+		public reset(): void {
+			this.setState({ options: [], display: true, optionsLoaded: false })
 		}
 
 	}

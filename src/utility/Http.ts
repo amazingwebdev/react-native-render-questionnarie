@@ -14,7 +14,7 @@ class Http {
 		if (!requestDetails.headers) {
 			requestDetails.headers = {
 				Accept: 'application/json',
-				Authorization: 'Bearer 5cc97d97-7666-47c5-bda8-f075a441f931',
+				Authorization: 'Bearer 1ce61ae5-0121-4263-bb24-2fd065f8223a',
 			}
 		}
 		if (requestDetails.query) {

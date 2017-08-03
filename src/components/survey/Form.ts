@@ -52,6 +52,7 @@ export interface MultiInputQuestion extends Question {
 	defaultValue?: string | string[]
 	value?: string | string[]
 	loading?: boolean
+	answer?: string | string[]
 }
 
 export interface MultiInputQuestionOption {

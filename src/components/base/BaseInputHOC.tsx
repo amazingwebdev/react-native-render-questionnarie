@@ -38,6 +38,10 @@ export default function BaseInputHOC<Props extends Question>(Component: React.Co
             // TODO:
         }
 
+        public reset() {
+
+        }
+
     }
 
 }
