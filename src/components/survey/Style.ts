@@ -5,7 +5,13 @@ const HEIGHT = Dimensions.get('window').height
 
 const content: ViewStyle = {
 	top: 1,
+	flex: 1,
 
+}
+
+const container: ViewStyle = {
+	flex: 1,
+	height: HEIGHT,
 }
 
 const header: ViewStyle = {
@@ -29,10 +35,7 @@ const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
 }
 
 const indicator: ViewStyle = {
-	flex: 1,
-	backgroundColor: 'white',
-	width: WIDTH,
-	height: HEIGHT,
+	height: HEIGHT - 70,
 
 }
 export default {
@@ -40,4 +43,5 @@ export default {
 	button,
 	header,
 	indicator,
+	container,
 }

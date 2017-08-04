@@ -35,9 +35,9 @@ import {
   FormPage,
 } from '../'
 
-import { Dimensions } from 'react-native'
 import Style from './Style'
-import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager'
+
+import { IndicatorViewPager, PagerDotIndicator, PagerTitleIndicator } from 'rn-viewpager'
 
 interface SurveyProps {
   form: Form
@@ -114,7 +114,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
     return (
       // todo disabled button
-      <Container>
+      <Container style={Style.container} >
         <Header style={Style.header}>
           {!(this.state.pageNumber === 0 && this.pageCount !== 1) &&
             <Left>
@@ -171,23 +171,16 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           onGalleryClose={this.onGalleryClose}
         />
         <Content key="form" style={Style.content}>
-          <View>
-            <IndicatorViewPager
-              style={Style.indicator}
-              indicator={this.renderDotIndicator()}
-            >
-              {pages}
-            </IndicatorViewPager>
 
-          </View>
+          <IndicatorViewPager
+            style={Style.indicator}
+            indicator={this.renderDotIndicator()}>
+            {pages}
+          </IndicatorViewPager>
 
         </Content>
-      </Container>
+      </Container >
     )
-  }
-
-  private onPageChanged(page: number) {
-    this.setState({ pageNumber: this.state.pageNumber + 1 })
   }
 
   private renderDotIndicator() {
@@ -209,113 +202,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
       }
 
     })
-  }
-
-  private createQuestionComponent(question: Question): JSX.Element {
-    switch (question.type) {
-      case 'slider':
-        const slider: SliderInputQuestion = question as SliderInputQuestion
-        return (
-          <SliderInput
-            ref={slider.tag}
-            key={slider.tag}
-            tag={slider.tag}
-            type={slider.type}
-            title={slider.title}
-            required={slider.required}
-            photoRequired={slider.photoRequired}
-            min={slider.min}
-            max={slider.max}
-            step={slider.step}
-            defaultValue={slider.defaultValue}
-          />
-        )
-      case 'text':
-        const text: TextInputQuestion = question as TextInputQuestion
-        return (
-          <TextInput
-            ref={text.tag}
-            key={text.tag}
-            tag={text.tag}
-            type={text.type}
-            title={text.title}
-            required={text.required}
-            photoRequired={text.photoRequired}
-            defaultValue={text.defaultValue}
-            validation={text.validation}
-          />
-        )
-      case 'list':
-        const list: MultiInputQuestion = question as MultiInputQuestion
-        const selection = this.state.answers[list.tag] ? this.state.answers[list.tag].toString() : undefined
-        return (
-          <ListInput
-            ref={list.tag}
-            key={list.tag}
-            tag={list.tag}
-            type={list.type}
-            title={list.title}
-            required={list.required}
-            photoRequired={list.photoRequired}
-            options={list.options}
-            titleKey={list.titleKey}
-            valueKey={list.valueKey}
-            optionsTitle={list.optionsTitle}
-            onChange={list.onChange}
-            trigger={this.onChange} // TODO:  yalnızca onChange doluysa
-            answer={selection ? selection : list.defaultValue}
-          />
-        )
-      case 'radio':
-        const radio: MultiInputQuestion = question as MultiInputQuestion
-        return (
-          <RadioInput
-            ref={radio.tag}
-            key={radio.tag}
-            tag={radio.tag}
-            type={radio.type}
-            title={radio.title}
-            required={radio.required}
-            photoRequired={radio.photoRequired}
-            defaultValue={radio.defaultValue}
-            options={radio.options}
-            titleKey={radio.titleKey}
-            valueKey={radio.valueKey}
-          />
-        )
-      case 'check':
-        const checkbox: MultiInputQuestion = question as MultiInputQuestion
-        return (
-          <CheckInput
-            ref={checkbox.tag}
-            key={checkbox.tag}
-            tag={checkbox.tag}
-            type={checkbox.type}
-            title={checkbox.title}
-            required={checkbox.required}
-            photoRequired={checkbox.photoRequired}
-            defaultValue={checkbox.defaultValue}
-            options={checkbox.options}
-            titleKey={checkbox.titleKey}
-            valueKey={checkbox.valueKey}
-          />
-        )
-      case 'photo':
-        const photo: Question = question as Question
-        return (
-          <PhotoInput
-            ref={photo.tag}
-            key={photo.tag}
-            tag={photo.tag}
-            type={photo.type}
-            title={photo.title}
-            required={photo.required}
-            photoRequired={photo.required}
-          />
-        )
-      default:
-        throw new Error('no such question type')
-    }
   }
 
   private loadAnswers() {

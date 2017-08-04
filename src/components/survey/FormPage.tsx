@@ -33,6 +33,8 @@ import {
     Camera,
 } from '../'
 
+import { ScrollView } from 'react-native'
+
 import * as _ from 'lodash'
 
 interface PageProps {
@@ -48,9 +50,12 @@ export default class FormPage extends React.Component<PageProps> {
     public render() {
         const questions = this.props.data.questions.map(this.createQuestionComponent)
         return (
-            <View>
-                {questions}
-            </View >
+            <ScrollView>
+                <View style={{ height: 'auto' }}>
+                    {questions}
+                </View>
+            </ScrollView>
+
         )
     }
 
