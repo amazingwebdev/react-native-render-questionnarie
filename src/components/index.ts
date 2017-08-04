@@ -8,6 +8,7 @@ export { default as Camera } from './camera/Camera'
 export { default as Gallery } from './gallery/Gallery'
 export { default as Wrapper, BaseInput, BaseState, DisplayInput } from './base/Wrapper'
 export { default as Survey } from './survey/Survey'
+export { default as FormPage } from './survey/FormPage'
 export {
 	Form,
 	Page,

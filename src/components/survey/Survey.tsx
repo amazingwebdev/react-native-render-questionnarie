@@ -16,6 +16,7 @@ import * as _ from 'lodash'
 
 import {
   Form,
+  Page,
   Question,
   MultiInputQuestion,
   TextInputQuestion,
@@ -31,9 +32,12 @@ import {
   PhotoInput,
   Gallery,
   Camera,
+  FormPage,
 } from '../'
 
+import { Dimensions } from 'react-native'
 import Style from './Style'
+import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager'
 
 interface SurveyProps {
   form: Form
@@ -102,10 +106,11 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   public render(): JSX.Element {
-    const page = this.props.form.pages[this.state.pageNumber]
-    const questions: JSX.Element[] = page.questions.map((question: Question) =>
-      this.createQuestionComponent(question),
-    )
+    const pages = this.props.form.pages.map((page: Page) => {
+      return (<View>
+        <FormPage data={page} />
+      </View>)
+    })
 
     return (
       // todo disabled button
@@ -166,12 +171,28 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           onGalleryClose={this.onGalleryClose}
         />
         <Content key="form" style={Style.content}>
-          {questions}
+          <View>
+            <IndicatorViewPager
+              style={Style.indicator}
+              indicator={this.renderDotIndicator()}
+            >
+              {pages}
+            </IndicatorViewPager>
+
+          </View>
+
         </Content>
       </Container>
     )
   }
 
+  private onPageChanged(page: number) {
+    this.setState({ pageNumber: this.state.pageNumber + 1 })
+  }
+
+  private renderDotIndicator() {
+    return <PagerDotIndicator pageCount={this.pageCount} />
+  }
   private onChange(tag: string, value: string, cascadedTags: string[]) {
     _.forEach(cascadedTags, (cascadedTag) => {
       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>

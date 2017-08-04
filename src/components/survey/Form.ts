@@ -5,9 +5,9 @@ export interface Form {
 }
 
 export interface Page {
-	name: string
-	tag: string
-	questions: Question[]
+	name?: string
+	tag?: string
+	questions?: Question[]
 }
 
 export interface Question {

@@ -60,6 +60,64 @@
                     },
                     "titleKey": "name",
                     "valueKey": "oid"
+                },
+                {
+                    "title": "Noktada alkol satışı var mı?",
+                    "type": "radio",
+                    "tag": "AL_VY",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "Var",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Yok",
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
+                },
+                {
+                    "title": "Nokta bulunana içecek dolabı kapak sayısını giriniz (Firmalara ait dolaplar).",
+                    "type": "list",
+                    "tag": "BEV_KS",
+                    "required": true,
+                    "options": {
+                        "type": "static",
+                        "values": [
+                            {
+                                "name": "1",
+                                "value": "1"
+                            },
+                            {
+                                "name": "2",
+                                "value": "2"
+                            },
+                            {
+                                "name": "3",
+                                "value": "3"
+                            },
+                            {
+                                "name": "4-5",
+                                "value": "4-5"
+                            },
+                            {
+                                "name": "6-8",
+                                "value": "6-8"
+                            },
+                            {
+                                "name": "8+",
+                                "value": "8+"
+                            }
+                        ]
+                    },
+                    "titleKey": "name",
+                    "valueKey": "value"
                 }
             ]
         },
