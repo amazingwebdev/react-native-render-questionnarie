@@ -124,7 +124,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             </Left>}
           {this.state.pageNumber === 0 &&
             this.pageCount !== 1 &&
-            <Left>
+            <Left style={Style.headerLeft}>
               {
                 <Button transparent style={Style.button} onPress={this.openCamera}>
                   <Icon name="camera" />
