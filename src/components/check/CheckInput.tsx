@@ -79,6 +79,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
             const { selection } = this.state
             selection[value] = !selection[value]
             this.setState({ selection })
+            this.props.onValueChanged(this.props.tag, selection)
         } else if (typeof value === 'object') {
             this.setValues(value)
         }
@@ -90,6 +91,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
             selection[value] = true
         })
         this.setState({ selection })
+        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {

@@ -38,6 +38,7 @@ import { ScrollView } from 'react-native'
 import * as _ from 'lodash'
 
 interface PageProps {
+    questionValueHandler: (tag: string, value: any) => void
     data: Page
 }
 
@@ -45,9 +46,13 @@ export default class FormPage extends React.Component<PageProps> {
 
     public constructor(props: PageProps) {
         super(props)
+
+        this.createQuestionComponent = this.createQuestionComponent.bind(this)
+
     }
 
     public render() {
+
         const questions = this.props.data.questions.map(this.createQuestionComponent)
         return (
             <ScrollView>
@@ -76,6 +81,7 @@ export default class FormPage extends React.Component<PageProps> {
                         max={slider.max}
                         step={slider.step}
                         defaultValue={slider.defaultValue}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             case 'text':
@@ -91,6 +97,7 @@ export default class FormPage extends React.Component<PageProps> {
                         photoRequired={text.photoRequired}
                         defaultValue={text.defaultValue}
                         validation={text.validation}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             case 'list':
@@ -109,6 +116,7 @@ export default class FormPage extends React.Component<PageProps> {
                         titleKey={list.titleKey}
                         valueKey={list.valueKey}
                         optionsTitle={list.optionsTitle}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             case 'radio':
@@ -126,6 +134,7 @@ export default class FormPage extends React.Component<PageProps> {
                         options={radio.options}
                         titleKey={radio.titleKey}
                         valueKey={radio.valueKey}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             case 'check':
@@ -143,6 +152,7 @@ export default class FormPage extends React.Component<PageProps> {
                         options={checkbox.options}
                         titleKey={checkbox.titleKey}
                         valueKey={checkbox.valueKey}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             case 'photo':
@@ -156,6 +166,7 @@ export default class FormPage extends React.Component<PageProps> {
                         title={photo.title}
                         required={photo.required}
                         photoRequired={photo.required}
+                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             default:

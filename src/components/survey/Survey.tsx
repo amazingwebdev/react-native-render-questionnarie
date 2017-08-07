@@ -67,8 +67,6 @@ interface Media {
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
   private pageCount: number
-  private questionCount: number
-  private brief: string
   private prevAnswers: Answers
 
   public constructor(props: SurveyProps) {
@@ -86,29 +84,31 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
     this.pageCount = this.props.form.pages.length
     this.prevAnswers = {}
-    this.prevPage = this.prevPage.bind(this)
-    this.nextPage = this.nextPage.bind(this)
     this.onSave = this.onSave.bind(this)
     this.openCamera = this.openCamera.bind(this)
     this.openGallery = this.openGallery.bind(this)
     this.onCameraClose = this.onCameraClose.bind(this)
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
-    this.onChange = this.onChange.bind(this)
+    this.questionValueHandler = this.questionValueHandler.bind(this)
+    // TODO: /*this.onChange = this.onChange.bind(this)*/ 
   }
 
   public componentDidMount() {
     this.loadAnswers()
   }
 
-  public componentDidUpdate() {
-    // this.loadAnswers()
+  public questionValueHandler(tag: string, value: string) {
+    const { answers } = this.state
+    answers[tag] = value
+    this.setState({ answers })
+    console.warn(this.state.answers)
   }
 
   public render(): JSX.Element {
     const pages = this.props.form.pages.map((page: Page) => {
       return (<View>
-        <FormPage data={page} />
+        <FormPage data={page} questionValueHandler={this.questionValueHandler} />
       </View>)
     })
 
@@ -116,49 +116,34 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
       // todo disabled button
       <Container style={Style.container} >
         <Header style={Style.header}>
-          {!(this.state.pageNumber === 0 && this.pageCount !== 1) &&
-            <Left>
-              <Button onPress={this.prevPage} transparent>
-                <Icon name="arrow-back" />
+          <Left>
+            {
+              <Button transparent style={Style.button} onPress={this.openCamera}>
+                <Icon name="camera" />
               </Button>
-            </Left>}
-          {this.state.pageNumber === 0 &&
-            this.pageCount !== 1 &&
-            <Left>
-              {
-                <Button transparent style={Style.button} onPress={this.openCamera}>
-                  <Icon name="camera" />
-                </Button>
-              }
-              {
-                this.state.capturedPhotos.length === 1 &&
-                <Button transparent style={Style.button} onPress={this.openGallery}>
-                  <Icon name="image" />
-                </Button>
-              }
-              {
-                this.state.capturedPhotos.length > 1 &&
-                <Button transparent style={Style.button} onPress={this.openGallery}>
-                  <Icon name="images" />
-                </Button>
-              }
-            </Left>}
+            }
+            {
+              this.state.capturedPhotos.length === 1 &&
+              <Button transparent style={Style.button} onPress={this.openGallery}>
+                <Icon name="image" />
+              </Button>
+            }
+            {
+              this.state.capturedPhotos.length > 1 &&
+              <Button transparent style={Style.button} onPress={this.openGallery}>
+                <Icon name="images" />
+              </Button>
+            }
+          </Left>
           <Body>
             <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
           </Body>
-          {!(this.state.pageNumber === this.pageCount - 1) &&
-            <Right>
-              <Button onPress={this.nextPage} transparent>
-                <Icon name="arrow-forward" />
-              </Button>
-            </Right>}
-          {this.state.pageNumber === this.pageCount - 1 &&
-            <Right>
-              <Button onPress={this.onSave} transparent>
-                <Text> Save </Text>
-                <Icon name="done-all" />
-              </Button>
-            </Right>}
+          <Right>
+            <Button onPress={this.onSave} transparent>
+              <Text> Save </Text>
+              <Icon name="done-all" />
+            </Button>
+          </Right>
         </Header>
         <Camera
           visible={this.state.capturing}
@@ -186,23 +171,24 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private renderDotIndicator() {
     return <PagerDotIndicator pageCount={this.pageCount} />
   }
-  private onChange(tag: string, value: string, cascadedTags: string[]) {
-    _.forEach(cascadedTags, (cascadedTag) => {
-      const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
-      if (!_.isEmpty(wrapper)) {
-        wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
-        if (!_.isEmpty(wrapper.props.onChange)) {
-          _.forEach(wrapper.props.onChange, (a) => {
-            const cascadedList = this.refs[a] as DisplayInput<Question>
-            cascadedList.reset()
-
-          })
-        }
-        wrapper.reset()
-      }
-
-    })
-  }
+  // TODO:
+  /* private onChange(tag: string, value: string, cascadedTags: string[]) {
+     _.forEach(cascadedTags, (cascadedTag) => {
+       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
+       if (!_.isEmpty(wrapper)) {
+         wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
+         if (!_.isEmpty(wrapper.props.onChange)) {
+           _.forEach(wrapper.props.onChange, (a) => {
+             const cascadedList = this.refs[a] as DisplayInput<Question>
+             cascadedList.reset()
+ 
+           })
+         }
+         wrapper.reset()
+       }
+ 
+     })
+   }*/
 
   private loadAnswers() {
     if (_.isEmpty(this.state.answers)) {
@@ -234,42 +220,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     return validationMessages
   }
 
-  private storeCurrentPageAnswers(): void {
-    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
-      if (wrapper.isAvailable()) {
-        const question = wrapper.getWrappedComponent() as BaseInput<Question>
-        const answer = question.getValue()
-        if (question.getValue() !== undefined) {
-          this.state.answers[ref] = question.getValue()
-        }
-        const media = wrapper.getPhotosURLs()
-        if (!_.isEmpty(media)) {
-          this.state.medias.question[ref] = wrapper.getPhotosURLs()
-        }
-      }
-    })
-  }
-
-  private prevPage() {
-    this.storeCurrentPageAnswers()
-    const pageNumber = this.state.pageNumber - 1
-    this.setState({ pageNumber })
-  }
-
-  private nextPage() {
-    const validationMessages = this.validatePage()
-    if (_.isEmpty(validationMessages)) {
-      this.storeCurrentPageAnswers()
-      this.setState({ pageNumber: this.state.pageNumber + 1 })
-    } else if (this.props.onFailure) {
-      this.props.onFailure(validationMessages)
-    }
-  }
-
   private onSave() {
     const validationMessages = this.validatePage()
     if (_.isEmpty(validationMessages) && this.props.onSave) {
-      this.storeCurrentPageAnswers()
       if (this.state.capturedPhotos.length > 0) {
         this.state.medias.form = this.state.capturedPhotos
       }

@@ -7,6 +7,8 @@ const content: ViewStyle = {
 	top: 1,
 	flex: 1,
 
+	height: 'auto',
+
 }
 
 const container: ViewStyle = {
