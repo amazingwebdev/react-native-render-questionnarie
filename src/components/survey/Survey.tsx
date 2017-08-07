@@ -91,14 +91,21 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
     this.questionValueHandler = this.questionValueHandler.bind(this)
-    // TODO: /*this.onChange = this.onChange.bind(this)*/ 
   }
 
   public componentDidMount() {
     this.loadAnswers()
   }
 
-  public questionValueHandler(tag: string, value: string) {
+  public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
+    if (!this.state.capturing) {
+      return false
+    }
+    return true
+
+  }
+
+  public questionValueHandler(tag: string, value: string | string[] | number) {
     const { answers } = this.state
     answers[tag] = value
     this.setState({ answers })
@@ -115,13 +122,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
       // todo disabled button
       <Container style={Style.container} >
         <Header style={Style.header}>
-          <Left>
-            {
-              <Button transparent style={Style.button} onPress={this.openCamera}>
-                <Icon name="camera" />
-              </Button>
-            }
-          </Left>
+
           {this.state.pageNumber === 0 &&
             this.pageCount !== 1 &&
             <Left style={Style.headerLeft}>
@@ -179,24 +180,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   private renderDotIndicator() {
     return <PagerDotIndicator pageCount={this.pageCount} />
   }
-  // TODO:
-  /* private onChange(tag: string, value: string, cascadedTags: string[]) {
-     _.forEach(cascadedTags, (cascadedTag) => {
-       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
-       if (!_.isEmpty(wrapper)) {
-         wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
-         if (!_.isEmpty(wrapper.props.onChange)) {
-           _.forEach(wrapper.props.onChange, (a) => {
-             const cascadedList = this.refs[a] as DisplayInput<Question>
-             cascadedList.reset()
- 
-           })
-         }
-         wrapper.reset()
-       }
- 
-     })
-   }*/
 
   private loadAnswers() {
     if (_.isEmpty(this.state.answers)) {

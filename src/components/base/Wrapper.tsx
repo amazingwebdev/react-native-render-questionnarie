@@ -27,7 +27,7 @@ export interface DisplayInput<P> extends React.Component<P> {
 	getWrappedComponent: () => React.Component<P>
 	getPhotosURLs: () => string[]
 	setPhotosURLs: (urls: string[]) => void
-	onCascadedAnswerChanged: (tag: string, value: string) => void
+	onCascadedAnswerChanged: (tag: string, value: string | string[] | number) => void
 	reset: () => void
 }
 

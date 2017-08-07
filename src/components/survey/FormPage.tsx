@@ -48,6 +48,7 @@ export default class FormPage extends React.Component<PageProps> {
         super(props)
 
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
+        this.onChange = this.onChange.bind(this)
 
     }
 
@@ -62,6 +63,24 @@ export default class FormPage extends React.Component<PageProps> {
             </ScrollView>
 
         )
+    }
+
+    public onChange(tag: string, value: string | string[] | number, cascadedTags: string[]) {
+        _.forEach(cascadedTags, (cascadedTag) => {
+            const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
+            if (!_.isEmpty(wrapper)) {
+                wrapper.onCascadedAnswerChanged(tag, value)
+                if (!_.isEmpty(wrapper.props.onChange)) {
+                    _.forEach(wrapper.props.onChange, (a) => {
+                        const cascadedList = this.refs[a] as DisplayInput<Question>
+                        cascadedList.reset()
+                    })
+                }
+                wrapper.reset()
+            }
+
+        })
+
     }
 
     private createQuestionComponent(question: Question): JSX.Element {
@@ -116,6 +135,8 @@ export default class FormPage extends React.Component<PageProps> {
                         titleKey={list.titleKey}
                         valueKey={list.valueKey}
                         optionsTitle={list.optionsTitle}
+                        onChange={list.onChange}
+                        trigger={this.onChange}
                         onValueChanged={this.props.questionValueHandler}
                     />
                 )
