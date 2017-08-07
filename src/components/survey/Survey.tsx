@@ -102,7 +102,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     const { answers } = this.state
     answers[tag] = value
     this.setState({ answers })
-    console.warn(this.state.answers)
   }
 
   public render(): JSX.Element {

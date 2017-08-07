@@ -38,7 +38,7 @@ import { ScrollView } from 'react-native'
 import * as _ from 'lodash'
 
 interface PageProps {
-    questionValueHandler: (tag: string, value: any) => void
+    questionValueHandler: (tag: string, value: string | string[] | number) => void
     data: Page
 }
 
