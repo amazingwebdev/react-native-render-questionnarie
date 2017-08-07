@@ -121,19 +121,28 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                 <Icon name="camera" />
               </Button>
             }
-            {
-              this.state.capturedPhotos.length === 1 &&
-              <Button transparent style={Style.button} onPress={this.openGallery}>
-                <Icon name="image" />
-              </Button>
-            }
-            {
-              this.state.capturedPhotos.length > 1 &&
-              <Button transparent style={Style.button} onPress={this.openGallery}>
-                <Icon name="images" />
-              </Button>
-            }
           </Left>
+          {this.state.pageNumber === 0 &&
+            this.pageCount !== 1 &&
+            <Left style={Style.headerLeft}>
+              {
+                <Button transparent style={Style.button} onPress={this.openCamera}>
+                  <Icon name="camera" />
+                </Button>
+              }
+              {
+                this.state.capturedPhotos.length === 1 &&
+                <Button transparent style={Style.button} onPress={this.openGallery}>
+                  <Icon name="image" />
+                </Button>
+              }
+              {
+                this.state.capturedPhotos.length > 1 &&
+                <Button transparent style={Style.button} onPress={this.openGallery}>
+                  <Icon name="images" />
+                </Button>
+              }
+            </Left>}
           <Body>
             <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
           </Body>

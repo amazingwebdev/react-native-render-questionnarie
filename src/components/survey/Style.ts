@@ -28,16 +28,18 @@ const header: ViewStyle = {
 const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
 	...Platform.select({
 		android: {
-			flex: 0,
 			color: 'white',
-			textAlignVertical: 'auto',
-			textAlign: 'right',
 		},
 	}),
 }
 
+const headerLeft: TextStyle = {
+	flex: 1,
+	flexDirection: 'row',
+}
+
 const indicator: ViewStyle = {
-	height: HEIGHT - 70,
+	height: HEIGHT - (HEIGHT * 12 / 100),
 
 }
 export default {
@@ -46,4 +48,5 @@ export default {
 	header,
 	indicator,
 	container,
+	headerLeft,
 }
