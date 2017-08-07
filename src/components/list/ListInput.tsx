@@ -60,6 +60,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {

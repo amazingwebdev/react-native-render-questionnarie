@@ -15,7 +15,9 @@ class PhotoInput extends React.Component<Question> implements BaseInput<Question
         return <View />
     }
 
-    public setValue() { }
+    public setValue() {
+        // TODO:
+    }
 
     public getValue(): string { return }
 

@@ -26,6 +26,7 @@ export interface Question {
 	visibleIf?: string
 	onChange?: string[]
 	trigger?: (tag: string, value: string | string[] | number, cascadedTags: string[]) => void
+	onValueChanged: (tag: string, value: any) => void
 }
 
 export interface TextInputQuestion extends Question {
