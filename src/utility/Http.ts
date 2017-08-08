@@ -35,7 +35,7 @@ class Http {
 			return fetch(request).then((response) => {
 				if (response.status < 400) {
 					return response.json().then((responseEntity) => {
-						Cache.set(requestDetails.url, responseEntity, 1)
+						Cache.set(requestDetails.url, responseEntity, requestDetails.expiration)
 						return Promise.resolve(responseEntity)
 					})
 				}
