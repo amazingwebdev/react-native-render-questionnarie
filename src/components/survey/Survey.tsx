@@ -99,7 +99,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.onPageSelected = this.onPageSelected.bind(this)
   }
 
-  public questionValueHandler(tag: string, value: string) {
+  public questionValueHandler(tag: string, value: string | string[] | number) {
     const { answers } = this.state
     answers[tag] = value
     this.setState({ answers })
@@ -126,7 +126,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     return (
       <Container style={Style.container} >
         <Header style={Style.header}>
-          <Left>
+
+          <Left style={Style.headerLeft}>
             {
               <Button transparent style={Style.button} onPress={this.openCamera}>
                 <Icon name="camera" />

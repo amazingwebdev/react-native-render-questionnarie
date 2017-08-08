@@ -40,7 +40,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		render() {
-			console.warn(this.props.tag, 'render', this.state.display)
 			if (this.state.display) {
 				return (
 					<View>
@@ -61,7 +60,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		private loadOptions() {
-			console.warn(this.props.tag, 'loadOptions')
 			let options: MultiInputQuestionOption[]
 			switch (this.props.options.type) {
 				case 'static':
@@ -99,7 +97,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		public onCascadedAnswerChanged(tag: string, value: string) {
-			console.warn(this.props.tag, 'onCascadedAnswerChanged')
 			_.forEach(this.props.options.request.params, (paramValue, paramName) => {
 				if (paramValue === `$\{${tag}}`) {
 					const requestParams = _.clone(this.state.requestParams)
@@ -114,7 +111,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		private isParamsReadyForRequest(): boolean {
-			console.warn(this.props.tag, 'isParamsReadyForRequest')
 			return this.props.options.type === 'http' &&
 				!_.isEmpty(this.props.options.request.params) &&
 				_.isEqual(_.keys(this.state.requestParams), _.keys(this.props.options.request.params))

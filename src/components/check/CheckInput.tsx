@@ -61,7 +61,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         return this.props.title
     }
 
-    public getValue(): any | undefined {
+    public getValue(): string[] {
         const selections: string[] = []
         for (const ref in this.refs) {
             if (this.refs.hasOwnProperty(ref)) {
@@ -78,8 +78,9 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         if (typeof value === 'string') {
             const { selection } = this.state
             selection[value] = !selection[value]
-            this.setState({ selection })
-            this.props.onValueChanged(this.props.tag, selection)
+            this.setState({ selection }, () => {
+                this.props.onValueChanged(this.props.tag, this.getValue())
+            })
         } else if (typeof value === 'object') {
             this.setValues(value)
         }
@@ -90,8 +91,9 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         values.map((value) => {
             selection[value] = true
         })
-        this.setState({ selection })
-        this.props.onValueChanged(this.props.tag, selection)
+        this.setState({ selection }, () => {
+            this.props.onValueChanged(this.props.tag, this.getValue())
+        })
     }
 
     public isValid(): boolean {
