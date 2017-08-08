@@ -18,8 +18,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     private getInitialState(): ListInputState {
-        const state = { selection: this.props.answer }
-        return state
+        return { selection: undefined }
     }
 
     public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
@@ -27,6 +26,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public render(): JSX.Element {
+        console.warn('render =>  ' + this.props.tag)
         return (
             <Picker
                 ref={this.props.tag}
