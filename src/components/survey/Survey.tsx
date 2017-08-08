@@ -11,11 +11,13 @@ import {
   Right,
   Title,
   Body,
+  Picker,
 } from 'native-base'
 import * as _ from 'lodash'
 
 import {
   Form,
+  Page,
   Question,
   MultiInputQuestion,
   TextInputQuestion,
@@ -31,9 +33,12 @@ import {
   PhotoInput,
   Gallery,
   Camera,
+  FormPage,
 } from '../'
 
 import Style from './Style'
+
+import { IndicatorViewPager, PagerDotIndicator, PagerTitleIndicator } from 'rn-viewpager'
 
 interface SurveyProps {
   form: Form
@@ -49,6 +54,7 @@ interface SurveyState {
   capturing: boolean
   answers: Answers
   medias: Media
+  currentPage: number
 }
 
 interface Answers {
@@ -60,12 +66,13 @@ interface Media {
   question: { [key: string]: string[] }
 }
 
+interface CurrentPage {
+  position: number
+}
+
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
-  private pageCount: number
-  private questionCount: number
-  private brief: string
-  private prevAnswers: Answers
+  private pager: IndicatorViewPager
 
   public constructor(props: SurveyProps) {
     super(props)
@@ -79,81 +86,97 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         form: [],
         question: {},
       },
+      currentPage: 0,
     }
-    this.pageCount = this.props.form.pages.length
-    this.prevAnswers = {}
-    this.prevPage = this.prevPage.bind(this)
-    this.nextPage = this.nextPage.bind(this)
     this.onSave = this.onSave.bind(this)
     this.openCamera = this.openCamera.bind(this)
     this.openGallery = this.openGallery.bind(this)
     this.onCameraClose = this.onCameraClose.bind(this)
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
+    this.questionValueHandler = this.questionValueHandler.bind(this)
+    this.onPageChanged = this.onPageChanged.bind(this)
+    this.onPageSelected = this.onPageSelected.bind(this)
   }
 
-  public componentDidMount() {
-    this.loadAnswers()
+  public questionValueHandler(tag: string, value: string | string[] | number) {
+    const { answers } = this.state
+    answers[tag] = value
+    this.setState({ answers })
   }
 
-  public componentDidUpdate() {
-    this.loadAnswers()
+  public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
+    if (this.state.capturing !== nextState.capturing) {
+      return true
+    }
+    if (this.state.showGallery !== nextState.showGallery) {
+      return true
+    }
+    if (this.state.currentPage !== nextState.currentPage) {
+      return true
+    }
+    return false
   }
 
   public render(): JSX.Element {
-    const page = this.props.form.pages[this.state.pageNumber]
-    const questions: JSX.Element[] = page.questions.map((question: Question) =>
-      this.createQuestionComponent(question),
-    )
+    const pages = this.props.form.pages.map((page: Page) => {
+      return (<FormPage data={page} questionValueHandler={this.questionValueHandler} />)
+    })
 
     return (
-      // todo disabled button
-      <Container>
+      <Container style={Style.container} >
         <Header style={Style.header}>
-          {!(this.state.pageNumber === 0 && this.pageCount !== 1) &&
-            <Left>
-              <Button onPress={this.prevPage} transparent>
-                <Icon name="arrow-back" />
+
+          <Left style={Style.headerLeft}>
+            {
+              <Button transparent style={Style.button} onPress={this.openCamera}>
+                <Icon name="camera" />
               </Button>
-            </Left>}
-          {this.state.pageNumber === 0 &&
-            this.pageCount !== 1 &&
-            <Left>
-              {
-                <Button transparent style={Style.button} onPress={this.openCamera}>
-                  <Icon name="camera" />
-                </Button>
-              }
-              {
-                this.state.capturedPhotos.length === 1 &&
-                <Button transparent style={Style.button} onPress={this.openGallery}>
-                  <Icon name="image" />
-                </Button>
-              }
-              {
-                this.state.capturedPhotos.length > 1 &&
-                <Button transparent style={Style.button} onPress={this.openGallery}>
-                  <Icon name="images" />
-                </Button>
-              }
-            </Left>}
+            }
+            {
+              this.state.capturedPhotos.length === 1 &&
+              <Button transparent style={Style.button} onPress={this.openGallery}>
+                <Icon name="image" />
+              </Button>
+            }
+            {
+              this.state.capturedPhotos.length > 1 &&
+              <Button transparent style={Style.button} onPress={this.openGallery}>
+                <Icon name="images" />
+              </Button>
+            }
+          </Left>
           <Body>
-            <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
+            <Picker
+              style={{ width: 100 }} // TODO: style vermeyince gözükmüyor.
+              key="pager"
+              selectedValue={this.state.currentPage}
+              onValueChange={this.onPageChanged}>
+              {
+                this.props.form.pages.map((page, i) => {
+                  return <Picker.Item key={page.name} label={page.name} value={i} />
+                })
+              }
+            </Picker>
           </Body>
-          {!(this.state.pageNumber === this.pageCount - 1) &&
-            <Right>
-              <Button onPress={this.nextPage} transparent>
-                <Icon name="arrow-forward" />
-              </Button>
-            </Right>}
-          {this.state.pageNumber === this.pageCount - 1 &&
-            <Right>
-              <Button onPress={this.onSave} transparent>
-                <Text> Save </Text>
-                <Icon name="done-all" />
-              </Button>
-            </Right>}
+          <Right>
+            <Button onPress={this.onSave} transparent>
+              <Text> Save </Text>
+              <Icon name="done-all" />
+            </Button>
+          </Right>
         </Header>
+
+        <Content key="form" style={Style.content}>
+          <IndicatorViewPager
+            ref={(ref: IndicatorViewPager) => { this.pager = ref }}
+            style={Style.indicator}
+            onPageSelected={this.onPageSelected}
+            indicator={this.renderDotIndicator()}>
+            {pages}
+          </IndicatorViewPager>
+        </Content>
+
         <Camera
           visible={this.state.capturing}
           onClose={this.onCameraClose}
@@ -164,132 +187,21 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           onPhotoDelete={this.onPhotoDelete}
           onGalleryClose={this.onGalleryClose}
         />
-        <Content key="form" style={Style.content}>
-          {questions}
-        </Content>
       </Container>
     )
   }
 
-  private createQuestionComponent(question: Question): JSX.Element {
-    switch (question.type) {
-      case 'slider':
-        const slider: SliderInputQuestion = question as SliderInputQuestion
-        return (
-          <SliderInput
-            ref={slider.tag}
-            key={slider.tag}
-            tag={slider.tag}
-            type={slider.type}
-            title={slider.title}
-            required={slider.required}
-            photoRequired={slider.photoRequired}
-            min={slider.min}
-            max={slider.max}
-            step={slider.step}
-            defaultValue={slider.defaultValue}
-          />
-        )
-      case 'text':
-        const text: TextInputQuestion = question as TextInputQuestion
-        return (
-          <TextInput
-            ref={text.tag}
-            key={text.tag}
-            tag={text.tag}
-            type={text.type}
-            title={text.title}
-            required={text.required}
-            photoRequired={text.photoRequired}
-            defaultValue={text.defaultValue}
-            validation={text.validation}
-          />
-        )
-      case 'list':
-        const list: MultiInputQuestion = question as MultiInputQuestion
-        return (
-          <ListInput
-            ref={list.tag}
-            key={list.tag}
-            tag={list.tag}
-            type={list.type}
-            title={list.title}
-            required={list.required}
-            photoRequired={list.photoRequired}
-            defaultValue={list.defaultValue}
-            options={list.options}
-            titleKey={list.titleKey}
-            valueKey={list.valueKey}
-            optionsTitle={list.optionsTitle}
-          />
-        )
-      case 'radio':
-        const radio: MultiInputQuestion = question as MultiInputQuestion
-        return (
-          <RadioInput
-            ref={radio.tag}
-            key={radio.tag}
-            tag={radio.tag}
-            type={radio.type}
-            title={radio.title}
-            required={radio.required}
-            photoRequired={radio.photoRequired}
-            defaultValue={radio.defaultValue}
-            options={radio.options}
-            titleKey={radio.titleKey}
-            valueKey={radio.valueKey}
-          />
-        )
-      case 'check':
-        const checkbox: MultiInputQuestion = question as MultiInputQuestion
-        return (
-          <CheckInput
-            ref={checkbox.tag}
-            key={checkbox.tag}
-            tag={checkbox.tag}
-            type={checkbox.type}
-            title={checkbox.title}
-            required={checkbox.required}
-            photoRequired={checkbox.photoRequired}
-            defaultValue={checkbox.defaultValue}
-            options={checkbox.options}
-            titleKey={checkbox.titleKey}
-            valueKey={checkbox.valueKey}
-          />
-        )
-      case 'photo':
-        const photo: Question = question as Question
-        return (
-          <PhotoInput
-            ref={photo.tag}
-            key={photo.tag}
-            tag={photo.tag}
-            type={photo.type}
-            title={photo.title}
-            required={photo.required}
-            photoRequired={photo.required}
-          />
-        )
-      default:
-        throw new Error('no such question type')
-    }
+  private onPageChanged(currentPage: number) {
+    this.pager.setPage(currentPage)
+    this.onPageSelected({ position: currentPage })
   }
 
-  private loadAnswers() {
-    if (_.isEmpty(this.state.answers)) {
-      return
-    }
-    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
-      if (_.has(this.state.answers, ref)) {
-        if (wrapper.isAvailable()) {
-          const question = wrapper.getWrappedComponent() as BaseInput<Question>
-          question.setValue(this.state.answers[ref])
-        }
-      }
-      if (_.has(this.state.medias.question, ref)) {
-        wrapper.setPhotosURLs(this.state.medias.question[ref])
-      }
-    })
+  private onPageSelected(currentPage: CurrentPage) {
+    this.setState({ currentPage: currentPage.position })
+  }
+
+  private renderDotIndicator() {
+    return <PagerDotIndicator pageCount={this.props.form.pages.length} />
   }
 
   private validatePage(): string[] {
@@ -305,42 +217,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     return validationMessages
   }
 
-  private storeCurrentPageAnswers(): void {
-    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
-      if (wrapper.isAvailable()) {
-        const question = wrapper.getWrappedComponent() as BaseInput<Question>
-        const answer = question.getValue()
-        if (question.getValue() !== undefined) {
-          this.state.answers[ref] = question.getValue()
-        }
-        const media = wrapper.getPhotosURLs()
-        if (!_.isEmpty(media)) {
-          this.state.medias.question[ref] = wrapper.getPhotosURLs()
-        }
-      }
-    })
-  }
-
-  private prevPage() {
-    this.storeCurrentPageAnswers()
-    const pageNumber = this.state.pageNumber - 1
-    this.setState({ pageNumber })
-  }
-
-  private nextPage() {
-    const validationMessages = this.validatePage()
-    if (_.isEmpty(validationMessages)) {
-      this.storeCurrentPageAnswers()
-      this.setState({ pageNumber: this.state.pageNumber + 1 })
-    } else if (this.props.onFailure) {
-      this.props.onFailure(validationMessages)
-    }
-  }
-
   private onSave() {
     const validationMessages = this.validatePage()
     if (_.isEmpty(validationMessages) && this.props.onSave) {
-      this.storeCurrentPageAnswers()
       if (this.state.capturedPhotos.length > 0) {
         this.state.medias.form = this.state.capturedPhotos
       }

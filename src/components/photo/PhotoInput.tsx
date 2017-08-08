@@ -15,7 +15,9 @@ class PhotoInput extends React.Component<Question> implements BaseInput<Question
         return <View />
     }
 
-    public setValue() { }
+    public setValue() {
+        // TODO:
+    }
 
     public getValue(): string { return }
 
@@ -25,6 +27,14 @@ class PhotoInput extends React.Component<Question> implements BaseInput<Question
 
     public getTitle(): string {
         return this.props.title
+    }
+
+    public triggerCascadedQuestions(value: number) {
+
+    }
+
+    public reset(): void {
+
     }
 
 }

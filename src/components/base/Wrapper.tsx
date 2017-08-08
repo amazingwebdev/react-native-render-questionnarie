@@ -1,5 +1,6 @@
 import React from 'react'
 import { Header, Text, View, Button, Icon, Body } from 'native-base'
+import * as _ from 'lodash'
 
 import { Question, Camera, Gallery } from '../'
 
@@ -11,7 +12,11 @@ interface PhotoState {
 	showGallery: boolean
 }
 
-export interface BaseState extends PhotoState {
+interface RequestState {
+	requestParams: { [key: string]: string }
+}
+
+export interface BaseState extends PhotoState, RequestState {
 	display?: boolean
 }
 
@@ -22,14 +27,18 @@ export interface DisplayInput<P> extends React.Component<P> {
 	getWrappedComponent: () => React.Component<P>
 	getPhotosURLs: () => string[]
 	setPhotosURLs: (urls: string[]) => void
+	onCascadedAnswerChanged: (tag: string, value: string | string[] | number) => void
+	reset: () => void
 }
+
+export type Answer = string | string[] | number
 
 export interface BaseInput<P> extends React.Component<P> {
 	getTitle: () => string
-	getValue: () => string | string[] | number
-	setValue: (value: string | string[] | number) => void
+	getValue: () => Answer
+	setValue: (value: Answer) => void
 	isValid: () => boolean
-
+	triggerCascadedQuestions: (value: Answer) => void
 }
 
 export default abstract class Wrapper<P extends Question, S extends BaseState> extends React.Component<P, S> implements DisplayInput<P> {
@@ -41,10 +50,13 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		this.onCameraClose = this.onCameraClose.bind(this)
 		this.onPhotoDelete = this.onPhotoDelete.bind(this)
 		this.onGalleryClose = this.onGalleryClose.bind(this)
-
 	}
 
 	abstract getWrappedComponent(): React.Component<P>
+
+	abstract onCascadedAnswerChanged(tag: string, value: string): void
+
+	abstract reset(): void
 
 	protected getInitialState(): BaseState {
 		return {
@@ -52,6 +64,7 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 			capturing: false,
 			showGallery: false,
 			capturedPhotos: [],
+			requestParams: {},
 		}
 	}
 
@@ -142,6 +155,10 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		} else {
 			this.setState({ capturedPhotos })
 		}
+	}
+
+	public getRequestParams(): {} {
+		return this.state.requestParams
 	}
 
 }

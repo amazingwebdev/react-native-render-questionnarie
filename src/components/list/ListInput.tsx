@@ -1,43 +1,39 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
+import { Answer } from '../base/Wrapper'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: string | string[]
+    selection?: Answer
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
 
     constructor(props: MultiInputQuestion) {
         super(props)
-        this.state = {
-            selection: undefined,
-        }
+        this.state = this.getInitialState()
         this.renderOptions = this.renderOptions.bind(this)
         this.setValue = this.setValue.bind(this)
     }
 
-    componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setState({ selection: this.props.defaultValue })
-        } else {
-            this.setState({ selection: '-' })
-        }
+    private getInitialState(): ListInputState {
+        return { selection: undefined }
     }
 
-    render(): JSX.Element {
+    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
+        this.triggerCascadedQuestions(nextState.selection)
+    }
+
+    public render(): JSX.Element {
+        console.warn('render =>  ' + this.props.tag)
         return (
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
                 selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
-                <Picker.Item
-                    key="-1"
-                    label={this.props.optionsTitle ? this.props.optionsTitle : 'Seçiniz'}
-                    value="-1" />
                 {this.props.pureOptions.map(this.renderOptions)}
             </Picker>
         )
@@ -65,12 +61,17 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {
         return true
     }
 
-}
+    public triggerCascadedQuestions(value: string | string[] | number) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
 
-export default MultiChoiceInputHOC(ListInput)
+} export default MultiChoiceInputHOC(ListInput)

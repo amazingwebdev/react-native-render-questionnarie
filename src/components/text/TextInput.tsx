@@ -14,17 +14,25 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
 
     constructor(props: TextInputQuestion) {
         super(props)
-        this.state = {
-            value: props.value,
-        }
+        this.state = this.getInitialState()
         if (this.props.validation !== undefined) {
             this.regExp = new RegExp(this.props.validation)
         }
     }
 
+    private getInitialState(): TextInputState {
+        return { value: this.props.value }
+    }
+
     public componentDidMount() {
         if (this.props.defaultValue) {
             this.setValue(this.props.defaultValue)
+        }
+    }
+
+    public componentWillUpdate(nextProps: TextInputQuestion, nextState: TextInputState) {
+        if (this.state.value !== nextState.value) {
+            this.triggerCascadedQuestions(nextState.value)
         }
     }
 
@@ -53,6 +61,7 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
     public setValue(value: string): void {
         this.setState({ value })
+        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {
@@ -63,6 +72,17 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
             return this.regExp.test(this.state.value)
         }
         return true
+    }
+
+    public triggerCascadedQuestions(value: string) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
     }
 
 }

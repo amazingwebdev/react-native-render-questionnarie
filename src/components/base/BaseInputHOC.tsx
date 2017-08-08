@@ -34,6 +34,14 @@ export default function BaseInputHOC<Props extends Question>(Component: React.Co
             return this.wrappedComponent
         }
 
+        public onCascadedAnswerChanged(tag: string, value: string) {
+            // TODO:
+        }
+
+        public reset() {
+
+        }
+
     }
 
 }

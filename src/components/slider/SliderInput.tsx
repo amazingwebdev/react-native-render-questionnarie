@@ -5,23 +5,31 @@ import { View } from 'native-base'
 import BaseInputHOC from '../base/BaseInputHOC'
 import { BaseInput, SliderInputQuestion } from '../'
 
-interface SliderState {
+interface SliderInputState {
     value?: number
 }
 
-class SliderInput extends React.Component<SliderInputQuestion, SliderState> implements BaseInput<SliderInputQuestion> {
+class SliderInput extends React.Component<SliderInputQuestion, SliderInputState> implements BaseInput<SliderInputQuestion> {
 
     constructor(props: SliderInputQuestion) {
         super(props)
-        this.state = {
-            value: props.value || 0,
-        }
+        this.state = this.getInitialState()
         this.onValueChange = this.onValueChange.bind(this)
     }
 
-    public componentWillMount() {
+    private getInitialState(): SliderInputState {
+        return { value: this.props.value || 0 } // TODO: bitwise?
+    }
+
+    public componentDidMount() {
         if (this.props.defaultValue) {
             this.setValue(this.props.defaultValue)
+        }
+    }
+
+    public componentWillUpdate(nextProps: SliderInputQuestion, nextState: SliderInputState) {
+        if (this.state.value !== nextState.value) {
+            this.triggerCascadedQuestions(nextState.value)
         }
     }
 
@@ -43,7 +51,7 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
     }
 
     private onValueChange(value: number) {
-        this.setState({ value })
+        this.setValue(value)
     }
 
     public getTitle(): string {
@@ -56,10 +64,22 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderState> impl
 
     public setValue(value: number) {
         this.setState({ value })
+        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {
         return true
+    }
+
+    public triggerCascadedQuestions(value: number) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
     }
 
 }

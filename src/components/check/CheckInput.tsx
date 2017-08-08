@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
+import * as _ from 'lodash'
 
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
@@ -16,15 +17,23 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
 
     constructor(props: MultiInputQuestion) {
         super(props)
-        this.state = {
-            selection: {},
-        }
+        this.state = this.getInitialState()
         this.renderOptions = this.renderOptions.bind(this)
+    }
+
+    private getInitialState(): CheckInputState {
+        return { selection: {} }
     }
 
     public componentDidMount() {
         if (this.props.defaultValue) {
             this.setValue(this.props.defaultValue)
+        }
+    }
+
+    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: CheckInputState) {
+        if (!_.isEqual(this.state.selection, nextState.selection)) {
+            this.triggerCascadedQuestions(_.keys(nextState.selection))
         }
     }
 
@@ -52,7 +61,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         return this.props.title
     }
 
-    public getValue(): any | undefined {
+    public getValue(): string[] {
         const selections: string[] = []
         for (const ref in this.refs) {
             if (this.refs.hasOwnProperty(ref)) {
@@ -69,7 +78,9 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         if (typeof value === 'string') {
             const { selection } = this.state
             selection[value] = !selection[value]
-            this.setState({ selection })
+            this.setState({ selection }, () => {
+                this.props.onValueChanged(this.props.tag, this.getValue())
+            })
         } else if (typeof value === 'object') {
             this.setValues(value)
         }
@@ -80,11 +91,24 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         values.map((value) => {
             selection[value] = true
         })
-        this.setState({ selection })
+        this.setState({ selection }, () => {
+            this.props.onValueChanged(this.props.tag, this.getValue())
+        })
     }
 
     public isValid(): boolean {
         return true
+    }
+
+    public triggerCascadedQuestions(value: string[]) {
+        if (this.props.trigger && this.props.onChange) {
+            this.props.trigger(this.props.tag, value, this.props.onChange)
+        }
+    }
+
+    public reset(): void {
+        const initialState = this.getInitialState()
+        this.setState(initialState)
     }
 
 }
