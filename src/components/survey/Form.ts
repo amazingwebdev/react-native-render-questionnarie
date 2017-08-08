@@ -5,9 +5,9 @@ export interface Form {
 }
 
 export interface Page {
-	name: string
-	tag: string
-	questions: Question[]
+	name?: string
+	tag?: string
+	questions?: Question[]
 }
 
 export interface Question {
@@ -26,6 +26,7 @@ export interface Question {
 	visibleIf?: string
 	onChange?: string[]
 	trigger?: (tag: string, value: string | string[] | number, cascadedTags: string[]) => void
+	onValueChanged: (tag: string, value: string | string[] | number) => void
 }
 
 export interface TextInputQuestion extends Question {
@@ -45,7 +46,7 @@ export interface SliderInputQuestion extends Question {
 
 export interface MultiInputQuestion extends Question {
 	optionsTitle?: string
-	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {} } }
+	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {}, expiration: number } }
 	pureOptions?: MultiInputQuestionOption[]
 	titleKey: string
 	valueKey: string
