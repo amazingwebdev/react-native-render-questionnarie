@@ -61,6 +61,7 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
     public setValue(value: string): void {
         this.setState({ value })
+        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {

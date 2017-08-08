@@ -1,11 +1,12 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
+import { Answer } from '../base/Wrapper'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: string | string[] | number
+    selection?: Answer
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
@@ -18,8 +19,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     private getInitialState(): ListInputState {
-        const state = { selection: this.props.answer }
-        return state
+        return { selection: undefined }
     }
 
     public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
@@ -27,6 +27,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public render(): JSX.Element {
+        console.warn('render =>  ' + this.props.tag)
         return (
             <Picker
                 ref={this.props.tag}
@@ -60,6 +61,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {

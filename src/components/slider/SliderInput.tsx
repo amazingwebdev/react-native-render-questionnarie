@@ -51,7 +51,7 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
     }
 
     private onValueChange(value: number) {
-        this.setState({ value })
+        this.setValue(value)
     }
 
     public getTitle(): string {
@@ -64,6 +64,7 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
 
     public setValue(value: number) {
         this.setState({ value })
+        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {

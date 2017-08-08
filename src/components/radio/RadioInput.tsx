@@ -63,6 +63,7 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {

@@ -1,7 +1,19 @@
-import { Platform, TextStyle, TextStyleIOS, TextStyleAndroid, ViewStyle } from 'react-native'
+import { Platform, TextStyle, TextStyleIOS, TextStyleAndroid, ViewStyle, Dimensions } from 'react-native'
+
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
 
 const content: ViewStyle = {
 	top: 1,
+	flex: 1,
+
+	height: 'auto',
+
+}
+
+const container: ViewStyle = {
+	flex: 1,
+	height: HEIGHT,
 }
 
 const header: ViewStyle = {
@@ -16,16 +28,25 @@ const header: ViewStyle = {
 const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
 	...Platform.select({
 		android: {
-			flex: 0,
 			color: 'white',
-			textAlignVertical: 'auto',
-			textAlign: 'right',
 		},
 	}),
 }
 
+const headerLeft: TextStyle = {
+	flex: 1,
+	flexDirection: 'row',
+}
+
+const indicator: ViewStyle = {
+	height: HEIGHT - (HEIGHT * 12 / 100),
+
+}
 export default {
 	content,
 	button,
 	header,
+	indicator,
+	container,
+	headerLeft,
 }
