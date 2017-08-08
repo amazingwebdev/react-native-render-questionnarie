@@ -46,7 +46,7 @@ export interface SliderInputQuestion extends Question {
 
 export interface MultiInputQuestion extends Question {
 	optionsTitle?: string
-	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {} } }
+	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {}, expiration: number } }
 	pureOptions?: MultiInputQuestionOption[]
 	titleKey: string
 	valueKey: string

@@ -68,7 +68,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					break
 				case 'http':
 					const request = this.props.options.request
-					const httpRequest: HttpRequest = {}
+					const httpRequest: HttpRequest = { expiration: this.props.options.request.expiration }
 
 					if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
 						httpRequest.url = request.url
@@ -78,14 +78,12 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					}
 
 					if (!_.isEmpty(httpRequest)) {
-						Http.request(httpRequest).then((response) => {
-							response.json().then((options) => {
-								if (_.isEmpty(options)) { // if options is empty then hide the question.
-									this.setState({ options: [], optionsLoaded: true, display: true })
-								} else {
-									this.setState({ options, optionsLoaded: true, display: true })
-								}
-							})
+						Http.request(httpRequest).then((options) => {
+							if (_.isEmpty(options)) { // if options is empty then hide the question.
+								this.setState({ options: [], optionsLoaded: true, display: true })
+							} else {
+								this.setState({ options, optionsLoaded: true, display: true })
+							}
 						}).catch(() => {
 							this.setState({ options: [], optionsLoaded: true, display: true })
 						})
