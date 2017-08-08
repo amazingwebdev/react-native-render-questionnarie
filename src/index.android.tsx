@@ -19,12 +19,6 @@ export default class App extends React.Component<{}, {}> {
 
 	private onSave(answers: Object) {
 		console.log(JSON.stringify(answers))
-		/*Toast.show({
-			text: JSON.stringify(answers),
-			buttonText: 'Tamam',
-			position: 'bottom',
-			type: 'success',
-		})*/
 	}
 
 	private onFailure(erros: string[]) {

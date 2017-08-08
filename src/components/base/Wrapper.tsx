@@ -31,7 +31,7 @@ export interface DisplayInput<P> extends React.Component<P> {
 	reset: () => void
 }
 
-type Answer = string | string[] | number
+export type Answer = string | string[] | number
 
 export interface BaseInput<P> extends React.Component<P> {
 	getTitle: () => string

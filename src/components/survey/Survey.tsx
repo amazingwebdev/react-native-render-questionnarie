@@ -98,10 +98,13 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
   }
 
   public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
-    if (!this.state.capturing) {
-      return false
+    if (this.state.capturing !== nextState.capturing) {
+      return true
     }
-    return true
+    if (this.state.showGallery !== nextState.showGallery) {
+      return true
+    }
+    return false
 
   }
 

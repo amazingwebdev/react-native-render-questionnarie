@@ -1,15 +1,5 @@
 import React from 'react'
 import {
-    Body,
-    Button,
-    Container,
-    Content,
-    Header,
-    Icon,
-    Left,
-    Right,
-    Text,
-    Title,
     View,
 } from 'native-base'
 
@@ -37,8 +27,10 @@ import { ScrollView } from 'react-native'
 
 import * as _ from 'lodash'
 
+import { Answer } from '../base/Wrapper'
+
 interface PageProps {
-    questionValueHandler: (tag: string, value: string | string[] | number) => void
+    questionValueHandler: (tag: string, value: Answer) => void
     data: Page
 }
 

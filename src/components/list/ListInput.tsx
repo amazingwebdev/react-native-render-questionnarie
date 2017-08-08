@@ -1,11 +1,12 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
+import { Answer } from '../base/Wrapper'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: string | string[] | number
+    selection?: Answer
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
