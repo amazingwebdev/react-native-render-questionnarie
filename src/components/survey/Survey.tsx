@@ -11,6 +11,7 @@ import {
   Right,
   Title,
   Body,
+  Picker,
 } from 'native-base'
 import * as _ from 'lodash'
 
@@ -53,6 +54,7 @@ interface SurveyState {
   capturing: boolean
   answers: Answers
   medias: Media
+  currentPage: number
 }
 
 interface Answers {
@@ -64,10 +66,13 @@ interface Media {
   question: { [key: string]: string[] }
 }
 
+interface CurrentPage {
+  position: number
+}
+
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
-  private pageCount: number
-  private prevAnswers: Answers
+  private pager: IndicatorViewPager
 
   public constructor(props: SurveyProps) {
     super(props)
@@ -81,9 +86,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         form: [],
         question: {},
       },
+      currentPage: 0,
     }
-    this.pageCount = this.props.form.pages.length
-    this.prevAnswers = {}
     this.onSave = this.onSave.bind(this)
     this.openCamera = this.openCamera.bind(this)
     this.openGallery = this.openGallery.bind(this)
@@ -91,29 +95,35 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     this.onPhotoDelete = this.onPhotoDelete.bind(this)
     this.onGalleryClose = this.onGalleryClose.bind(this)
     this.questionValueHandler = this.questionValueHandler.bind(this)
-    // TODO: /*this.onChange = this.onChange.bind(this)*/ 
-  }
-
-  public componentDidMount() {
-    this.loadAnswers()
+    this.onPageChanged = this.onPageChanged.bind(this)
+    this.onPageSelected = this.onPageSelected.bind(this)
   }
 
   public questionValueHandler(tag: string, value: string) {
     const { answers } = this.state
     answers[tag] = value
     this.setState({ answers })
-    console.warn(this.state.answers)
+  }
+
+  public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
+    if (this.state.capturing !== nextState.capturing) {
+      return true
+    }
+    if (this.state.showGallery !== nextState.showGallery) {
+      return true
+    }
+    if (this.state.currentPage !== nextState.currentPage) {
+      return true
+    }
+    return false
   }
 
   public render(): JSX.Element {
     const pages = this.props.form.pages.map((page: Page) => {
-      return (<View>
-        <FormPage data={page} questionValueHandler={this.questionValueHandler} />
-      </View>)
+      return (<FormPage data={page} questionValueHandler={this.questionValueHandler} />)
     })
 
     return (
-      // todo disabled button
       <Container style={Style.container} >
         <Header style={Style.header}>
           <Left>
@@ -136,7 +146,17 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             }
           </Left>
           <Body>
-            <Title>{this.props.form.pages[this.state.pageNumber].name}</Title>
+            <Picker
+              style={{ width: 100 }} // TODO: style vermeyince gözükmüyor.
+              key="pager"
+              selectedValue={this.state.currentPage}
+              onValueChange={this.onPageChanged}>
+              {
+                this.props.form.pages.map((page, i) => {
+                  return <Picker.Item key={page.name} label={page.name} value={i} />
+                })
+              }
+            </Picker>
           </Body>
           <Right>
             <Button onPress={this.onSave} transparent>
@@ -145,6 +165,17 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             </Button>
           </Right>
         </Header>
+
+        <Content key="form" style={Style.content}>
+          <IndicatorViewPager
+            ref={(ref: IndicatorViewPager) => { this.pager = ref }}
+            style={Style.indicator}
+            onPageSelected={this.onPageSelected}
+            indicator={this.renderDotIndicator()}>
+            {pages}
+          </IndicatorViewPager>
+        </Content>
+
         <Camera
           visible={this.state.capturing}
           onClose={this.onCameraClose}
@@ -155,56 +186,21 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           onPhotoDelete={this.onPhotoDelete}
           onGalleryClose={this.onGalleryClose}
         />
-        <Content key="form" style={Style.content}>
-
-          <IndicatorViewPager
-            style={Style.indicator}
-            indicator={this.renderDotIndicator()}>
-            {pages}
-          </IndicatorViewPager>
-
-        </Content>
-      </Container >
+      </Container>
     )
   }
 
-  private renderDotIndicator() {
-    return <PagerDotIndicator pageCount={this.pageCount} />
+  private onPageChanged(currentPage: number) {
+    this.pager.setPage(currentPage)
+    this.onPageSelected({ position: currentPage })
   }
-  // TODO:
-  /* private onChange(tag: string, value: string, cascadedTags: string[]) {
-     _.forEach(cascadedTags, (cascadedTag) => {
-       const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
-       if (!_.isEmpty(wrapper)) {
-         wrapper.onCascadedAnswerChanged(tag, value) // TODO: eğer onChange içinde form içinde olmayan bir tag olursa nabalım?
-         if (!_.isEmpty(wrapper.props.onChange)) {
-           _.forEach(wrapper.props.onChange, (a) => {
-             const cascadedList = this.refs[a] as DisplayInput<Question>
-             cascadedList.reset()
- 
-           })
-         }
-         wrapper.reset()
-       }
- 
-     })
-   }*/
 
-  private loadAnswers() {
-    if (_.isEmpty(this.state.answers)) {
-      return
-    }
-    _.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
-      if (_.has(this.state.answers, ref)) {
-        if (wrapper.isAvailable()) {
-          const question = wrapper.getWrappedComponent() as BaseInput<Question>
-          question.setValue(this.state.answers[ref])
-        }
-      }
-      if (_.has(this.state.medias.question, ref)) {
-        wrapper.setPhotosURLs(this.state.medias.question[ref])
-      }
-    })
+  private onPageSelected(currentPage: CurrentPage) {
+    this.setState({ currentPage: currentPage.position })
+  }
+
+  private renderDotIndicator() {
+    return <PagerDotIndicator pageCount={this.props.form.pages.length} />
   }
 
   private validatePage(): string[] {

@@ -6,7 +6,7 @@ declare module 'rn-viewpager' {
 	}
 
 	class IndicatorViewPager extends Component<any> {
-
+		setPage(pageNumber: number): void
 	}
 
 	class PagerTitleIndicator extends Component<any> {
