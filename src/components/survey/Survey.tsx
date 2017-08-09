@@ -148,7 +148,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
           </Left>
           <Body>
             <Picker
-              style={{ width: 100 }} // TODO: style vermeyince gözükmüyor.
+              style={Style.headerPicker} // TODO: style vermeyince gözükmüyor.
               key="pager"
               selectedValue={this.state.currentPage}
               onValueChange={this.onPageChanged}>
@@ -159,8 +159,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
               }
             </Picker>
           </Body>
-          <Right>
-            <Button onPress={this.onSave} transparent>
+          <Right style={Style.headerRight}>
+            <Button style={Style.button} onPress={this.onSave} transparent>
               <Text> Save </Text>
               <Icon name="done-all" />
             </Button>

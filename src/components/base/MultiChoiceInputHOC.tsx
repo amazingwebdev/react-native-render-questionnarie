@@ -68,13 +68,15 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					break
 				case 'http':
 					const request = this.props.options.request
-					const httpRequest: HttpRequest = { expiration: this.props.options.request.expiration }
+					const httpRequest: HttpRequest = {}
 
 					if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
 						httpRequest.url = request.url
 						httpRequest.query = this.state.requestParams
+						httpRequest.expiration = this.props.options.request.expiration
 					} else if (request.url && _.isEmpty(request.params)) {
 						httpRequest.url = request.url
+						httpRequest.expiration = this.props.options.request.expiration
 					}
 
 					if (!_.isEmpty(httpRequest)) {

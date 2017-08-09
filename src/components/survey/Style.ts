@@ -2,11 +2,11 @@ import { Platform, TextStyle, TextStyleIOS, TextStyleAndroid, ViewStyle, Dimensi
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
+const HEADER = HEIGHT * 12 / 100
 
 const content: ViewStyle = {
 	top: 1,
 	flex: 1,
-
 	height: 'auto',
 
 }
@@ -25,7 +25,16 @@ const header: ViewStyle = {
 	}),
 }
 
-const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
+const headerPicker: ViewStyle | TextStyle = {
+	...Platform.select({
+		android: {
+			width: 180,
+			color: 'white',
+		},
+	}),
+}
+
+const button: ViewStyle | TextStyle = {
 	...Platform.select({
 		android: {
 			color: 'white',
@@ -34,12 +43,16 @@ const button: TextStyle | TextStyleIOS | TextStyleAndroid = {
 }
 
 const headerLeft: TextStyle = {
-	flex: 1,
+	flex: 0,
+	flexDirection: 'row',
+}
+const headerRight: TextStyle = {
+	flex: 0,
 	flexDirection: 'row',
 }
 
 const indicator: ViewStyle = {
-	height: HEIGHT - (HEIGHT * 12 / 100),
+	height: HEIGHT - HEADER,
 
 }
 export default {
@@ -49,4 +62,6 @@ export default {
 	indicator,
 	container,
 	headerLeft,
+	headerPicker,
+	headerRight,
 }
