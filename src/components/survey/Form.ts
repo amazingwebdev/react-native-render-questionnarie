@@ -1,3 +1,5 @@
+import { Answer } from './AnswerStore'
+
 export interface Form {
 	name: string
 	type: string
@@ -25,23 +27,22 @@ export interface Question {
 	visible?: boolean
 	visibleIf?: string
 	onChange?: string[]
-	trigger?: (tag: string, value: string | string[] | number, cascadedTags: string[]) => void
-	onValueChanged: (tag: string, value: string | string[] | number) => void
+	defaultValue?: Answer
+	answer?: Answer
+	trigger?: (tag: string, value: Answer, cascadedTags: string[]) => void
 }
 
 export interface TextInputQuestion extends Question {
 	placeholder?: string
 	validation?: string
-	value?: string
-	defaultValue?: string
+	value?: Answer
 }
 
 export interface SliderInputQuestion extends Question {
 	min: number
 	max: number
 	step: number
-	value?: number
-	defaultValue?: number
+	value?: Answer
 }
 
 export interface MultiInputQuestion extends Question {
@@ -50,10 +51,7 @@ export interface MultiInputQuestion extends Question {
 	pureOptions?: MultiInputQuestionOption[]
 	titleKey: string
 	valueKey: string
-	defaultValue?: string | string[]
-	value?: string | string[]
-	loading?: boolean
-	answer?: string | string[]
+	value?: Answer	
 }
 
 export interface MultiInputQuestionOption {

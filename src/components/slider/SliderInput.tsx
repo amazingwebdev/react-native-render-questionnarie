@@ -1,6 +1,6 @@
 import React from 'react'
-import { Text, Slider } from 'react-native'
-import { View } from 'native-base'
+import { Slider } from 'react-native'
+import { View, Text } from 'native-base'
 
 import BaseInputHOC from '../base/BaseInputHOC'
 import { BaseInput, SliderInputQuestion } from '../'
@@ -18,19 +18,10 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
     }
 
     private getInitialState(): SliderInputState {
-        return { value: this.props.value || 0 } // TODO: bitwise?
-    }
-
-    public componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setValue(this.props.defaultValue)
+        if (typeof this.props.answer === 'number') {
+            return { value: this.props.answer }
         }
-    }
-
-    public componentWillUpdate(nextProps: SliderInputQuestion, nextState: SliderInputState) {
-        if (this.state.value !== nextState.value) {
-            this.triggerCascadedQuestions(nextState.value)
-        }
+        return { value: 0 }
     }
 
     public render(): JSX.Element {
@@ -58,13 +49,12 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
         return this.props.title
     }
 
-    public getValue() {
+    public getValue(): number {
         return this.state.value
     }
 
     public setValue(value: number) {
         this.setState({ value })
-        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {
@@ -78,8 +68,7 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
     }
 
     public reset(): void {
-        const initialState = this.getInitialState()
-        this.setState(initialState)
+        this.setState({ value: 0 })
     }
 
 }

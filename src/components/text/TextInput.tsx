@@ -18,29 +18,21 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
         if (this.props.validation !== undefined) {
             this.regExp = new RegExp(this.props.validation)
         }
+        this.onChange = this.onChange.bind(this)
     }
 
     private getInitialState(): TextInputState {
-        return { value: this.props.value }
-    }
-
-    public componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setValue(this.props.defaultValue)
+        if (this.props.answer) {
+            return { value: this.props.answer.toString() }
         }
-    }
-
-    public componentWillUpdate(nextProps: TextInputQuestion, nextState: TextInputState) {
-        if (this.state.value !== nextState.value) {
-            this.triggerCascadedQuestions(nextState.value)
-        }
+        return { value: undefined }
     }
 
     public render(): JSX.Element {
         return (
             <Item rounded>
                 <Input
-                    onChange={this.onChange.bind(this)}
+                    onChange={this.onChange}
                     placeholder={this.props.placeholder}
                     value={this.state.value}
                 />
@@ -56,12 +48,11 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
         return this.props.title
     }
 
-    public getValue(): string | undefined {
+    public getValue(): string {
         return this.state.value ? this.state.value : undefined
     }
     public setValue(value: string): void {
         this.setState({ value })
-        this.props.onValueChanged(this.props.tag, value)
     }
 
     public isValid(): boolean {

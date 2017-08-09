@@ -25,18 +25,6 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         return { selection: {} }
     }
 
-    public componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setValue(this.props.defaultValue)
-        }
-    }
-
-    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: CheckInputState) {
-        if (!_.isEqual(this.state.selection, nextState.selection)) {
-            this.triggerCascadedQuestions(_.keys(nextState.selection))
-        }
-    }
-
     public render(): JSX.Element {
         return (
             <View>
@@ -78,9 +66,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         if (typeof value === 'string') {
             const { selection } = this.state
             selection[value] = !selection[value]
-            this.setState({ selection }, () => {
-                this.props.onValueChanged(this.props.tag, this.getValue())
-            })
+            this.setState({ selection })
         } else if (typeof value === 'object') {
             this.setValues(value)
         }
@@ -91,9 +77,7 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         values.map((value) => {
             selection[value] = true
         })
-        this.setState({ selection }, () => {
-            this.props.onValueChanged(this.props.tag, this.getValue())
-        })
+        this.setState({ selection })
     }
 
     public isValid(): boolean {

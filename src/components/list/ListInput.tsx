@@ -1,12 +1,11 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
-import { Answer } from '../base/Wrapper'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
 interface ListInputState {
-    selection?: Answer
+    selection: string
 }
 
 class ListInput extends React.Component<MultiInputQuestion, ListInputState> implements BaseInput<MultiInputQuestion> {
@@ -19,6 +18,9 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     private getInitialState(): ListInputState {
+        if (typeof this.props.answer === 'string') {
+            return { selection: this.props.answer }
+        }
         return { selection: undefined }
     }
 
@@ -48,7 +50,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         return this.props.title
     }
 
-    public getValue() {
+    public getValue(): string {
         if (this.state.selection === undefined || this.state.selection === '-1') {
             return undefined
         }
@@ -56,24 +58,22 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public setValue(selection: string) {
-        this.setState({ selection }, () => {
-            this.triggerCascadedQuestions(selection)
-        })
-        // this.props.onValueChanged(this.props.tag, selection)
+        this.setState({ selection })
+        this.triggerCascadedQuestions(selection)
     }
 
     public isValid(): boolean {
         return true
     }
 
-    public reset(): void {
-        this.setState({ selection: undefined  })
-    }
-
-    public triggerCascadedQuestions(value: string | string[] | number) {
+    public triggerCascadedQuestions(value: string) {
         if (this.props.trigger && this.props.onChange) {
             this.props.trigger(this.props.tag, value, this.props.onChange)
         }
+    }
+
+    public reset(): void {
+        this.setState({ selection: undefined })
     }
 
 }

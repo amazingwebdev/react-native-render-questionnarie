@@ -27,21 +27,18 @@ import { ScrollView } from 'react-native'
 
 import * as _ from 'lodash'
 
-import { Answer } from '../base/Wrapper'
+import AnswerStore, { Answer } from './AnswerStore'
 
 interface PageProps {
-    questionValueHandler: (tag: string, value: Answer) => void
-    data: Page
+    page: Page
 }
 
 export default class FormPage extends React.Component<PageProps> {
 
     public constructor(props: PageProps) {
         super(props)
-
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
         this.onChange = this.onChange.bind(this)
-
     }
 
     public shouldComponentUpdate(nextProps: PageProps) {
@@ -49,19 +46,17 @@ export default class FormPage extends React.Component<PageProps> {
     }
 
     public render() {
-
-        const questions = this.props.data.questions.map(this.createQuestionComponent)
+        const questions = this.props.page.questions.map(this.createQuestionComponent)
         return (
             <ScrollView>
                 <View style={{ height: 'auto' }}>
                     {questions}
                 </View>
             </ScrollView>
-
         )
     }
 
-    public onChange(tag: string, value: string | string[] | number, cascadedTags: string[]) {
+    public onChange(tag: string, value: Answer, cascadedTags: string[]) {
         _.forEach(cascadedTags, (cascadedTag) => {
             const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
             if (!_.isEmpty(wrapper)) {
@@ -74,6 +69,7 @@ export default class FormPage extends React.Component<PageProps> {
     }
 
     private createQuestionComponent(question: Question): JSX.Element {
+        const answer = AnswerStore.getOrDefault(question.tag, question.defaultValue)
         switch (question.type) {
             case 'slider':
                 const slider: SliderInputQuestion = question as SliderInputQuestion
@@ -90,7 +86,7 @@ export default class FormPage extends React.Component<PageProps> {
                         max={slider.max}
                         step={slider.step}
                         defaultValue={slider.defaultValue}
-                        onValueChanged={this.props.questionValueHandler}
+                        answer={answer}
                     />
                 )
             case 'text':
@@ -106,7 +102,7 @@ export default class FormPage extends React.Component<PageProps> {
                         photoRequired={text.photoRequired}
                         defaultValue={text.defaultValue}
                         validation={text.validation}
-                        onValueChanged={this.props.questionValueHandler}
+                        answer={answer}
                     />
                 )
             case 'list':
@@ -127,7 +123,7 @@ export default class FormPage extends React.Component<PageProps> {
                         optionsTitle={list.optionsTitle}
                         onChange={list.onChange}
                         trigger={this.onChange}
-                        onValueChanged={this.props.questionValueHandler}
+                        answer={answer}
                     />
                 )
             case 'radio':
@@ -145,7 +141,7 @@ export default class FormPage extends React.Component<PageProps> {
                         options={radio.options}
                         titleKey={radio.titleKey}
                         valueKey={radio.valueKey}
-                        onValueChanged={this.props.questionValueHandler}
+                        answer={answer}
                     />
                 )
             case 'check':
@@ -163,7 +159,7 @@ export default class FormPage extends React.Component<PageProps> {
                         options={checkbox.options}
                         titleKey={checkbox.titleKey}
                         valueKey={checkbox.valueKey}
-                        onValueChanged={this.props.questionValueHandler}
+                        answer={answer}
                     />
                 )
             case 'photo':
@@ -177,7 +173,6 @@ export default class FormPage extends React.Component<PageProps> {
                         title={photo.title}
                         required={photo.required}
                         photoRequired={photo.required}
-                        onValueChanged={this.props.questionValueHandler}
                     />
                 )
             default:

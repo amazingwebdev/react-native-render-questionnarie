@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
+import { Answer } from '../survey/AnswerStore'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
@@ -18,19 +19,10 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
     }
 
     private getInitialState(): RadioInputState {
+        if (typeof this.props.answer === 'string') {
+            return { selection: this.props.answer }
+        }
         return { selection: undefined }
-    }
-
-    public componentDidMount() {
-        if (this.props.defaultValue) {
-            this.setState({ selection: this.props.defaultValue.toString() })
-        }
-    }
-
-    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: RadioInputState) {
-        if (this.state.selection !== nextState.selection) {
-            this.triggerCascadedQuestions(nextState.selection)
-        }
     }
 
     public render(): JSX.Element {
@@ -63,22 +55,20 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
 
     public setValue(selection: string) {
         this.setState({ selection })
-        this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {
         return true
     }
 
-    public triggerCascadedQuestions(value: string) {
+    public triggerCascadedQuestions(value: Answer) {
         if (this.props.trigger && this.props.onChange) {
             this.props.trigger(this.props.tag, value, this.props.onChange)
         }
     }
 
     public reset(): void {
-        const initialState = this.getInitialState()
-        this.setState(initialState)
+        this.setState({ selection: undefined })
     }
 
 }
