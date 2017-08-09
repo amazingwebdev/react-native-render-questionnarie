@@ -44,6 +44,10 @@ export default class FormPage extends React.Component<PageProps> {
 
     }
 
+    public shouldComponentUpdate(nextProps: PageProps) {
+        return false
+    }
+
     public render() {
 
         const questions = this.props.data.questions.map(this.createQuestionComponent)
