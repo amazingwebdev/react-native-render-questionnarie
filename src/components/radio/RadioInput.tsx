@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ListItem, Text, Radio } from 'native-base'
 
-import { Answer } from '../survey/AnswerStore'
+import AnswerStore from '../survey/AnswerStore'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
@@ -55,20 +55,22 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
 
     public setValue(selection: string) {
         this.setState({ selection })
+        this.triggerCascadedQuestions(selection)
+        AnswerStore.put(this.props.tag, selection)
     }
 
     public isValid(): boolean {
         return true
     }
 
-    public triggerCascadedQuestions(value: Answer) {
+    public triggerCascadedQuestions(value: string) {
         if (this.props.trigger && this.props.onChange) {
             this.props.trigger(this.props.tag, value, this.props.onChange)
         }
     }
 
     public reset(): void {
-        this.setState({ selection: undefined })
+        this.setValue(undefined)
     }
 
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Slider } from 'react-native'
 import { View, Text } from 'native-base'
 
+import AnswerStore from '../survey/AnswerStore'
 import BaseInputHOC from '../base/BaseInputHOC'
 import { BaseInput, SliderInputQuestion } from '../'
 
@@ -55,6 +56,8 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
 
     public setValue(value: number) {
         this.setState({ value })
+        this.triggerCascadedQuestions(value)
+        AnswerStore.put(this.props.tag, value)
     }
 
     public isValid(): boolean {
@@ -68,7 +71,7 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
     }
 
     public reset(): void {
-        this.setState({ value: 0 })
+        this.setValue(0)
     }
 
 }

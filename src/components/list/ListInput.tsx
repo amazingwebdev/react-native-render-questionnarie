@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Picker } from 'native-base'
 
+import AnswerStore from '../survey/AnswerStore'
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
 
@@ -60,6 +61,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     public setValue(selection: string) {
         this.setState({ selection })
         this.triggerCascadedQuestions(selection)
+        AnswerStore.put(this.props.tag, selection)
     }
 
     public isValid(): boolean {
@@ -73,7 +75,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public reset(): void {
-        this.setState({ selection: undefined })
+        this.setValue(undefined)
     }
 
 }

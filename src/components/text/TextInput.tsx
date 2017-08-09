@@ -1,6 +1,7 @@
 import React from 'react'
 import { Item, Input } from 'native-base'
 
+import AnswerStore from '../survey/AnswerStore'
 import BaseInputHOC from '../base/BaseInputHOC'
 import { BaseInput, TextInputQuestion } from '../'
 
@@ -22,8 +23,8 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
 
     private getInitialState(): TextInputState {
-        if (this.props.answer) {
-            return { value: this.props.answer.toString() }
+        if (typeof this.props.answer === 'string') {
+            return { value: this.props.answer }
         }
         return { value: undefined }
     }
@@ -53,6 +54,8 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
     public setValue(value: string): void {
         this.setState({ value })
+        this.triggerCascadedQuestions(value)
+        AnswerStore.put(this.props.tag, value)
     }
 
     public isValid(): boolean {
@@ -72,8 +75,7 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
 
     public reset(): void {
-        const initialState = this.getInitialState()
-        this.setState(initialState)
+        this.setValue(undefined)
     }
 
 }
