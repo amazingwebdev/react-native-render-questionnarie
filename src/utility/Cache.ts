@@ -1,74 +1,89 @@
 import { AsyncStorage } from 'react-native'
 
-const CACHE_PREFIX = 'cachestore-'
-const CACHE_EXPIRATION_PREFIX = 'cacheexpiration-'
-const EXPIRY_UNITS = 60 * 1000 // Time resolution in minutes
+class CacheStore {
 
-function currentTime() {
-    return Math.floor((new Date().getTime()) / EXPIRY_UNITS)
-}
+    private readonly CACHE_PREFIX = 'cachestore-'
+    private readonly CACHE_EXPIRATION_PREFIX = 'cacheexpiration-'
+    private readonly EXPIRY_UNITS = 60 * 1000
 
-const CacheStore = {
-    get(key: String): Promise<any> {
-        const theKey = CACHE_PREFIX + key
-        const exprKey = CACHE_EXPIRATION_PREFIX + key
-        return AsyncStorage.getItem(exprKey).then((expiry) => {
-            if (expiry && currentTime() >= parseInt(expiry, 10)) {
-                AsyncStorage.multiRemove([exprKey, theKey])
-                return Promise.reject(undefined)
-            }
-            return AsyncStorage.getItem(theKey).then((item) => {
-                console.warn({ item })
-                if (item) {
-                    return Promise.resolve(JSON.parse(item))
+    constructor() {
+        this.flushExpired()
+    }
+
+    public get(key: String): Promise<any> {
+        const theKey = this.CACHE_PREFIX + key
+        const exprKey = this.CACHE_EXPIRATION_PREFIX + key
+        return new Promise((resolve, reject) => {
+            return AsyncStorage.getItem(exprKey).then((expiry) => {
+                if (expiry && this.currentTimeInMinutes() >= parseInt(expiry, 10)) {
+                    AsyncStorage.multiRemove([exprKey, theKey])
+                    return reject()
                 }
-                return Promise.reject(undefined)
+                return AsyncStorage.getItem(theKey).then((item) => {
+                    console.warn({ fromCache: item })
+                    if (item) {
+                        return resolve(JSON.parse(item))
+                    }
+                    return reject(undefined)
+                })
             })
         })
-    },
 
-    set(key: String, value: Response, time: number): Promise<any> {
-        const theKey = CACHE_PREFIX + key
-        const exprKey = CACHE_EXPIRATION_PREFIX + key
+    }
+
+    public set(key: String, value: Response, time: number): Promise<void> {
+        const theKey = this.CACHE_PREFIX + key
+        const exprKey = this.CACHE_EXPIRATION_PREFIX + key
         if (time) {
-            return AsyncStorage.setItem(exprKey, (currentTime() + time).toString()).then(() => {
+            return AsyncStorage.setItem(exprKey, (this.currentTimeInMinutes() + time).toString()).then(() => {
                 return AsyncStorage.setItem(theKey, JSON.stringify(value))
             })
         } else {
             AsyncStorage.removeItem(exprKey)
             return AsyncStorage.setItem(theKey, JSON.stringify(value))
         }
-    },
+    }
 
-    remove(key: String): Promise<any> {
-        return AsyncStorage.multiRemove([CACHE_EXPIRATION_PREFIX + key, CACHE_PREFIX + key])
-    },
+    public remove(key: String): Promise<void> {
+        return AsyncStorage.multiRemove([this.CACHE_EXPIRATION_PREFIX + key, this.CACHE_PREFIX + key])
+    }
 
-    isExpired(key: String): Promise<any> {
-        const exprKey = CACHE_EXPIRATION_PREFIX + key
-        return AsyncStorage.getItem(exprKey).then((expiry) => {
-            const expired = expiry && currentTime() >= parseInt(expiry, 10)
-            return expired ? Promise.resolve() : Promise.reject(null)
+    public isExpired(key: String): Promise<any> {
+        const exprKey = this.CACHE_EXPIRATION_PREFIX + key
+        return new Promise((resolve, reject) => {
+            return AsyncStorage.getItem(exprKey).then((expiry) => {
+                const expired = expiry && this.currentTimeInMinutes() >= parseInt(expiry, 10)
+                return expired ? resolve() : reject()
+            })
         })
-    },
+    }
 
-    flush(): Promise<any> {
+    public flush(): Promise<void> {
         return AsyncStorage.getAllKeys().then((keys) => {
             const theKeys = keys.filter((key) => {
-                return key.indexOf(CACHE_PREFIX) === 0 || key.indexOf(CACHE_EXPIRATION_PREFIX) === 0
+                return key.indexOf(this.CACHE_PREFIX) === 0 || key.indexOf(this.CACHE_EXPIRATION_PREFIX) === 0
             })
             return AsyncStorage.multiRemove(theKeys)
         })
-    },
+    }
 
-    flushExpired(): Promise<any> {
+    public all(): Promise<void> {
+        return AsyncStorage.getAllKeys().then((keys) => {
+            const theKeys = keys.filter((key) => {
+                return key.indexOf(this.CACHE_PREFIX) === 0 || key.indexOf(this.CACHE_EXPIRATION_PREFIX) === 0
+            })
+            return console.warn({ theKeys })
+        })
+    }
+
+    public flushExpired(): Promise<any> {
         return AsyncStorage.getAllKeys().then((keys) => {
             keys.forEach((key) => {
-                if (key.indexOf(CACHE_EXPIRATION_PREFIX) === 0) {
+                if (key.indexOf(this.CACHE_EXPIRATION_PREFIX) === 0) {
                     const exprKey = key
                     return AsyncStorage.getItem(exprKey).then((expiry) => {
-                        if (expiry && currentTime() >= parseInt(expiry, 10)) {
-                            const theKey = CACHE_PREFIX + key.replace(CACHE_EXPIRATION_PREFIX, '')
+                        if (expiry && this.currentTimeInMinutes() >= parseInt(expiry, 10)) {
+                            const theKey = this.CACHE_PREFIX + key.replace(this.CACHE_EXPIRATION_PREFIX, '')
                             return AsyncStorage.multiRemove([exprKey, theKey])
                         }
                         return Promise.resolve()
@@ -77,10 +92,12 @@ const CacheStore = {
                 return Promise.resolve()
             })
         })
-    },
+    }
+
+    private currentTimeInMinutes() {
+        return Math.floor((new Date().getTime()) / this.EXPIRY_UNITS)
+    }
+
 }
 
-// Always flush expired items on start time
-CacheStore.flushExpired()
-
-export default CacheStore
+export default new CacheStore()
