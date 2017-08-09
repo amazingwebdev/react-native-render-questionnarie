@@ -28,7 +28,6 @@ export interface DisplayInput<P> extends React.Component<P> {
 	getPhotosURLs: () => string[]
 	setPhotosURLs: (urls: string[]) => void
 	onCascadedAnswerChanged: (tag: string, value: string | string[] | number) => void
-	reset: () => void
 }
 
 export type Answer = string | string[] | number
@@ -56,8 +55,6 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 	abstract getWrappedComponent(): React.Component<P>
 
 	abstract onCascadedAnswerChanged(tag: string, value: string): void
-
-	abstract reset(): void
 
 	protected getInitialState(): BaseState {
 		return {
