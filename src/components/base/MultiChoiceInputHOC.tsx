@@ -116,10 +116,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				_.isEqual(_.keys(this.state.requestParams), _.keys(this.props.options.request.params))
 		}
 
-		public reset(): void {
-			this.setState({ options: [], display: true, optionsLoaded: false })
-		}
-
 	}
 
 }

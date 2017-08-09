@@ -22,10 +22,6 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         return { selection: undefined }
     }
 
-    public componentWillUpdate(nextProps: MultiInputQuestion, nextState: ListInputState) {
-        this.triggerCascadedQuestions(nextState.selection)
-    }
-
     public render(): JSX.Element {
         console.warn('render =>  ' + this.props.tag)
         return (
@@ -60,12 +56,18 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public setValue(selection: string) {
-        this.setState({ selection })
-        this.props.onValueChanged(this.props.tag, selection)
+        this.setState({ selection }, () => {
+            this.triggerCascadedQuestions(selection)
+        })
+        // this.props.onValueChanged(this.props.tag, selection)
     }
 
     public isValid(): boolean {
         return true
+    }
+
+    public reset(): void {
+        this.setState({ selection: undefined  })
     }
 
     public triggerCascadedQuestions(value: string | string[] | number) {
@@ -74,4 +76,5 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
         }
     }
 
-} export default MultiChoiceInputHOC(ListInput)
+}
+export default MultiChoiceInputHOC(ListInput)

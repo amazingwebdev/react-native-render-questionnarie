@@ -39,6 +39,7 @@ export interface BaseInput<P> extends React.Component<P> {
 	setValue: (value: Answer) => void
 	isValid: () => boolean
 	triggerCascadedQuestions: (value: Answer) => void
+	reset: () => void
 }
 
 export default abstract class Wrapper<P extends Question, S extends BaseState> extends React.Component<P, S> implements DisplayInput<P> {

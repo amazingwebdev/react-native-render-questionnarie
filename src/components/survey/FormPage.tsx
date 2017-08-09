@@ -62,17 +62,11 @@ export default class FormPage extends React.Component<PageProps> {
             const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
             if (!_.isEmpty(wrapper)) {
                 wrapper.onCascadedAnswerChanged(tag, value)
-                if (!_.isEmpty(wrapper.props.onChange)) {
-                    _.forEach(wrapper.props.onChange, (a) => {
-                        const cascadedList = this.refs[a] as DisplayInput<Question>
-                        cascadedList.reset()
-                    })
-                }
-                wrapper.reset()
+                const wrappedInput = wrapper.getWrappedComponent() as BaseInput<Question>
+                wrappedInput.reset()
+                this.onChange(wrapper.props.tag, undefined, wrapper.props.onChange)
             }
-
         })
-
     }
 
     private createQuestionComponent(question: Question): JSX.Element {
