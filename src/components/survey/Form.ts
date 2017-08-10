@@ -29,7 +29,6 @@ export interface Question {
 	onChange?: string[]
 	defaultValue?: Answer
 	answer?: Answer
-	trigger?: (tag: string, value: Answer, cascadedTags: string[]) => void
 }
 
 export interface TextInputQuestion extends Question {
@@ -47,11 +46,11 @@ export interface SliderInputQuestion extends Question {
 
 export interface MultiInputQuestion extends Question {
 	optionsTitle?: string
-	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: {}, expiration: number } }
+	options: { type: string, values: MultiInputQuestionOption[], request: { url: string, params: { [key: string]: string }, expiration: number } }
 	pureOptions?: MultiInputQuestionOption[]
 	titleKey: string
 	valueKey: string
-	value?: Answer	
+	value?: Answer
 }
 
 export interface MultiInputQuestionOption {

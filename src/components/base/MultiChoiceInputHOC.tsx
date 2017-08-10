@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'native-base'
 import * as _ from 'lodash'
 
+import AnswerStore, { Answer } from '../survey/AnswerStore'
 import Wrapper from './Wrapper'
 import { BaseState, MultiInputQuestion, MultiInputQuestionOption } from '../'
 import Http, { HttpRequest } from '../../utility/Http'
@@ -18,14 +19,17 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 
 		private wrappedComponent: React.Component<Props>
 
+		private tagAndQueryMapping: { [key: string]: string } = {}
+
 		constructor(props: Props) {
 			super(props)
+			this.onCascadingAnswerChanged = this.onCascadingAnswerChanged.bind(this)
 			this.state = {
 				...super.getInitialState(),
+				requestParams: this.initializeRequestParams(),
 				options: [],
 				optionsLoaded: false,
 			}
-
 		}
 
 		componentDidMount() {
@@ -36,7 +40,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			if (!this.state.optionsLoaded) {
 				this.loadOptions()
 			}
-
 		}
 
 		render() {
@@ -96,24 +99,34 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			}
 		}
 
-		public onCascadedAnswerChanged(tag: string, value: string) {
+		private initializeRequestParams(): {} {
+			if (this.props.options.type !== 'http') {
+				return {}
+			}
+			const requestParams: { [key: string]: string } = {}
 			_.forEach(this.props.options.request.params, (paramValue, paramName) => {
-				if (paramValue === `$\{${tag}}`) {
-					const requestParams = _.clone(this.state.requestParams)
-					if (_.isUndefined(value) || _.isEmpty(value) || _.isNull(value) || value === '-') {
-						delete requestParams[paramName]
-					} else {
-						requestParams[paramName] = value
-					}
-					this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
+				if (paramValue && paramValue.toString().startsWith('${')) {
+					const tag = paramValue.replace('${', '').replace('}', '')
+					this.tagAndQueryMapping[tag] = paramName
+					AnswerStore.subscribe(tag, this.onCascadingAnswerChanged)
+				} else {
+					requestParams[paramName] = paramValue
+					this.tagAndQueryMapping[paramName] = paramName
 				}
 			})
+			return requestParams
+		}
+
+		private onCascadingAnswerChanged(tag: string, value: Answer) {
+			const requestParams = _.clone(this.state.requestParams)
+			requestParams[this.tagAndQueryMapping[tag]] = value.toString()
+			this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
 		}
 
 		private isParamsReadyForRequest(): boolean {
 			return this.props.options.type === 'http' &&
 				!_.isEmpty(this.props.options.request.params) &&
-				_.isEqual(_.keys(this.state.requestParams), _.keys(this.props.options.request.params))
+				_.isEqual(_.keys(this.state.requestParams).sort(), _.values(this.tagAndQueryMapping).sort())
 		}
 
 	}

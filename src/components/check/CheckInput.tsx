@@ -84,12 +84,6 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
         return true
     }
 
-    public triggerCascadedQuestions(value: string[]) {
-        if (this.props.trigger && this.props.onChange) {
-            this.props.trigger(this.props.tag, value, this.props.onChange)
-        }
-    }
-
     public reset(): void {
         const initialState = this.getInitialState()
         this.setState(initialState)

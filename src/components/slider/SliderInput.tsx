@@ -56,18 +56,11 @@ class SliderInput extends React.Component<SliderInputQuestion, SliderInputState>
 
     public setValue(value: number) {
         this.setState({ value })
-        this.triggerCascadedQuestions(value)
         AnswerStore.put(this.props.tag, value)
     }
 
     public isValid(): boolean {
         return true
-    }
-
-    public triggerCascadedQuestions(value: number) {
-        if (this.props.trigger && this.props.onChange) {
-            this.props.trigger(this.props.tag, value, this.props.onChange)
-        }
     }
 
     public reset(): void {

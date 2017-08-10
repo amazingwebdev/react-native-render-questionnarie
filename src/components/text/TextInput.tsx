@@ -54,7 +54,6 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
     }
     public setValue(value: string): void {
         this.setState({ value })
-        this.triggerCascadedQuestions(value)
         AnswerStore.put(this.props.tag, value)
     }
 
@@ -66,12 +65,6 @@ class TextInput extends React.Component<TextInputQuestion, TextInputState> imple
             return this.regExp.test(this.state.value)
         }
         return true
-    }
-
-    public triggerCascadedQuestions(value: string) {
-        if (this.props.trigger && this.props.onChange) {
-            this.props.trigger(this.props.tag, value, this.props.onChange)
-        }
     }
 
     public reset(): void {

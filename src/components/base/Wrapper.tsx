@@ -28,7 +28,6 @@ export interface DisplayInput<P> extends React.Component<P> {
 	getWrappedComponent: () => React.Component<P>
 	getPhotosURLs: () => string[]
 	setPhotosURLs: (urls: string[]) => void
-	onCascadedAnswerChanged: (tag: string, value: Answer) => void
 }
 
 export interface BaseInput<P> extends React.Component<P> {
@@ -36,7 +35,6 @@ export interface BaseInput<P> extends React.Component<P> {
 	getValue: () => Answer
 	setValue: (value: Answer) => void
 	isValid: () => boolean
-	triggerCascadedQuestions: (value: Answer) => void
 	reset: () => void
 }
 
@@ -52,8 +50,6 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 	}
 
 	abstract getWrappedComponent(): React.Component<P>
-
-	abstract onCascadedAnswerChanged(tag: string, value: Answer): void
 
 	protected getInitialState(): BaseState {
 		return {
