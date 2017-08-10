@@ -121,7 +121,11 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 
 		private onCascadingAnswerChanged(tag: string, value: Answer) {
 			const requestParams = _.clone(this.state.requestParams)
-			requestParams[this.tagAndQueryMapping[tag]] = value.toString()
+			if (value) {
+				requestParams[this.tagAndQueryMapping[tag]] = value.toString()
+			} else {
+				delete requestParams[this.tagAndQueryMapping[tag]]
+			}
 			this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
 		}
 
