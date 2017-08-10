@@ -31,7 +31,7 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
-                selectedValue={this.state.selection}
+                selectedValue={AnswerStore.get(this.props.tag)}
                 onValueChange={this.setValue}>
                 {this.props.pureOptions.map(this.renderOptions)}
             </Picker>

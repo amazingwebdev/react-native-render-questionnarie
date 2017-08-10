@@ -35,13 +35,34 @@ interface PageProps {
 
 export default class FormPage extends React.Component<PageProps> {
 
+    public relatedQuestions: { [key: string]: string[] } = {}
+    public parent: string
+
+    public cascadedQuestions: string[] = []
+
     public constructor(props: PageProps) {
         super(props)
+        this.cascadedQuestions = []
+        this.relatedQuestions = {}
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
     }
 
     public shouldComponentUpdate(nextProps: PageProps) {
         return false
+    }
+
+    componentDidMount() {
+        _.forEach(this.props.page.questions, (question) => {
+            if (question.tag === this.parent) {
+                AnswerStore.subscribe(this.parent, () => {
+                    this.relatedQuestions[this.parent].forEach((tag) => {
+                        const inputWrapper = this.refs[tag] as DisplayInput<Question>
+                        const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
+                        input.reset()
+                    })
+                })
+            }
+        })
     }
 
     public render() {
@@ -53,6 +74,27 @@ export default class FormPage extends React.Component<PageProps> {
                 </View>
             </ScrollView>
         )
+    }
+
+    private getCascadedQuestionFromRequestParams(question: MultiInputQuestion) {
+        if (question.options.type === 'http') {
+            if (!question.options.request.params && question.onChange) {
+                this.relatedQuestions[question.tag] = []
+                this.parent = question.tag
+            } else {
+                _.forEach(question.options.request.params, (paramValue, paramName) => {
+                    if (paramValue && paramValue.toString().startsWith('${')) {
+                        const tag = paramValue.replace('${', '').replace('}', '')
+                        this.cascadedQuestions.push(question.tag)
+                    }
+                })
+            }
+            const cascadedQuestions = [...new Set(this.cascadedQuestions)]
+            this.relatedQuestions[this.parent] = cascadedQuestions
+            return this.relatedQuestions
+
+        }
+
     }
 
     private createQuestionComponent(question: Question): JSX.Element {
@@ -94,6 +136,7 @@ export default class FormPage extends React.Component<PageProps> {
                 )
             case 'list':
                 const list: MultiInputQuestion = question as MultiInputQuestion
+                this.getCascadedQuestionFromRequestParams(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
                 return (
                     <ListInput
                         ref={list.tag}
