@@ -73,11 +73,11 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					const request = this.props.options.request
 					const httpRequest: HttpRequest = {}
 
-					if (request.url && _.size(request.params) > 0 && this.isParamsReadyForRequest()) {
+					if (this.hasHttpSource() && this.hasHttpParameters() && this.areHttpParametersReady()) {
 						httpRequest.url = request.url
 						httpRequest.query = this.state.requestParams
 						httpRequest.expiration = this.props.options.request.expiration
-					} else if (request.url && _.isEmpty(request.params)) {
+					} else if (this.hasHttpSource() && !this.hasHttpParameters()) {
 						httpRequest.url = request.url
 						httpRequest.expiration = this.props.options.request.expiration
 					}
@@ -85,22 +85,24 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					if (!_.isEmpty(httpRequest)) {
 						Http.request(httpRequest).then((options) => {
 							if (_.isEmpty(options)) { // if options is empty then hide the question.
-								this.setState({ options: [], optionsLoaded: true, display: true })
+								this.resetOptions()
 							} else {
 								this.setState({ options, optionsLoaded: true, display: true })
 							}
-						}).catch(() => {
-							this.setState({ options: [], optionsLoaded: true, display: true })
-						})
+						}).catch(this.resetOptions)
 					} else {
-						this.setState({ options: [], optionsLoaded: true, display: true })
+						this.resetOptions()
 					}
 					break
 			}
 		}
 
+		private resetOptions(): void {
+			this.setState({ options: [], optionsLoaded: true, display: true })
+		}
+
 		private initializeRequestParams(): {} {
-			if (this.props.options.type !== 'http') {
+			if (!this.hasHttpSource()) {
 				return {}
 			}
 			const requestParams: { [key: string]: string } = {}
@@ -123,12 +125,17 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
 		}
 
-		private isParamsReadyForRequest(): boolean {
-			return this.props.options.type === 'http' &&
-				!_.isEmpty(this.props.options.request.params) &&
-				_.isEqual(_.keys(this.state.requestParams).sort(), _.values(this.tagAndQueryMapping).sort())
+		private hasHttpSource(): boolean {
+			return this.props.options.type === 'http'
+		}
+
+		private hasHttpParameters(): boolean {
+			return !_.isEmpty(this.props.options.request.params)
+		}
+
+		private areHttpParametersReady(): boolean {
+			return _.isEqual(_.keys(this.state.requestParams).sort(), _.values(this.tagAndQueryMapping).sort())
 		}
 
 	}
-
 }
