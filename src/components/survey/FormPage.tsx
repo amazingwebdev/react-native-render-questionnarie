@@ -42,7 +42,6 @@ export default class FormPage extends React.Component<PageProps> {
 
     public constructor(props: PageProps) {
         super(props)
-        this.cascadedQuestions = []
         this.relatedQuestions = {}
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
     }
@@ -53,15 +52,19 @@ export default class FormPage extends React.Component<PageProps> {
 
     componentDidMount() {
         _.forEach(this.props.page.questions, (question) => {
-            if (question.tag === this.parent) {
-                AnswerStore.subscribe(this.parent, () => {
-                    this.relatedQuestions[this.parent].forEach((tag) => {
-                        const inputWrapper = this.refs[tag] as DisplayInput<Question>
-                        const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
-                        input.reset()
+            _.forEach(this.relatedQuestions, (array, parent) => {
+                if (question.tag === parent) {
+                    AnswerStore.subscribe(parent, () => {
+                        this.relatedQuestions[parent].forEach((tag) => {
+                            const inputWrapper = this.refs[tag] as DisplayInput<Question>
+                            const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
+                            input.reset()
+                        })
                     })
-                })
-            }
+                }
+
+            })
+
         })
     }
 
@@ -85,12 +88,10 @@ export default class FormPage extends React.Component<PageProps> {
                 _.forEach(question.options.request.params, (paramValue, paramName) => {
                     if (paramValue && paramValue.toString().startsWith('${')) {
                         const tag = paramValue.replace('${', '').replace('}', '')
-                        this.cascadedQuestions.push(question.tag)
+                        this.relatedQuestions[this.parent].push(question.tag)
                     }
                 })
             }
-            const cascadedQuestions = [...new Set(this.cascadedQuestions)]
-            this.relatedQuestions[this.parent] = cascadedQuestions
             return this.relatedQuestions
 
         }
