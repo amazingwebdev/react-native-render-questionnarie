@@ -25,7 +25,9 @@ import {
 
 import { ScrollView } from 'react-native'
 
-import * as _ from 'lodash'
+/* import * as _ from 'lodash' */
+
+import { forEach, isEmpty } from 'lodash'
 
 import AnswerStore, { Answer } from './AnswerStore'
 
@@ -36,14 +38,12 @@ interface PageProps {
 export default class FormPage extends React.Component<PageProps> {
 
     public relatedQuestions: { [key: string]: string[] } = {}
-    public parent: string
-
-    public cascadedQuestions: string[] = []
 
     public constructor(props: PageProps) {
         super(props)
         this.relatedQuestions = {}
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
+        this.getCascadedQuestion = this.getCascadedQuestion.bind(this)
     }
 
     public shouldComponentUpdate(nextProps: PageProps) {
@@ -51,8 +51,13 @@ export default class FormPage extends React.Component<PageProps> {
     }
 
     componentDidMount() {
-        _.forEach(this.props.page.questions, (question) => {
-            _.forEach(this.relatedQuestions, (array, parent) => {
+        forEach(this.relatedQuestions, (value, key) => {
+            if (isEmpty(this.relatedQuestions[key])) {
+                delete this.relatedQuestions[key]
+            }
+        })
+        forEach(this.props.page.questions, (question) => {
+            forEach(this.relatedQuestions, (array, parent) => {
                 if (question.tag === parent) {
                     AnswerStore.subscribe(parent, () => {
                         this.relatedQuestions[parent].forEach((tag) => {
@@ -79,19 +84,31 @@ export default class FormPage extends React.Component<PageProps> {
         )
     }
 
-    private getCascadedQuestionFromRequestParams(question: MultiInputQuestion) {
+    private getCascadedQuestion(question: MultiInputQuestion) {
         if (question.options.type === 'http') {
-            if (!question.options.request.params && question.onChange) {
-                this.relatedQuestions[question.tag] = []
-                this.parent = question.tag
-            } else {
-                _.forEach(question.options.request.params, (paramValue, paramName) => {
-                    if (paramValue && paramValue.toString().startsWith('${')) {
-                        const tag = paramValue.replace('${', '').replace('}', '')
-                        this.relatedQuestions[this.parent].push(question.tag)
-                    }
-                })
-            }
+            this.relatedQuestions[question.tag] = []
+            forEach(question.options.request.params, (paramValue, paramName) => {
+                if (paramValue && paramValue.toString().startsWith('${')) {
+                    const tag = paramValue.replace('${', '').replace('}', '')
+                    forEach(this.relatedQuestions, (value, key) => {
+                        if (key === tag) {
+                            this.relatedQuestions[key].push(question.tag)
+                        }
+                    })
+                }
+            })
+            forEach(this.relatedQuestions, (value, key) => {
+                if (value && value.length > 0) {
+                    forEach(this.relatedQuestions, (value2, key2) => {
+                        if (value[0] === key2 && value2[0] !== undefined) {
+                            this.relatedQuestions[key].push(value2[0])
+                            delete this.relatedQuestions[key2]
+
+                        }
+                    })
+                }
+
+            })
             return this.relatedQuestions
 
         }
@@ -137,7 +154,7 @@ export default class FormPage extends React.Component<PageProps> {
                 )
             case 'list':
                 const list: MultiInputQuestion = question as MultiInputQuestion
-                this.getCascadedQuestionFromRequestParams(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
+                this.getCascadedQuestion(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
                 return (
                     <ListInput
                         ref={list.tag}
