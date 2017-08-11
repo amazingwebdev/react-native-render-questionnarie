@@ -1,6 +1,5 @@
 import React from 'react'
 import { Header, Text, View, Button, Icon, Body } from 'native-base'
-import * as _ from 'lodash'
 
 import { Answer } from '../survey/AnswerStore'
 import { Question, Camera, Gallery } from '../'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'native-base'
-import * as _ from 'lodash'
+import { isEmpty, forEach, clone, isEqual, keys, values } from 'lodash'
 
 import AnswerStore, { Answer } from '../survey/AnswerStore'
 import Wrapper from './Wrapper'
@@ -82,9 +82,9 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 						httpRequest.expiration = this.props.options.request.expiration
 					}
 
-					if (!_.isEmpty(httpRequest)) {
+					if (!isEmpty(httpRequest)) {
 						Http.request(httpRequest).then((options) => {
-							if (_.isEmpty(options)) { // if options is empty then hide the question.
+							if (isEmpty(options)) { // if options is empty then hide the question.
 								this.resetOptions()
 							} else {
 								this.setState({ options, optionsLoaded: true, display: true })
@@ -106,7 +106,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				return {}
 			}
 			const requestParams: { [key: string]: string } = {}
-			_.forEach(this.props.options.request.params, (paramValue, paramName) => {
+			forEach(this.props.options.request.params, (paramValue, paramName) => {
 				if (paramValue && paramValue.toString().startsWith('${')) {
 					const tag = paramValue.replace('${', '').replace('}', '')
 					this.tagAndQueryMapping[tag] = paramName
@@ -120,7 +120,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		private onCascadingAnswerChanged(tag: string, value: Answer) {
-			const requestParams = _.clone(this.state.requestParams)
+			const requestParams = clone(this.state.requestParams)
 			if (value) {
 				requestParams[this.tagAndQueryMapping[tag]] = value.toString()
 			} else {
@@ -135,11 +135,11 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		private hasHttpParameters(): boolean {
-			return !_.isEmpty(this.props.options.request.params)
+			return !isEmpty(this.props.options.request.params)
 		}
 
 		private areHttpParametersReady(): boolean {
-			return _.isEqual(_.keys(this.state.requestParams).sort(), _.values(this.tagAndQueryMapping).sort())
+			return isEqual(keys(this.state.requestParams).sort(), values(this.tagAndQueryMapping).sort())
 		}
 
 	}

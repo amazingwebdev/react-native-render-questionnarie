@@ -25,8 +25,6 @@ import {
 
 import { ScrollView } from 'react-native'
 
-/* import * as _ from 'lodash' */
-
 import { forEach, isEmpty } from 'lodash'
 
 import AnswerStore, { Answer } from './AnswerStore'

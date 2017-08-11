@@ -13,7 +13,7 @@ import {
 	Body,
 	Picker,
 } from 'native-base'
-import * as _ from 'lodash'
+import { forOwn, isEmpty } from 'lodash'
 
 import {
 	Form,
@@ -200,7 +200,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
 	private validatePage(): string[] {
 		const validationMessages: string[] = []
-		_.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
+		forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
 			if (wrapper.isAvailable()) {
 				const question = wrapper.getWrappedComponent() as BaseInput<Question>
 				if (!question.isValid() && question.getTitle()) {
@@ -213,7 +213,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
 	private onSave() {
 		const validationMessages = this.validatePage()
-		if (_.isEmpty(validationMessages) && this.props.onSave) {
+		if (isEmpty(validationMessages) && this.props.onSave) {
 			if (this.state.capturedPhotos.length > 0) {
 				this.state.medias.form = this.state.capturedPhotos
 			}
@@ -242,7 +242,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 	private onPhotoDelete(deletedPhoto: string) {
 		const { capturedPhotos } = this.state
 		capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
-		if (_.isEmpty(capturedPhotos)) {
+		if (isEmpty(capturedPhotos)) {
 			this.setState({ showGallery: false })
 		} else {
 			this.setState({ capturedPhotos })

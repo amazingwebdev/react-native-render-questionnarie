@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
-import * as _ from 'lodash'
 
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
