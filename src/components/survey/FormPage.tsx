@@ -25,7 +25,7 @@ import {
 
 import { ScrollView } from 'react-native'
 
-import { forEach, isEmpty } from 'lodash'
+import { forEach, isEmpty, isUndefined, isNull } from 'lodash'
 
 import AnswerStore, { Answer } from './AnswerStore'
 
@@ -41,34 +41,16 @@ export default class FormPage extends React.Component<PageProps> {
         super(props)
         this.relatedQuestions = {}
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
-        this.getCascadedQuestion = this.getCascadedQuestion.bind(this)
+        this.onCascadingAnswerChange = this.onCascadingAnswerChange.bind(this)
     }
 
     public shouldComponentUpdate(nextProps: PageProps) {
         return false
     }
 
-    componentDidMount() {
-        forEach(this.relatedQuestions, (value, key) => {
-            if (isEmpty(this.relatedQuestions[key])) {
-                delete this.relatedQuestions[key]
-            }
-        })
-        forEach(this.props.page.questions, (question) => {
-            forEach(this.relatedQuestions, (array, parent) => {
-                if (question.tag === parent) {
-                    AnswerStore.subscribe(parent, () => {
-                        this.relatedQuestions[parent].forEach((tag) => {
-                            const inputWrapper = this.refs[tag] as DisplayInput<Question>
-                            const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
-                            input.reset()
-                        })
-                    })
-                }
-
-            })
-
-        })
+    public componentDidMount() {
+        this.deleteUnpairedMappings()
+        this.subscribePairedMappings()
     }
 
     public render() {
@@ -82,7 +64,25 @@ export default class FormPage extends React.Component<PageProps> {
         )
     }
 
-    private getCascadedQuestion(question: MultiInputQuestion) {
+    private subscribePairedMappings(): void {
+        forEach(this.props.page.questions, (question) => {
+            forEach(this.relatedQuestions, (array, parent) => {
+                if (question.tag === parent) {
+                    AnswerStore.subscribe(parent, this.onCascadingAnswerChange)
+                }
+            })
+        })
+    }
+
+    private deleteUnpairedMappings(): void {
+        forEach(this.relatedQuestions, (value, key) => {
+            if (isEmpty(this.relatedQuestions[key])) {
+                delete this.relatedQuestions[key]
+            }
+        })
+    }
+
+    private pairCascadingQuestions(question: MultiInputQuestion): void {
         if (question.options.type === 'http') {
             this.relatedQuestions[question.tag] = []
             forEach(question.options.request.params, (paramValue, paramName) => {
@@ -107,10 +107,18 @@ export default class FormPage extends React.Component<PageProps> {
                 }
 
             })
-            return this.relatedQuestions
-
         }
 
+    }
+
+    private onCascadingAnswerChange(tag: string, value: string): void {
+        this.relatedQuestions[tag].forEach((question) => {
+            const inputWrapper = this.refs[question] as DisplayInput<Question>
+            const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
+            if (!isUndefined(input) && !isNull(input)) {
+                input.reset()
+            }
+        })
     }
 
     private createQuestionComponent(question: Question): JSX.Element {
@@ -152,7 +160,7 @@ export default class FormPage extends React.Component<PageProps> {
                 )
             case 'list':
                 const list: MultiInputQuestion = question as MultiInputQuestion
-                this.getCascadedQuestion(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
+                this.pairCascadingQuestions(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
                 return (
                     <ListInput
                         ref={list.tag}

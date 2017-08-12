@@ -98,7 +98,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 		}
 
 		private resetOptions(): void {
-			this.setState({ options: [], optionsLoaded: true, display: true })
+			this.setState({ options: [], optionsLoaded: true, display: false })
 		}
 
 		private initializeRequestParams(): {} {
