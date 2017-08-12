@@ -95,20 +95,17 @@ export default class FormPage extends React.Component<PageProps> {
                     })
                 }
             })
-            forEach(this.relatedQuestions, (value, key) => {
-                if (value && value.length > 0) {
-                    forEach(this.relatedQuestions, (value2, key2) => {
-                        if (value[0] === key2 && value2[0] !== undefined) {
-                            this.relatedQuestions[key].push(value2[0])
-                            delete this.relatedQuestions[key2]
-
+            forEach(this.relatedQuestions, (childs, parent) => {
+                if (childs && childs.length > 0) {
+                    forEach(this.relatedQuestions, (childs2, parent2) => {
+                        if (childs.indexOf(parent2) !== -1) {
+                            this.relatedQuestions[parent] = this.relatedQuestions[parent].concat(childs2)
+                            delete this.relatedQuestions[parent2]
                         }
                     })
                 }
-
             })
         }
-
     }
 
     private onCascadingAnswerChange(tag: string, value: string): void {
