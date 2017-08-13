@@ -13,7 +13,7 @@ import {
 	Body,
 	Picker,
 } from 'native-base'
-import * as _ from 'lodash'
+import { forOwn, isEmpty, isEqual, clone } from 'lodash'
 
 import {
 	Form,
@@ -94,7 +94,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 		this.onGalleryClose = this.onGalleryClose.bind(this)
 		this.onPageChanged = this.onPageChanged.bind(this)
 		this.onPageSelected = this.onPageSelected.bind(this)
-		this.getAnswer = this.getAnswer.bind(this)
 	}
 
 	public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
@@ -107,16 +106,15 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 		if (this.state.currentPage !== nextState.currentPage) {
 			return true
 		}
+		if (!isEqual(this.state.capturedPhotos, nextState.capturedPhotos)) {
+			return true
+		}
 		return false
 	}
 
-	private getAnswer(tag: string) {
-		return AnswerStore.get(tag)
-	}
-
 	public render(): JSX.Element {
-		const pages = this.props.form.pages.map((page: Page) => {
-			return <FormPage page={page} />
+		const pages = this.props.form.pages.map((page: Page, index) => {
+			return <FormPage key={`${page.tag}_${index}`} page={page} />
 		})
 		return (
 			<Container style={Style.container} >
@@ -200,7 +198,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
 	private validatePage(): string[] {
 		const validationMessages: string[] = []
-		_.forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
+		forOwn(this.refs, (wrapper: DisplayInput<Question>, ref) => {
 			if (wrapper.isAvailable()) {
 				const question = wrapper.getWrappedComponent() as BaseInput<Question>
 				if (!question.isValid() && question.getTitle()) {
@@ -213,7 +211,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
 	private onSave() {
 		const validationMessages = this.validatePage()
-		if (_.isEmpty(validationMessages) && this.props.onSave) {
+		if (isEmpty(validationMessages) && this.props.onSave) {
 			if (this.state.capturedPhotos.length > 0) {
 				this.state.medias.form = this.state.capturedPhotos
 			}
@@ -240,13 +238,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 	}
 
 	private onPhotoDelete(deletedPhoto: string) {
-		const { capturedPhotos } = this.state
-		capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
-		if (_.isEmpty(capturedPhotos)) {
-			this.setState({ showGallery: false })
-		} else {
-			this.setState({ capturedPhotos })
-		}
+		const capturedPhotos = clone(this.state.capturedPhotos)
+		capturedPhotos.splice(capturedPhotos.indexOf(deletedPhoto, 1))
+		this.setState({ capturedPhotos, showGallery: capturedPhotos.length > 0 })
 	}
 
 }

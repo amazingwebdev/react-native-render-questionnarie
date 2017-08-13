@@ -55,18 +55,11 @@ class RadioInput extends React.Component<MultiInputQuestion, RadioInputState> im
 
     public setValue(selection: string) {
         this.setState({ selection })
-        this.triggerCascadedQuestions(selection)
         AnswerStore.put(this.props.tag, selection)
     }
 
     public isValid(): boolean {
         return true
-    }
-
-    public triggerCascadedQuestions(value: string) {
-        if (this.props.trigger && this.props.onChange) {
-            this.props.trigger(this.props.tag, value, this.props.onChange)
-        }
     }
 
     public reset(): void {

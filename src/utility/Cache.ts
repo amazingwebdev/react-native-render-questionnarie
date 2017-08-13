@@ -10,7 +10,7 @@ class CacheStore {
         this.flushExpired()
     }
 
-    public get(key: String): Promise<any> {
+    public get(key: String): Promise<void> {
         const theKey = this.CACHE_PREFIX + key
         const exprKey = this.CACHE_EXPIRATION_PREFIX + key
         return new Promise((resolve, reject) => {
@@ -20,27 +20,22 @@ class CacheStore {
                     return reject()
                 }
                 return AsyncStorage.getItem(theKey).then((item) => {
-                    console.warn({ fromCache: item })
-                    if (item) {
-                        return resolve(JSON.parse(item))
-                    }
-                    return reject(undefined)
+                    return item ? resolve(JSON.parse(item)) : reject()
                 })
             })
         })
-
     }
 
-    public set(key: String, value: Response, time: number): Promise<void> {
+    public set(key: String, item: Response, ttl?: number): Promise<void> {
         const theKey = this.CACHE_PREFIX + key
         const exprKey = this.CACHE_EXPIRATION_PREFIX + key
-        if (time) {
-            return AsyncStorage.setItem(exprKey, (this.currentTimeInMinutes() + time).toString()).then(() => {
-                return AsyncStorage.setItem(theKey, JSON.stringify(value))
+        if (ttl) {
+            return AsyncStorage.setItem(exprKey, (this.currentTimeInMinutes() + ttl).toString()).then(() => {
+                return AsyncStorage.setItem(theKey, JSON.stringify(item))
             })
         } else {
             AsyncStorage.removeItem(exprKey)
-            return AsyncStorage.setItem(theKey, JSON.stringify(value))
+            return AsyncStorage.setItem(theKey, JSON.stringify(item))
         }
     }
 
@@ -48,7 +43,7 @@ class CacheStore {
         return AsyncStorage.multiRemove([this.CACHE_EXPIRATION_PREFIX + key, this.CACHE_PREFIX + key])
     }
 
-    public isExpired(key: String): Promise<any> {
+    public isExpired(key: String): Promise<void> {
         const exprKey = this.CACHE_EXPIRATION_PREFIX + key
         return new Promise((resolve, reject) => {
             return AsyncStorage.getItem(exprKey).then((expiry) => {
@@ -67,16 +62,16 @@ class CacheStore {
         })
     }
 
-    public all(): Promise<void> {
+    public all(): Promise<string[]> {
         return AsyncStorage.getAllKeys().then((keys) => {
             const theKeys = keys.filter((key) => {
                 return key.indexOf(this.CACHE_PREFIX) === 0 || key.indexOf(this.CACHE_EXPIRATION_PREFIX) === 0
             })
-            return console.warn({ theKeys })
+            return Promise.resolve(theKeys)
         })
     }
 
-    public flushExpired(): Promise<any> {
+    public flushExpired(): Promise<void> {
         return AsyncStorage.getAllKeys().then((keys) => {
             keys.forEach((key) => {
                 if (key.indexOf(this.CACHE_EXPIRATION_PREFIX) === 0) {
@@ -94,7 +89,7 @@ class CacheStore {
         })
     }
 
-    private currentTimeInMinutes() {
+    private currentTimeInMinutes(): number {
         return Math.floor((new Date().getTime()) / this.EXPIRY_UNITS)
     }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, CheckBox, ListItem, Text } from 'native-base'
-import * as _ from 'lodash'
 
 import MultiChoiceInputHOC from '../base/MultiChoiceInputHOC'
 import { BaseInput, MultiInputQuestion, MultiInputQuestionOption } from '../'
@@ -82,12 +81,6 @@ class CheckInput extends React.Component<MultiInputQuestion, CheckInputState> im
 
     public isValid(): boolean {
         return true
-    }
-
-    public triggerCascadedQuestions(value: string[]) {
-        if (this.props.trigger && this.props.onChange) {
-            this.props.trigger(this.props.tag, value, this.props.onChange)
-        }
     }
 
     public reset(): void {

@@ -17,17 +17,13 @@ export default class App extends React.Component<{}, {}> {
 		)
 	}
 
-	private onSave(answers: Object) {
-		console.log(JSON.stringify(answers))
+	private onSave(answers: Object, medias: Object) {
+		console.warn(JSON.stringify(answers))
+		console.warn(JSON.stringify(medias))
 	}
 
-	private onFailure(erros: string[]) {
-		Toast.show({
-			text: erros.join('\n'),
-			buttonText: 'Tamam',
-			position: 'bottom',
-			type: 'danger',
-		})
+	private onFailure(errors: string[]) {
+		console.warn({ errors })
 	}
 
 }

@@ -25,7 +25,7 @@ import {
 
 import { ScrollView } from 'react-native'
 
-import * as _ from 'lodash'
+import { forEach, isEmpty, isUndefined, isNull } from 'lodash'
 
 import AnswerStore, { Answer } from './AnswerStore'
 
@@ -35,14 +35,22 @@ interface PageProps {
 
 export default class FormPage extends React.Component<PageProps> {
 
+    public relatedQuestions: { [key: string]: string[] } = {}
+
     public constructor(props: PageProps) {
         super(props)
+        this.relatedQuestions = {}
         this.createQuestionComponent = this.createQuestionComponent.bind(this)
-        this.onChange = this.onChange.bind(this)
+        this.onCascadingAnswerChange = this.onCascadingAnswerChange.bind(this)
     }
 
     public shouldComponentUpdate(nextProps: PageProps) {
         return false
+    }
+
+    public componentDidMount() {
+        this.deleteUnpairedMappings()
+        this.subscribePairedMappings()
     }
 
     public render() {
@@ -56,14 +64,56 @@ export default class FormPage extends React.Component<PageProps> {
         )
     }
 
-    public onChange(tag: string, value: Answer, cascadedTags: string[]) {
-        _.forEach(cascadedTags, (cascadedTag) => {
-            const wrapper = this.refs[cascadedTag] as DisplayInput<Question>
-            if (!_.isEmpty(wrapper)) {
-                wrapper.onCascadedAnswerChanged(tag, value)
-                const wrappedInput = wrapper.getWrappedComponent() as BaseInput<Question>
-                wrappedInput.reset()
-                this.onChange(wrapper.props.tag, undefined, wrapper.props.onChange)
+    private subscribePairedMappings(): void {
+        forEach(this.props.page.questions, (question) => {
+            forEach(this.relatedQuestions, (array, parent) => {
+                if (question.tag === parent) {
+                    AnswerStore.subscribe(parent, this.onCascadingAnswerChange)
+                }
+            })
+        })
+    }
+
+    private deleteUnpairedMappings(): void {
+        forEach(this.relatedQuestions, (value, key) => {
+            if (isEmpty(this.relatedQuestions[key])) {
+                delete this.relatedQuestions[key]
+            }
+        })
+    }
+
+    private pairCascadingQuestions(question: MultiInputQuestion): void {
+        if (question.options.type === 'http') {
+            this.relatedQuestions[question.tag] = []
+            forEach(question.options.request.params, (paramValue, paramName) => {
+                if (paramValue && paramValue.toString().startsWith('${')) {
+                    const tag = paramValue.replace('${', '').replace('}', '')
+                    forEach(this.relatedQuestions, (value, key) => {
+                        if (key === tag) {
+                            this.relatedQuestions[key].push(question.tag)
+                        }
+                    })
+                }
+            })
+            forEach(this.relatedQuestions, (childs, parent) => {
+                if (childs && childs.length > 0) {
+                    forEach(this.relatedQuestions, (childs2, parent2) => {
+                        if (childs.indexOf(parent2) !== -1) {
+                            this.relatedQuestions[parent] = this.relatedQuestions[parent].concat(childs2)
+                            delete this.relatedQuestions[parent2]
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    private onCascadingAnswerChange(tag: string, value: string): void {
+        this.relatedQuestions[tag].forEach((question) => {
+            const inputWrapper = this.refs[question] as DisplayInput<Question>
+            const input = inputWrapper.getWrappedComponent() as BaseInput<Question>
+            if (!isUndefined(input) && !isNull(input)) {
+                input.reset()
             }
         })
     }
@@ -107,6 +157,7 @@ export default class FormPage extends React.Component<PageProps> {
                 )
             case 'list':
                 const list: MultiInputQuestion = question as MultiInputQuestion
+                this.pairCascadingQuestions(list) // FIXME: Bütün sorular için bunun yapılması gerekiyor.
                 return (
                     <ListInput
                         ref={list.tag}
@@ -122,7 +173,6 @@ export default class FormPage extends React.Component<PageProps> {
                         valueKey={list.valueKey}
                         optionsTitle={list.optionsTitle}
                         onChange={list.onChange}
-                        trigger={this.onChange}
                         answer={answer}
                     />
                 )
