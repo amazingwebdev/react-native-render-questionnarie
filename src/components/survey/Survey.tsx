@@ -113,8 +113,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 	}
 
 	public render(): JSX.Element {
-		const pages = this.props.form.pages.map((page: Page) => {
-			return <FormPage page={page} />
+		const pages = this.props.form.pages.map((page: Page, index) => {
+			return <FormPage key={`${page.tag}_${index}`} page={page} />
 		})
 		return (
 			<Container style={Style.container} >
