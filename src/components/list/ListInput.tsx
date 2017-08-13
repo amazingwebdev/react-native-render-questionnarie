@@ -26,12 +26,11 @@ class ListInput extends React.Component<MultiInputQuestion, ListInputState> impl
     }
 
     public render(): JSX.Element {
-        console.warn('render =>  ' + this.props.tag)
         return (
             <Picker
                 ref={this.props.tag}
                 key={this.props.tag}
-                selectedValue={AnswerStore.get(this.props.tag)}
+                selectedValue={this.state.selection}
                 onValueChange={this.setValue}>
                 {this.props.pureOptions.map(this.renderOptions)}
             </Picker>

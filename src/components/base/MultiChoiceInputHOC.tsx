@@ -30,6 +30,7 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				options: [],
 				optionsLoaded: false,
 			}
+			this.refreshOptions = this.refreshOptions.bind(this)
 		}
 
 		componentDidMount() {
@@ -73,32 +74,33 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 					const request = this.props.options.request
 					const httpRequest: HttpRequest = {}
 
-					if (this.hasHttpSource() && this.hasHttpParameters() && this.areHttpParametersReady()) {
-						httpRequest.url = request.url
-						httpRequest.query = this.state.requestParams
-						httpRequest.expiration = this.props.options.request.expiration
-					} else if (this.hasHttpSource() && !this.hasHttpParameters()) {
-						httpRequest.url = request.url
-						httpRequest.expiration = this.props.options.request.expiration
+					if (this.hasHttpSource()) {
+						if (this.hasHttpParameters() && this.areHttpParametersReady()) {
+							httpRequest.url = request.url
+							httpRequest.query = this.state.requestParams
+							httpRequest.expiration = this.props.options.request.expiration
+						}
+						if (!this.hasHttpParameters()) {
+							httpRequest.url = request.url
+							httpRequest.expiration = this.props.options.request.expiration
+						}
 					}
 
 					if (!isEmpty(httpRequest)) {
-						Http.request(httpRequest).then((options) => {
-							if (isEmpty(options)) { // if options is empty then hide the question.
-								this.resetOptions()
-							} else {
-								this.setState({ options, optionsLoaded: true, display: true })
-							}
-						}).catch(this.resetOptions)
+						Http.request(httpRequest).then(this.refreshOptions).catch(this.refreshOptions)
 					} else {
-						this.resetOptions()
+						this.refreshOptions([])
 					}
 					break
 			}
 		}
 
-		private resetOptions(): void {
-			this.setState({ options: [], optionsLoaded: true, display: false })
+		private refreshOptions(options: MultiInputQuestionOption[]): void {
+			this.setState({
+				options: options ? options : [],
+				optionsLoaded: true,
+				display: options.length > 0,
+			})
 		}
 
 		private initializeRequestParams(): {} {

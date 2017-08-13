@@ -3,7 +3,7 @@
     "pages": [
         {
             "name": "JTI Stand",
-            "tag": "foo11",
+            "tag": "saife1",
             "questions": [
                 {
                     "title": "Ülke",
@@ -59,6 +59,26 @@
                     },
                     "titleKey": "name",
                     "valueKey": "oid"
+                },
+                 {
+                    "title": "Şehir2",
+                    "type": "list",
+                    "tag": "city2",
+                    "required": true,
+                    "options": {
+                        "type": "http",
+                        "request": {
+                            "url": "http://guanyin.gvg.com.tr/service/rest/city",
+                            "params": {
+                                "countryOid": "${country}"
+                            }
+                        }
+                    },
+                    "titleKey": "name",
+                    "valueKey": "oid",
+                    "onChange": [
+                        "county2"
+                    ]
                 },
                 {
                     "title": "Nokta'nın TAPDK numarasını giriniz.",
@@ -511,6 +531,24 @@
             "name": "Potansiyel",
             "tag": "foo1",
             "questions": [
+
+                {
+                    "title": "İlçe",
+                    "type": "list",
+                    "tag": "county2",
+                    "required": true,
+                    "options": {
+                        "type": "http",
+                        "request": {
+                            "url": "http://guanyin.gvg.com.tr/service/rest/county/getbycity",
+                            "params": {
+                                "cityOid": "${city2}"
+                            }
+                        }
+                    },
+                    "titleKey": "name",
+                    "valueKey": "oid"
+                },
                 {
                     "title": "Noktada alkol satışı var mı?",
                     "type": "radio",

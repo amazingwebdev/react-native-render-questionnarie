@@ -13,7 +13,7 @@ import {
 	Body,
 	Picker,
 } from 'native-base'
-import { forOwn, isEmpty } from 'lodash'
+import { forOwn, isEmpty, isEqual, clone } from 'lodash'
 
 import {
 	Form,
@@ -94,7 +94,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 		this.onGalleryClose = this.onGalleryClose.bind(this)
 		this.onPageChanged = this.onPageChanged.bind(this)
 		this.onPageSelected = this.onPageSelected.bind(this)
-		this.getAnswer = this.getAnswer.bind(this)
 	}
 
 	public shouldComponentUpdate(nextProps: SurveyProps, nextState: SurveyState) {
@@ -107,11 +106,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 		if (this.state.currentPage !== nextState.currentPage) {
 			return true
 		}
+		if (!isEqual(this.state.capturedPhotos, nextState.capturedPhotos)) {
+			return true
+		}
 		return false
-	}
-
-	private getAnswer(tag: string) {
-		return AnswerStore.get(tag)
 	}
 
 	public render(): JSX.Element {
@@ -240,13 +238,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 	}
 
 	private onPhotoDelete(deletedPhoto: string) {
-		const { capturedPhotos } = this.state
-		capturedPhotos.splice(this.state.capturedPhotos.indexOf(deletedPhoto, 1))
-		if (isEmpty(capturedPhotos)) {
-			this.setState({ showGallery: false })
-		} else {
-			this.setState({ capturedPhotos })
-		}
+		const capturedPhotos = clone(this.state.capturedPhotos)
+		capturedPhotos.splice(capturedPhotos.indexOf(deletedPhoto, 1))
+		this.setState({ capturedPhotos, showGallery: capturedPhotos.length > 0 })
 	}
 
 }
