@@ -12,11 +12,7 @@ interface PhotoState {
 	showGallery: boolean
 }
 
-interface RequestState {
-	requestParams: { [key: string]: string }
-}
-
-export interface BaseState extends PhotoState, RequestState {
+export interface BaseState extends PhotoState {
 	display?: boolean
 }
 
@@ -56,7 +52,6 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 			capturing: false,
 			showGallery: false,
 			capturedPhotos: [],
-			requestParams: {},
 		}
 	}
 
@@ -147,10 +142,6 @@ export default abstract class Wrapper<P extends Question, S extends BaseState> e
 		} else {
 			this.setState({ capturedPhotos })
 		}
-	}
-
-	public getRequestParams(): {} {
-		return this.state.requestParams
 	}
 
 }

@@ -8,6 +8,7 @@ import { BaseState, MultiInputQuestion, MultiInputQuestionOption } from '../'
 import Http, { HttpRequest } from '../../utility/Http'
 
 interface MultiChoiceInputState extends BaseState {
+	requestParams: { [key: string]: string }
 	options: MultiInputQuestionOption[]
 	optionsLoaded: boolean
 }
@@ -67,8 +68,8 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 			let options: MultiInputQuestionOption[]
 			switch (this.props.options.type) {
 				case 'static':
-					options = this.props.options.values.slice(0)
-					this.setState({ options, optionsLoaded: true, display: true })
+					options = clone(this.props.options.values)
+					this.refreshOptions(options)
 					break
 				case 'http':
 					const request = this.props.options.request
@@ -129,7 +130,6 @@ export default function MultiChoiceInputHOC<Props extends MultiInputQuestion>(Co
 				delete requestParams[this.tagAndQueryMapping[tag]]
 			}
 			this.setState({ requestParams, options: [], display: true, optionsLoaded: false })
-
 		}
 
 		private hasHttpSource(): boolean {
